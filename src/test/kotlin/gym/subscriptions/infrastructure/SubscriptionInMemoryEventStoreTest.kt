@@ -3,7 +3,7 @@ package gym.subscriptions.infrastructure
 import gym.subscriptions.domain.SubscriptionEvent.NewSubscription
 import gym.subscriptions.domain.SubscriptionEvent.SubscriptionRenewed
 import gym.subscriptions.domain.SubscriptionId
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class SubscriptionInMemoryEventStoreTest {

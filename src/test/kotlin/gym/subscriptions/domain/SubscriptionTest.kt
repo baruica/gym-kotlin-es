@@ -2,7 +2,7 @@ package gym.subscriptions.domain
 
 import gym.fifthOfJune
 import gym.subscriptions.domain.SubscriptionEvent.NewSubscription
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.util.*
 import kotlin.test.assertEquals

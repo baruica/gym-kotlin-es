@@ -3,7 +3,7 @@ package gym.plans.infrastructure
 import gym.plans.domain.PlanEvent
 import gym.plans.domain.PlanEvent.NewPlanCreated
 import gym.plans.domain.PlanId
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class PlanInMemoryEventStoreTest {

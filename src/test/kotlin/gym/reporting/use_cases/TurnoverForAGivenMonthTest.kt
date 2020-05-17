@@ -2,7 +2,7 @@ package gym.reporting.use_cases
 
 import gym.subscriptions.domain.Subscription
 import gym.subscriptions.infrastructure.SubscriptionInMemoryRepository
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
 
