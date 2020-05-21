@@ -72,9 +72,9 @@ class SubscriptionTest {
     fun `can be restored from events`() {
         val tested = Subscription(
             SubscriptionId("aggregateId"),
-            900,
             LocalDate.parse("2018-07-04"),
             12,
+            900,
             "Han@gmail.com",
             isStudent = false
         )
@@ -108,9 +108,9 @@ class SubscriptionTest {
     ): Subscription {
         return Subscription(
             SubscriptionId(UUID.randomUUID().toString()),
-            basePrice,
             startDate,
             durationInMonths,
+            basePrice,
             "luke@gmail.com",
             isStudent
         )

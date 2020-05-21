@@ -17,9 +17,9 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
 
     constructor(
         subscriptionId: SubscriptionId,
-        price: Int,
         startDate: LocalDate,
         planDurationInMonths: Int,
+        price: Int,
         email: String,
         isStudent: Boolean
     ) : this(subscriptionId) {
@@ -93,7 +93,7 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
     }
 
     fun monthlyTurnover(): Double {
-        return (price.value / durationInMonths.value).toDouble()
+        return (price.amount / durationInMonths.value).toDouble()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -121,9 +121,15 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
     }
 }
 
-private data class Price(val value: Int) {
+private data class Price(val amount: Int) {
+    init {
+        require(amount >= 0) {
+            "Price amount must be non-negative, was $amount"
+        }
+    }
+
     internal fun afterDiscount(durationInMonths: Int, isStudent: Boolean): Int {
-        return (value.toDouble() * (1 - Discount(durationInMonths, isStudent).rate)).toInt()
+        return (amount.toDouble() * (1 - Discount(durationInMonths, isStudent).rate)).toInt()
     }
 }
 

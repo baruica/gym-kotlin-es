@@ -13,9 +13,9 @@ class SubscribeToPlan(
 
         val subscription = Subscription(
             SubscriptionId(command.subscriptionId),
-            command.planPrice,
             LocalDate.parse(command.startDate),
             command.planDurationInMonths,
+            command.planPrice,
             command.email,
             command.isStudent
         )

@@ -18,9 +18,9 @@ class TurnoverForAGivenMonthTest {
         subscriptionRepository.store(
             Subscription(
                 subscriptionRepository.nextId(),
-                50,
                 today,
                 1,
+                50,
                 "bob@gmail.com",
                 false
             )
@@ -28,9 +28,9 @@ class TurnoverForAGivenMonthTest {
         subscriptionRepository.store(
             Subscription(
                 subscriptionRepository.nextId(),
-                500,
                 inAMonth,
                 12,
+                500,
                 "bob@gmail.com",
                 false
             )
