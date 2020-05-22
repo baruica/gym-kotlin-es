@@ -1,9 +1,9 @@
 package gym.membership.use_cases
 
 import gym.membership.domain.EmailAddress
-import gym.membership.domain.MemberEvent.NewMemberSubscribed
+import gym.membership.domain.NewMembership
 import gym.membership.infrastructure.MemberInMemoryRepository
-import gym.subscriptions.domain.SubscriptionEvent.NewSubscription
+import gym.subscriptions.domain.NewSubscription
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -37,7 +37,7 @@ class NewSubscriptionEventListenerTest {
 
         assertEquals(
             events.last(),
-            NewMemberSubscribed(
+            NewMembership(
                 events.last().memberId,
                 email,
                 subscriptionId,

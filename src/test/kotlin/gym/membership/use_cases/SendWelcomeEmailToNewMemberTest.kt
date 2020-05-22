@@ -1,10 +1,6 @@
 package gym.membership.use_cases
 
-import gym.membership.domain.EmailAddress
-import gym.membership.domain.Member
-import gym.membership.domain.MemberEvent.NewMemberSubscribed
-import gym.membership.domain.MemberEvent.WelcomeEmailWasSentToNewMember
-import gym.membership.domain.MemberId
+import gym.membership.domain.*
 import gym.membership.infrastructure.InMemoryMailer
 import gym.membership.infrastructure.MemberInMemoryRepository
 import gym.subscriptions.domain.SubscriptionId
@@ -36,7 +32,7 @@ class SendWelcomeEmailToNewMemberTest {
         val tested = SendWelcomeEmailToNewMember(memberRepository, mailer)
 
         val events = tested.handle(
-            NewMemberSubscribed(
+            NewMembership(
                 memberId.toString(),
                 email,
                 subscriptionId.toString(),

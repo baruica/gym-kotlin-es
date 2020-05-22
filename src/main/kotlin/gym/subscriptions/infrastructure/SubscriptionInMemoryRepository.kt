@@ -8,7 +8,7 @@ import java.util.*
 
 class SubscriptionInMemoryRepository : SubscriptionRepository {
 
-    private val subscriptions = HashMap<SubscriptionId, Subscription>()
+    private val subscriptions = mutableMapOf<SubscriptionId, Subscription>()
 
     override fun nextId(): SubscriptionId {
         return SubscriptionId(UUID.randomUUID().toString())

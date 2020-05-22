@@ -1,22 +1,29 @@
 package gym.membership.domain
 
-sealed class MemberEvent(open val memberId: String) {
+import common.DomainEvent
+import java.time.Instant
 
-    data class NewMemberSubscribed(
-        override val memberId: String,
-        val memberEmail: String,
-        val subscriptionId: String,
-        val memberSince: String
-    ) : MemberEvent(memberId)
+sealed class MemberEvent : DomainEvent {
+    override fun aggregateId(): String = memberId
+    override val created: Instant = Instant.now()
 
-    data class WelcomeEmailWasSentToNewMember(
-        override val memberId: String,
-        val email: String,
-        val memberSince: String
-    ) : MemberEvent(memberId)
-
-    data class ThreeYearsAnniversaryThankYouEmailSent(
-        override val memberId: String,
-        val memberSince: String
-    ) : MemberEvent(memberId)
+    abstract val memberId: String
 }
+
+data class NewMembership(
+    override val memberId: String,
+    val memberEmail: String,
+    val subscriptionId: String,
+    val memberSince: String
+) : MemberEvent()
+
+data class WelcomeEmailWasSentToNewMember(
+    override val memberId: String,
+    val email: String,
+    val memberSince: String
+) : MemberEvent()
+
+data class ThreeYearsAnniversaryThankYouEmailSent(
+    override val memberId: String,
+    val memberSince: String
+) : MemberEvent()

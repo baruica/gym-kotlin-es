@@ -1,8 +1,5 @@
 package gym.plans.domain
 
-import gym.plans.domain.PlanEvent.NewPlanCreated
-import gym.plans.domain.PlanEvent.PlanPriceChanged
-
 inline class PlanId(private val id: String) {
     override fun toString(): String = id
 }

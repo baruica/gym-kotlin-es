@@ -1,22 +1,13 @@
 package gym.subscriptions.domain
 
-sealed class SubscriptionEvent(open val subscriptionId: String) {
+import common.DomainEvent
+import java.time.Instant
 
-    data class NewSubscription(
-        override val subscriptionId: String,
-        val subscriptionPrice: Int,
-        val planDurationInMonths: Int,
-        val subscriptionStartDate: String,
-        val subscriptionEndDate: String,
-        val email: String,
-        val isStudent: Boolean
-    ) : SubscriptionEvent(subscriptionId)
+sealed class SubscriptionEvent : DomainEvent {
+    override fun aggregateId(): String = subscriptionId
+    override val created: Instant = Instant.now()
 
-    data class SubscriptionRenewed(
-        override val subscriptionId: String,
-        val oldEndDate: String,
-        val newEndDate: String
-    ) : SubscriptionEvent(subscriptionId)
+    abstract val subscriptionId: String
 
     fun getEndDate(): String {
         return when (this) {
@@ -25,3 +16,19 @@ sealed class SubscriptionEvent(open val subscriptionId: String) {
         }
     }
 }
+
+data class NewSubscription(
+    override val subscriptionId: String,
+    val subscriptionPrice: Int,
+    val planDurationInMonths: Int,
+    val subscriptionStartDate: String,
+    val subscriptionEndDate: String,
+    val email: String,
+    val isStudent: Boolean
+) : SubscriptionEvent()
+
+data class SubscriptionRenewed(
+    override val subscriptionId: String,
+    val oldEndDate: String,
+    val newEndDate: String
+) : SubscriptionEvent()

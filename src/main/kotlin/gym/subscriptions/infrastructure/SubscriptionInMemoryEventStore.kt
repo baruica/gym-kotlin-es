@@ -1,16 +1,12 @@
 package gym.subscriptions.infrastructure
 
-import gym.subscriptions.domain.Subscription
-import gym.subscriptions.domain.SubscriptionEvent
-import gym.subscriptions.domain.SubscriptionEvent.NewSubscription
-import gym.subscriptions.domain.SubscriptionEventStore
-import gym.subscriptions.domain.SubscriptionId
+import gym.subscriptions.domain.*
 import java.time.LocalDate
 import java.util.*
 
 class SubscriptionInMemoryEventStore : SubscriptionEventStore {
 
-    private val events = HashMap<SubscriptionId, MutableList<SubscriptionEvent>>()
+    private val events = mutableMapOf<SubscriptionId, MutableList<SubscriptionEvent>>()
 
     override fun nextId(): SubscriptionId {
         return SubscriptionId(UUID.randomUUID().toString())

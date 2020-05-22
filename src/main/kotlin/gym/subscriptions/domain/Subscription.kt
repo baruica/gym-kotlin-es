@@ -1,7 +1,5 @@
 package gym.subscriptions.domain
 
-import gym.subscriptions.domain.SubscriptionEvent.NewSubscription
-import gym.subscriptions.domain.SubscriptionEvent.SubscriptionRenewed
 import java.time.LocalDate
 
 inline class SubscriptionId(private val id: String) {

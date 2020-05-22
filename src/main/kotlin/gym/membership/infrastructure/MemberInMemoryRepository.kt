@@ -9,7 +9,7 @@ import java.util.*
 
 class MemberInMemoryRepository : MemberRepository {
 
-    private val members = HashMap<MemberId, Member>()
+    private val members = mutableMapOf<MemberId, Member>()
 
     override fun nextId(): MemberId {
         return MemberId(UUID.randomUUID().toString())

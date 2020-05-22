@@ -1,7 +1,7 @@
 package gym.plans.use_cases
 
-import gym.plans.domain.PlanEvent.NewPlanCreated
-import gym.plans.domain.PlanEvent.PlanPriceChanged
+import gym.plans.domain.NewPlanCreated
+import gym.plans.domain.PlanPriceChanged
 import gym.plans.infrastructure.PlanInMemoryEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

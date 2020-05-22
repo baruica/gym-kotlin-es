@@ -1,7 +1,7 @@
 package gym.subscriptions.use_cases
 
-import gym.subscriptions.domain.SubscriptionEvent.NewSubscription
-import gym.subscriptions.domain.SubscriptionEvent.SubscriptionRenewed
+import gym.subscriptions.domain.NewSubscription
+import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.SubscriptionInMemoryEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

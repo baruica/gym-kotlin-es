@@ -1,6 +1,5 @@
 package gym.membership.domain
 
-import gym.membership.domain.MemberEvent.*
 import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
 
@@ -18,7 +17,7 @@ class Member(
 
     init {
         history.add(
-            NewMemberSubscribed(
+            NewMembership(
                 memberId.toString(),
                 email.toString(),
                 subscriptionId.toString(),

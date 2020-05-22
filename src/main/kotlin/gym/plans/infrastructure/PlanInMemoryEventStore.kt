@@ -8,7 +8,7 @@ import java.util.*
 
 class PlanInMemoryEventStore : PlanEventStore {
 
-    private val events = HashMap<PlanId, MutableList<PlanEvent>>()
+    private val events = mutableMapOf<PlanId, MutableList<PlanEvent>>()
 
     override fun nextId(): PlanId {
         return PlanId(UUID.randomUUID().toString())
