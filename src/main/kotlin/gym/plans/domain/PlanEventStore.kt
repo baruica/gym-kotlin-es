@@ -1,12 +1,8 @@
 package gym.plans.domain
 
-interface PlanEventStore {
+import common.EventStore
 
-    fun nextId(): PlanId
-
-    fun store(events: List<PlanEvent>)
+interface PlanEventStore : EventStore {
 
     fun get(planId: PlanId): Plan
-
-    fun getAllEvents(planId: PlanId): List<PlanEvent>
 }

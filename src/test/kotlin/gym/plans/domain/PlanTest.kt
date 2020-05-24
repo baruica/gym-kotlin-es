@@ -1,5 +1,6 @@
 package gym.plans.domain
 
+import common.AggregateHistory
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -33,10 +34,11 @@ class PlanTest {
 
     @Test
     fun `can be restored from events`() {
-        val tested = Plan(PlanId("aggregateId"), 800, 12)
+        val planId = PlanId("planId 42")
+        val tested = Plan(planId, 800, 12)
         tested.changePrice(900)
 
-        val restoredFromEvents = Plan.restoreFrom(tested.history)
+        val restoredFromEvents = Plan.restoreFrom(AggregateHistory(planId, tested.history))
 
         assertEquals(tested, restoredFromEvents)
     }
@@ -44,7 +46,7 @@ class PlanTest {
     @Test
     fun `cannot be restored if no events`() {
         assertFailsWith<IllegalArgumentException> {
-            Plan.restoreFrom(listOf())
+            Plan.restoreFrom(AggregateHistory(PlanId("planId 42"), listOf()))
         }
     }
 }

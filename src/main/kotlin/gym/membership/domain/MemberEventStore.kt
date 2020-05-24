@@ -1,4 +1,5 @@
 package gym.membership.domain
 
-interface MemberEventStore {
-}
+import common.EventStore
+
+interface MemberEventStore : EventStore

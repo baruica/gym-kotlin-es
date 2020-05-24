@@ -1,6 +1,7 @@
 package gym.subscriptions.use_cases
 
 import gym.subscriptions.domain.NewSubscription
+import gym.subscriptions.domain.SubscriptionId
 import gym.subscriptions.infrastructure.SubscriptionInMemoryEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -16,7 +17,7 @@ class SubscribeToPlanTest {
 
         tested.handle(
             SubscribeToPlanCommand(
-                subscriptionId.toString(),
+                subscriptionId,
                 1000,
                 12,
                 "2018-12-18",
@@ -25,13 +26,13 @@ class SubscribeToPlanTest {
             )
         )
 
-        val events = subscriptionEventStore.getAllEvents(subscriptionId)
+        val aggregateHistory = subscriptionEventStore.getAggregateHistoryFor(SubscriptionId(subscriptionId))
 
-        assertEquals(1, events.size)
+        assertEquals(1, aggregateHistory.events.size)
         assertEquals(
-            events.last(),
+            aggregateHistory.events.last(),
             NewSubscription(
-                events.last().subscriptionId,
+                aggregateHistory.aggregateId.toString(),
                 700,
                 12,
                 "2018-12-18",

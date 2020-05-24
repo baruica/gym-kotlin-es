@@ -1,16 +1,11 @@
 package gym.subscriptions.domain
 
+import common.EventStore
 import java.time.LocalDate
 
-interface SubscriptionEventStore {
-
-    fun nextId(): SubscriptionId
-
-    fun store(events: List<SubscriptionEvent>)
+interface SubscriptionEventStore : EventStore {
 
     fun get(subscriptionId: SubscriptionId): Subscription
-
-    fun getAllEvents(subscriptionId: SubscriptionId): List<SubscriptionEvent>
 
     fun subscriptionsEnding(asOfDate: LocalDate): List<Subscription>
 }

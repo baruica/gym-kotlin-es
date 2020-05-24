@@ -1,5 +1,8 @@
 package gym.plans.infrastructure
 
+import common.AggregateHistory
+import common.AggregateId
+import common.DomainEvent
 import gym.plans.domain.Plan
 import gym.plans.domain.PlanEvent
 import gym.plans.domain.PlanEventStore
@@ -10,23 +13,27 @@ class PlanInMemoryEventStore : PlanEventStore {
 
     private val events = mutableMapOf<PlanId, MutableList<PlanEvent>>()
 
-    override fun nextId(): PlanId {
-        return PlanId(UUID.randomUUID().toString())
+    override fun nextId(): String {
+        return UUID.randomUUID().toString()
     }
 
-    override fun store(events: List<PlanEvent>) {
+    override fun store(events: List<DomainEvent>) {
         events.forEach {
-            this.events.getOrPut(PlanId(it.planId)) { mutableListOf() }.add(it)
+            this.events.getOrPut(PlanId(it.aggregateId())) { mutableListOf() }.add(it as PlanEvent)
         }
     }
 
-    override fun getAllEvents(planId: PlanId): List<PlanEvent> {
-        return getAggregateEvents(planId)
+    override fun getAggregateHistoryFor(aggregateId: AggregateId): AggregateHistory {
+        return AggregateHistory(
+            aggregateId,
+            getAggregateEvents(aggregateId)
+        )
     }
 
     override fun get(planId: PlanId): Plan {
-        return Plan.restoreFrom(getAggregateEvents(planId))
+        return Plan.restoreFrom(getAggregateHistoryFor(planId))
     }
 
-    private fun getAggregateEvents(id: PlanId): MutableList<PlanEvent> = this.events.getOrDefault(id, mutableListOf())
+    private fun getAggregateEvents(id: AggregateId): MutableList<PlanEvent> =
+        this.events.getOrDefault(id as PlanId, mutableListOf())
 }

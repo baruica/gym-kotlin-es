@@ -1,6 +1,7 @@
 package gym.plans.use_cases
 
 import gym.plans.domain.NewPlanCreated
+import gym.plans.domain.PlanId
 import gym.plans.domain.PlanPriceChanged
 import gym.plans.infrastructure.PlanInMemoryEventStore
 import org.junit.jupiter.api.Test
@@ -14,20 +15,20 @@ class ChangePlanPriceTest {
         val planId = planEventStore.nextId()
 
         planEventStore.store(listOf(
-            NewPlanCreated(planId.toString(), 450, 12)
+            NewPlanCreated(planId, 450, 12)
         ))
 
         val tested = ChangePlanPrice(planEventStore)
 
         tested.handle(
-            ChangePriceOfPlanCommand(planId.toString(), 400)
+            ChangePriceOfPlanCommand(planId, 400)
         )
 
-        val events = planEventStore.getAllEvents(planId)
+        val aggregateHistory = planEventStore.getAggregateHistoryFor(PlanId(planId))
 
         assertEquals(
-            events.last(),
-            PlanPriceChanged(planId.toString(), 450, 400)
+            aggregateHistory.events.last(),
+            PlanPriceChanged(planId, 450, 400)
         )
     }
 }

@@ -1,6 +1,7 @@
 package gym.subscriptions.use_cases
 
 import gym.subscriptions.domain.NewSubscription
+import gym.subscriptions.domain.SubscriptionId
 import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.SubscriptionInMemoryEventStore
 import org.junit.jupiter.api.Test
@@ -15,7 +16,7 @@ class RenewSubscriptionsAutomaticallyTest {
 
         subscriptionEventStore.store(listOf(
             NewSubscription(
-                subscriptionId.toString(),
+                subscriptionId,
                 300,
                 1,
                 "2018-06-09",
@@ -31,12 +32,12 @@ class RenewSubscriptionsAutomaticallyTest {
             RenewSubscriptionsAutomaticallyCommand("2018-07-09")
         )
 
-        val events = subscriptionEventStore.getAllEvents(subscriptionId)
+        val aggregateHistory = subscriptionEventStore.getAggregateHistoryFor(SubscriptionId(subscriptionId))
 
         assertEquals(
-            events.last(),
+            aggregateHistory.events.last(),
             SubscriptionRenewed(
-                subscriptionId.toString(),
+                subscriptionId,
                 "2018-07-09",
                 "2018-08-08"
             )

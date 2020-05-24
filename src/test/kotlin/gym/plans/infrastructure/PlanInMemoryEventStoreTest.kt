@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class PlanInMemoryEventStoreTest {
 
     @Test
-    fun `what is stores can be retrived`() {
+    fun `what is stored can be retrived`() {
         val tested = PlanInMemoryEventStore()
 
         val planId1Event1 = NewPlanCreated("planId1", 200, 1)
@@ -32,7 +32,7 @@ class PlanInMemoryEventStoreTest {
                 planId1Event2,
                 planId1Event3
             ),
-            tested.getAllEvents(PlanId("planId1"))
+            tested.getAggregateHistoryFor(PlanId("planId1")).events
         )
 
         assertEquals(
@@ -40,7 +40,7 @@ class PlanInMemoryEventStoreTest {
                 planId2Event1,
                 planId2Event2
             ),
-            tested.getAllEvents(PlanId("planId2"))
+            tested.getAggregateHistoryFor(PlanId("planId2")).events
         )
     }
 }

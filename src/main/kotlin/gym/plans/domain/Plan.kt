@@ -1,6 +1,9 @@
 package gym.plans.domain
 
-inline class PlanId(private val id: String) {
+import common.AggregateHistory
+import common.AggregateId
+
+inline class PlanId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
@@ -40,15 +43,15 @@ class Plan private constructor(val planId: PlanId) {
     }
 
     companion object {
-        fun restoreFrom(events: List<PlanEvent>): Plan {
-            require(events.isNotEmpty()) {
+        fun restoreFrom(aggregateHistory: AggregateHistory): Plan {
+            require(aggregateHistory.events.isNotEmpty()) {
                 "Cannot restore without any event."
             }
 
-            val plan = Plan(PlanId(events.last().planId))
+            val plan = Plan(aggregateHistory.aggregateId as PlanId)
 
-            events.forEach {
-                plan.recordEvent(it)
+            aggregateHistory.events.forEach {
+                plan.recordEvent(it as PlanEvent)
             }
 
             return plan
