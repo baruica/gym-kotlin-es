@@ -20,8 +20,8 @@ class SubscribeToPlan(
             command.isStudent
         )
 
-        subscriptionRepository.store(subscription.history)
+        subscriptionRepository.store(subscription.recordedEvents)
 
-        return subscription.history
+        return subscription.recordedEvents
     }
 }

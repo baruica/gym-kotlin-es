@@ -29,7 +29,7 @@ class SubscriptionInMemoryEventStore : SubscriptionEventStore {
     }
 
     override fun get(subscriptionId: SubscriptionId): Subscription {
-        return Subscription.restoreFrom(getAggregateEvents(subscriptionId))
+        return Subscription.restoreFrom(getAggregateHistoryFor(subscriptionId))
     }
 
     override fun subscriptionsEnding(asOfDate: LocalDate): List<Subscription> {
@@ -39,9 +39,11 @@ class SubscriptionInMemoryEventStore : SubscriptionEventStore {
             subscriptionEvents.forEach { subscriptionEvent ->
                 if (subscriptionEvent is NewSubscription) {
                     if (LocalDate.parse(subscriptionEvent.subscriptionEndDate) == asOfDate) {
+                        val subscriptionId = SubscriptionId(subscriptionEvent.subscriptionId)
+
                         subscriptionsEnding.add(
                             Subscription.restoreFrom(
-                                this.events[SubscriptionId(subscriptionEvent.subscriptionId)]!!.toList()
+                                AggregateHistory(subscriptionId, this.events[subscriptionId]!!.toList())
                             )
                         )
                     }

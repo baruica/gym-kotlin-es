@@ -13,24 +13,32 @@ class Plan private constructor(val planId: PlanId) {
     private lateinit var durationInMonths: Duration
 
     constructor(planId: PlanId, priceAmount: Int, durationInMonths: Int) : this(planId) {
+
+        val planPrice = Price(priceAmount)
+        val planDurationInMonths = Duration(durationInMonths)
+
         recordEvent(
             NewPlanCreated(
                 planId.toString(),
-                Price(priceAmount).value,
-                Duration(durationInMonths).value
+                planPrice.amount,
+                planDurationInMonths.durationInMonths
             )
         )
     }
 
-    val history: MutableList<PlanEvent> = mutableListOf()
+    val recordedEvents: MutableList<PlanEvent> = mutableListOf()
 
     private fun recordEvent(event: PlanEvent) {
+        recordedEvents.add(event)
+
+        apply(event)
+    }
+
+    private fun apply(event: PlanEvent) {
         when (event) {
             is NewPlanCreated -> apply(event)
             is PlanPriceChanged -> apply(event)
         }
-
-        history.add(event)
     }
 
     private fun apply(event: NewPlanCreated) {
@@ -48,10 +56,12 @@ class Plan private constructor(val planId: PlanId) {
                 "Cannot restore without any event."
             }
 
-            val plan = Plan(aggregateHistory.aggregateId as PlanId)
+            val plan = Plan(
+                PlanId(aggregateHistory.aggregateId.toString())
+            )
 
             aggregateHistory.events.forEach {
-                plan.recordEvent(it as PlanEvent)
+                plan.apply(it as PlanEvent)
             }
 
             return plan
@@ -66,15 +76,15 @@ class Plan private constructor(val planId: PlanId) {
             recordEvent(
                 PlanPriceChanged(
                     this.planId.toString(),
-                    latestPrice.value,
-                    newPrice.value
+                    latestPrice.amount,
+                    newPrice.amount
                 )
             )
         }
     }
 
     private fun latestPrice(): Price {
-        return Price(history.last().getPrice())
+        return this.price
     }
 
     override fun equals(other: Any?): Boolean {
@@ -98,18 +108,20 @@ class Plan private constructor(val planId: PlanId) {
     }
 }
 
-private data class Price(val value: Int) {
+// invariants
+
+private data class Price(val amount: Int) {
     init {
-        require(value >= 0) {
-            "Price amount must be non-negative, was $value"
+        require(amount >= 0) {
+            "Price amount must be non-negative, was $amount"
         }
     }
 }
 
-private data class Duration(val value: Int) {
+private data class Duration(val durationInMonths: Int) {
     init {
-        require(listOf(1, 12).contains(value)) {
-            "Plan duration is either 1 month or 12 months, was $value"
+        require(listOf(1, 12).contains(durationInMonths)) {
+            "Plan duration is either 1 month or 12 months, was $durationInMonths"
         }
     }
 }

@@ -14,8 +14,8 @@ class CreateNewPlan(private val planEventStore: PlanEventStore) {
             command.planDurationInMonths
         )
 
-        planEventStore.store(newPlan.history)
+        planEventStore.store(newPlan.recordedEvents)
 
-        return newPlan.history
+        return newPlan.recordedEvents
     }
 }

@@ -12,8 +12,8 @@ class ChangePlanPrice(private val planEventStore: PlanEventStore) {
 
         plan.changePrice(command.newPrice)
 
-        planEventStore.store(plan.history)
+        planEventStore.store(plan.recordedEvents)
 
-        return plan.history
+        return plan.recordedEvents
     }
 }

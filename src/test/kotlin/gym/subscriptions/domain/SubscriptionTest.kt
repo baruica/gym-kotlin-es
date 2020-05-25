@@ -1,5 +1,6 @@
 package gym.subscriptions.domain
 
+import common.AggregateHistory
 import gym.fifthOfJune
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -13,32 +14,32 @@ class SubscriptionTest {
     fun `no discount for monthly subscription`() {
         val subscriptionWithoutDiscount = monthlySubscription(300, fifthOfJune(), false)
 
-        assertEquals(300, (subscriptionWithoutDiscount.history.last() as NewSubscription).subscriptionPrice)
+        assertEquals(300, (subscriptionWithoutDiscount.recordedEvents.last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `30% discount for yearly subscription`() {
         val subscriptionWithYearlyDiscount = yearlySubscription(1000, fifthOfJune(), false)
 
-        assertEquals(700, (subscriptionWithYearlyDiscount.history.last() as NewSubscription).subscriptionPrice)
+        assertEquals(700, (subscriptionWithYearlyDiscount.recordedEvents.last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `20% discount for students`() {
         val monthlySubscriptionWithStudentDiscount = monthlySubscription(100, fifthOfJune(), true)
-        assertEquals(80, (monthlySubscriptionWithStudentDiscount.history.last() as NewSubscription).subscriptionPrice)
+        assertEquals(80, (monthlySubscriptionWithStudentDiscount.recordedEvents.last() as NewSubscription).subscriptionPrice)
 
         val yearlySubscriptionWithStudentDiscount = yearlySubscription(100, fifthOfJune(), true)
-        assertEquals(50, (yearlySubscriptionWithStudentDiscount.history.last() as NewSubscription).subscriptionPrice)
+        assertEquals(50, (yearlySubscriptionWithStudentDiscount.recordedEvents.last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `can be renewed`() {
         val subscription = monthlySubscription(100, fifthOfJune(), isStudent = false)
-        assertEquals("2018-07-04", (subscription.history.last()).getEndDate())
+        assertEquals("2018-07-04", (subscription.recordedEvents.last()).getEndDate())
 
         subscription.renew()
-        assertEquals("2018-08-03", (subscription.history.last()).getEndDate())
+        assertEquals("2018-08-03", (subscription.recordedEvents.last()).getEndDate())
     }
 
     @Test
@@ -69,8 +70,9 @@ class SubscriptionTest {
 
     @Test
     fun `can be restored from events`() {
+        val subscriptionId = SubscriptionId("aggregateId")
         val tested = Subscription(
-            SubscriptionId("aggregateId"),
+            subscriptionId,
             LocalDate.parse("2018-07-04"),
             12,
             900,
@@ -79,7 +81,7 @@ class SubscriptionTest {
         )
         tested.renew()
 
-        val restoredFromEvents = Subscription.restoreFrom(tested.history)
+        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(subscriptionId, tested.recordedEvents))
 
         assertEquals(tested, restoredFromEvents)
     }
@@ -87,7 +89,7 @@ class SubscriptionTest {
     @Test
     fun `cannot be restored if no events`() {
         assertFailsWith<IllegalArgumentException> {
-            Subscription.restoreFrom(listOf())
+            Subscription.restoreFrom(AggregateHistory(SubscriptionId("subscriptionId 42"), listOf()))
         }
     }
 

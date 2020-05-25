@@ -19,6 +19,6 @@ class SendWelcomeEmailToNewMember(
 
         memberRepository.store(member)
 
-        return member.history
+        return member.recordedEvents
     }
 }

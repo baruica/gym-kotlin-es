@@ -13,9 +13,9 @@ class RenewSubscriptionsAutomatically(
 
         endedSubscriptionsAsOf.map {
             it.renew()
-            subscriptionEventStore.store(it.history)
+            subscriptionEventStore.store(it.recordedEvents)
         }
 
-        return endedSubscriptionsAsOf.flatMap { it.history }
+        return endedSubscriptionsAsOf.flatMap { it.recordedEvents }
     }
 }

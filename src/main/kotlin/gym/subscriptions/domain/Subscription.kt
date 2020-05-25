@@ -1,5 +1,6 @@
 package gym.subscriptions.domain
 
+import common.AggregateHistory
 import common.AggregateId
 import java.time.LocalDate
 
@@ -23,28 +24,35 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
         isStudent: Boolean
     ) : this(subscriptionId) {
 
+        val subscriptionPrice = Price(price).afterDiscount(planDurationInMonths, isStudent)
+        val subscriptionEndDate = (startDate.plusMonths(planDurationInMonths.toLong())).minusDays(1)
+
         recordEvent(
             NewSubscription(
                 subscriptionId.toString(),
-                Price(price).afterDiscount(planDurationInMonths, isStudent),
+                subscriptionPrice,
                 planDurationInMonths,
                 startDate.toString(),
-                (startDate.plusMonths(planDurationInMonths.toLong())).minusDays(1).toString(),
+                subscriptionEndDate.toString(),
                 email,
                 isStudent
             )
         )
     }
 
-    val history: MutableList<SubscriptionEvent> = mutableListOf()
+    val recordedEvents: MutableList<SubscriptionEvent> = mutableListOf()
 
     private fun recordEvent(event: SubscriptionEvent) {
+        recordedEvents.add(event)
+
+        apply(event)
+    }
+
+    private fun apply(event: SubscriptionEvent) {
         when (event) {
             is NewSubscription -> apply(event)
             is SubscriptionRenewed -> apply(event)
         }
-
-        history.add(event)
     }
 
     private fun apply(event: NewSubscription) {
@@ -59,20 +67,17 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
     }
 
     companion object {
-        fun restoreFrom(events: List<SubscriptionEvent>): Subscription {
-            require(events.isNotEmpty()) {
+        fun restoreFrom(aggregateHistory: AggregateHistory): Subscription {
+            require(aggregateHistory.events.isNotEmpty()) {
                 "Cannot restore without any event."
             }
 
             val subscription = Subscription(
-                SubscriptionId(events.last().subscriptionId)
+                SubscriptionId(aggregateHistory.aggregateId.toString())
             )
 
-            events.forEach {
-                when (it) {
-                    is NewSubscription -> subscription.apply(it)
-                    is SubscriptionRenewed -> subscription.apply(it)
-                }
+            aggregateHistory.events.forEach {
+                subscription.apply(it as SubscriptionEvent)
             }
 
             return subscription
@@ -119,6 +124,8 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
         return result
     }
 }
+
+// invariants
 
 private data class Price(val amount: Int) {
     init {

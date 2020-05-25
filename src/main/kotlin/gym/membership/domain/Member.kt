@@ -14,10 +14,10 @@ class Member(
     private val subscriptionId: SubscriptionId,
     private val memberSince: LocalDate
 ) {
-    val history: MutableList<MemberEvent> = mutableListOf()
+    val recordedEvents: MutableList<MemberEvent> = mutableListOf()
 
     init {
-        history.add(
+        recordedEvents.add(
             NewMembership(
                 memberId.toString(),
                 email.toString(),
@@ -28,7 +28,7 @@ class Member(
     }
 
     fun markWelcomeEmailAsSent() {
-        history.add(
+        recordedEvents.add(
             WelcomeEmailWasSentToNewMember(
                 memberId.toString(),
                 email.email,
@@ -42,7 +42,7 @@ class Member(
     }
 
     fun mark3YearsAnniversaryThankYouEmailAsSent() {
-        history.add(
+        recordedEvents.add(
             ThreeYearsAnniversaryThankYouEmailSent(
                 memberId.toString(),
                 memberSince.toString()
