@@ -10,7 +10,7 @@ interface MemberRepository {
 
     fun get(memberId: MemberId): Member
 
-    fun findByEmail(email: EmailAddress): Member?
+    fun findByEmailAddress(email: EmailAddress): Member?
 
     fun threeYearsAnniversaryMembers(asOfDate: LocalDate): Map<MemberId, Member>
 }

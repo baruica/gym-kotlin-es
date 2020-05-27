@@ -6,7 +6,7 @@ import kotlin.test.assertFailsWith
 class EmailAddressTest {
 
     @Test
-    fun `does not allow invalid emails`() {
+    fun `does not allow an invalid email`() {
         assertFailsWith<IllegalArgumentException> {
             EmailAddress("bob[at]gmail.com")
         }

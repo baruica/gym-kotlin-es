@@ -31,7 +31,7 @@ class Member(
         recordedEvents.add(
             WelcomeEmailWasSentToNewMember(
                 memberId.toString(),
-                email.email,
+                email.value,
                 subscriptionId.toString()
             )
         )

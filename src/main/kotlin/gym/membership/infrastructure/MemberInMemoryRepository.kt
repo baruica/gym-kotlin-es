@@ -24,7 +24,7 @@ class MemberInMemoryRepository : MemberRepository {
             ?: throw MemberRepositoryException.notFound(memberId)
     }
 
-    override fun findByEmail(email: EmailAddress): Member? {
+    override fun findByEmailAddress(email: EmailAddress): Member? {
         return members.filterValues {
             it.email == email
         }.values.firstOrNull()

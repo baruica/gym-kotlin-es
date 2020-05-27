@@ -13,13 +13,13 @@ class NewSubscriptionEventListener(
 ) {
     fun handle(event: NewSubscription): List<MemberEvent> {
 
-        val email = EmailAddress(event.email)
-        val knownMember: Member? = memberRepository.findByEmail(email)
+        val emailAddress = EmailAddress(event.email)
+        val knownMember: Member? = memberRepository.findByEmailAddress(emailAddress)
 
         if (knownMember == null) {
             val member = Member(
                 memberRepository.nextId(),
-                email,
+                emailAddress,
                 SubscriptionId(event.subscriptionId),
                 LocalDate.parse(event.subscriptionStartDate)
             )

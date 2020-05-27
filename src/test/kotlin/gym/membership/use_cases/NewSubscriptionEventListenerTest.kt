@@ -16,7 +16,7 @@ class NewSubscriptionEventListenerTest {
 
         val email = "luke@gmail.com"
 
-        assertNull(memberRepository.findByEmail(EmailAddress(email)))
+        assertNull(memberRepository.findByEmailAddress(EmailAddress(email)))
 
         val subscriptionId = "subscriptionId def"
         val subscriptionStartDate = "2018-06-05"
