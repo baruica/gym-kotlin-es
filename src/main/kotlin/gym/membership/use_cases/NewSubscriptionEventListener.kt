@@ -28,6 +28,6 @@ class NewSubscriptionEventListener(
             return member.recordedEvents
         }
 
-        return listOf()
+        return emptyList()
     }
 }
