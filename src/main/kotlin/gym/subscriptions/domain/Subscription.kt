@@ -96,6 +96,10 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
         )
     }
 
+    fun isOngoing(asOfDate: LocalDate): Boolean {
+        return asOfDate in startDate..endDate
+    }
+
     fun monthlyTurnover(): Double {
         return (price.amount / durationInMonths.value).toDouble()
     }

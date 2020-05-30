@@ -7,6 +7,8 @@ import java.time.LocalDate
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class SubscriptionTest {
 
@@ -44,25 +46,27 @@ class SubscriptionTest {
 
     @Test
     fun `can be ongoing`() {
-        val ongoingSubscription = monthlySubscription(100, fifthOfJune(), isStudent = false)
+        val ongoingSubscription = monthlySubscription(100, fifthOfJune())
 
-        val dateInJune = LocalDate.parse("2018-06-19")
-
-        //assertTrue(ongoingSubscription.isOngoing(dateInJune))
+        assertFalse(ongoingSubscription.isOngoing(LocalDate.parse("2018-06-04")))
+        assertTrue(ongoingSubscription.isOngoing(LocalDate.parse("2018-06-05")))
+        assertTrue(ongoingSubscription.isOngoing(LocalDate.parse("2018-06-19")))
+        assertTrue(ongoingSubscription.isOngoing(LocalDate.parse("2018-07-04")))
+        assertFalse(ongoingSubscription.isOngoing(LocalDate.parse("2018-07-05")))
     }
 
     @Test
     fun `has a monthly turnover`() {
-        val monthlySubscription = monthlySubscription(100, fifthOfJune(), isStudent = false)
+        val monthlySubscription = monthlySubscription(100, fifthOfJune())
         assertEquals(100.0, monthlySubscription.monthlyTurnover())
 
-        val yearlySubscription = yearlySubscription(1200, fifthOfJune(), isStudent = false)
+        val yearlySubscription = yearlySubscription(1200, fifthOfJune())
         assertEquals(70.0, yearlySubscription.monthlyTurnover())
     }
 
     @Test
     fun `can tell if it'll be ended as from a given date`() {
-        val subscriptionEndingEndOfJune = monthlySubscription(100, fifthOfJune(), isStudent = false)
+        val subscriptionEndingEndOfJune = monthlySubscription(100, fifthOfJune())
 
         //assertFalse(subscriptionEndingEndOfJune.willBeEnded(LocalDate.parse("2018-07-04")))
         //assertTrue(subscriptionEndingEndOfJune.willBeEnded(LocalDate.parse("2018-07-05")))
@@ -93,11 +97,11 @@ class SubscriptionTest {
         }
     }
 
-    private fun monthlySubscription(basePrice: Int, startDate: LocalDate, isStudent: Boolean): Subscription {
+    private fun monthlySubscription(basePrice: Int, startDate: LocalDate, isStudent: Boolean = false): Subscription {
         return newSubscription(startDate, basePrice, 1, isStudent)
     }
 
-    private fun yearlySubscription(basePrice: Int, startDate: LocalDate, isStudent: Boolean): Subscription {
+    private fun yearlySubscription(basePrice: Int, startDate: LocalDate, isStudent: Boolean = false): Subscription {
         return newSubscription(startDate, basePrice, 12, isStudent)
     }
 
