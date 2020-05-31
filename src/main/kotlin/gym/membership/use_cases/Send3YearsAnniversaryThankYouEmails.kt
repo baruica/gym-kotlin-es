@@ -2,29 +2,24 @@ package gym.membership.use_cases
 
 import gym.membership.domain.Mailer
 import gym.membership.domain.MemberEvent
-import gym.membership.domain.MemberRepository
+import gym.membership.domain.MemberEventStore
 import java.time.LocalDate
 
 class Send3YearsAnniversaryThankYouEmails(
-    private val memberRepository: MemberRepository,
+    private val eventStore: MemberEventStore,
     private val mailer: Mailer
 ) {
     fun handle(command: Send3YearsAnniversaryThankYouEmailsCommand): List<MemberEvent> {
 
-        val threeYearsAnniversaryMembers = memberRepository.threeYearsAnniversaryMembers(
+        val threeYearsAnniversaryMembers = eventStore.threeYearsAnniversaryMembers(
             LocalDate.parse(command.asOfDate)
         )
 
-        threeYearsAnniversaryMembers.mapValues {
-            mailer.sendEmail(
-                it.value.email,
-                "Thank you for your loyalty ${it.value.email} !"
-            )
-
-            it.value.mark3YearsAnniversaryThankYouEmailAsSent()
+        threeYearsAnniversaryMembers.map {
+            mailer.send3YearsAnniversaryThankYouEmail(it)
         }
 
-        return threeYearsAnniversaryMembers.values.map {
+        return threeYearsAnniversaryMembers.map {
             it.recordedEvents.last()
         }
     }

@@ -8,58 +8,29 @@ inline class SubscriptionId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
-class Subscription private constructor(val subscriptionId: SubscriptionId) {
+class Subscription private constructor(val id: SubscriptionId) {
 
     private lateinit var price: Price
     private lateinit var startDate: LocalDate
     private lateinit var endDate: LocalDate
-    private lateinit var durationInMonths: Duration
-
-    constructor(
-        subscriptionId: SubscriptionId,
-        startDate: LocalDate,
-        planDurationInMonths: Int,
-        price: Int,
-        email: String,
-        isStudent: Boolean
-    ) : this(subscriptionId) {
-
-        val subscriptionPrice = Price(price).afterDiscount(Discount(planDurationInMonths, isStudent))
-        val subscriptionEndDate = (startDate.plusMonths(planDurationInMonths.toLong())).minusDays(1)
-
-        recordEvent(
-            NewSubscription(
-                subscriptionId.toString(),
-                subscriptionPrice,
-                planDurationInMonths,
-                startDate.toString(),
-                subscriptionEndDate.toString(),
-                email,
-                isStudent
-            )
-        )
-    }
+    private lateinit var duration: Duration
 
     val recordedEvents: MutableList<SubscriptionEvent> = mutableListOf()
 
-    private fun recordEvent(event: SubscriptionEvent) {
-        recordedEvents.add(event)
-
-        apply(event)
-    }
-
-    private fun apply(event: SubscriptionEvent) {
+    private fun applyChange(event: SubscriptionEvent) {
         when (event) {
             is NewSubscription -> apply(event)
             is SubscriptionRenewed -> apply(event)
         }
+
+        recordedEvents.add(event)
     }
 
     private fun apply(event: NewSubscription) {
         this.price = Price(event.subscriptionPrice)
         this.startDate = LocalDate.parse(event.subscriptionStartDate)
         this.endDate = LocalDate.parse(event.subscriptionEndDate)
-        this.durationInMonths = Duration(event.planDurationInMonths)
+        this.duration = Duration(event.planDurationInMonths)
     }
 
     private fun apply(event: SubscriptionRenewed) {
@@ -67,6 +38,33 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
     }
 
     companion object {
+        fun subscribe(
+            subscriptionId: SubscriptionId,
+            planDurationInMonths: Int,
+            startDate: LocalDate,
+            planPrice: Int,
+            email: String,
+            isStudent: Boolean
+        ): Subscription {
+            val subscription = Subscription(subscriptionId)
+            val priceAfterDiscount = Price(planPrice).applyDiscount(Discount(planDurationInMonths, isStudent))
+            val subscriptionEndDate = (startDate.plusMonths(planDurationInMonths.toLong())).minusDays(1)
+
+            subscription.applyChange(
+                NewSubscription(
+                    subscriptionId.toString(),
+                    priceAfterDiscount.amount,
+                    Duration(planDurationInMonths).value,
+                    startDate.toString(),
+                    subscriptionEndDate.toString(),
+                    email,
+                    isStudent
+                )
+            )
+
+            return subscription
+        }
+
         fun restoreFrom(aggregateHistory: AggregateHistory): Subscription {
             require(aggregateHistory.events.isNotEmpty()) {
                 "Cannot restore without any event."
@@ -77,7 +75,7 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
             )
 
             aggregateHistory.events.forEach {
-                subscription.apply(it as SubscriptionEvent)
+                subscription.applyChange(it as SubscriptionEvent)
             }
 
             return subscription
@@ -85,11 +83,11 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
     }
 
     fun renew() {
-        val newEndDate = (endDate.plusMonths(durationInMonths.value.toLong())).minusDays(1)
+        val newEndDate = (endDate.plusMonths(duration.value.toLong())).minusDays(1)
 
-        recordEvent(
+        applyChange(
             SubscriptionRenewed(
-                subscriptionId.toString(),
+                id.toString(),
                 endDate.toString(),
                 newEndDate.toString()
             )
@@ -101,7 +99,7 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
     }
 
     fun monthlyTurnover(): Double {
-        return (price.amount / durationInMonths.value).toDouble()
+        return (price.amount / duration.value).toDouble()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -110,21 +108,21 @@ class Subscription private constructor(val subscriptionId: SubscriptionId) {
 
         other as Subscription
 
-        if (subscriptionId != other.subscriptionId) return false
+        if (id != other.id) return false
         if (price != other.price) return false
         if (startDate != other.startDate) return false
         if (endDate != other.endDate) return false
-        if (durationInMonths != other.durationInMonths) return false
+        if (duration != other.duration) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = subscriptionId.hashCode()
+        var result = id.hashCode()
         result = 31 * result + price.hashCode()
         result = 31 * result + startDate.hashCode()
         result = 31 * result + endDate.hashCode()
-        result = 31 * result + durationInMonths.hashCode()
+        result = 31 * result + duration.hashCode()
         return result
     }
 }
@@ -138,8 +136,8 @@ private data class Price(val amount: Int) {
         }
     }
 
-    internal fun afterDiscount(discount: Discount): Int {
-        return (amount.toDouble() * (1 - discount.rate)).toInt()
+    internal fun applyDiscount(discount: Discount): Price {
+        return Price((amount.toDouble() * (1 - discount.rate)).toInt())
     }
 }
 

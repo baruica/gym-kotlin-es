@@ -1,8 +1,10 @@
 package gym.membership.use_cases
 
-import gym.membership.domain.*
+import gym.membership.domain.MemberId
+import gym.membership.domain.NewMemberRegistered
+import gym.membership.domain.WelcomeEmailWasSentToNewMember
 import gym.membership.infrastructure.InMemoryMailer
-import gym.membership.infrastructure.MemberInMemoryRepository
+import gym.membership.infrastructure.MemberInMemoryEventStore
 import gym.subscriptions.domain.SubscriptionId
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -14,40 +16,37 @@ class SendWelcomeEmailToNewMemberTest {
     @Test
     fun handle() {
 
-        val memberId = MemberId("abc")
-        val email = "bob@gmail.com"
-        val subscriptionId = SubscriptionId("def")
-        val startDate = LocalDate.now()
-        val member = Member(
-            memberId,
-            EmailAddress(email),
-            subscriptionId,
-            startDate
-        )
-        val memberRepository = MemberInMemoryRepository()
-        memberRepository.store(member)
+        val memberId = MemberId("member abc")
+        val emailAddress = "bob@gmail.com"
+        val subscriptionId = SubscriptionId("subscription def")
+        val memberSince = LocalDate.now()
+
+        val memberEventStore = MemberInMemoryEventStore()
+        memberEventStore.store(listOf(
+            NewMemberRegistered(
+                memberId.toString(),
+                emailAddress,
+                subscriptionId.toString(),
+                memberSince.toString()
+            )
+        ))
 
         val mailer = InMemoryMailer()
 
-        val tested = SendWelcomeEmailToNewMember(memberRepository, mailer)
+        val tested = SendWelcomeEmailToNewMember(memberEventStore, mailer)
 
         val events = tested.handle(
-            NewMembership(
-                memberId.toString(),
-                email,
-                subscriptionId.toString(),
-                startDate.toString()
-            )
+            SendWelcomeEmailToNewMemberCommand(memberId.toString())
         )
 
         assertEquals(
             events.last(),
             WelcomeEmailWasSentToNewMember(
                 memberId.toString(),
-                email,
-                subscriptionId.toString()
+                emailAddress,
+                memberSince.toString()
             )
         )
-        assertTrue(mailer.sentEmails.containsValue("Thank you for subscribing bob@gmail.com !"))
+        assertTrue(mailer.welcomeEmailWasSentTo("bob@gmail.com"))
     }
 }

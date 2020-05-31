@@ -1,23 +1,21 @@
 package gym.membership.use_cases
 
-import gym.membership.domain.*
+import gym.membership.domain.Mailer
+import gym.membership.domain.MemberEvent
+import gym.membership.domain.MemberEventStore
+import gym.membership.domain.MemberId
 
 class SendWelcomeEmailToNewMember(
-    private val memberRepository: MemberRepository,
+    private val eventStore: MemberEventStore,
     private val mailer: Mailer
 ) {
-    fun handle(event: NewMembership): List<MemberEvent> {
+    fun handle(event: SendWelcomeEmailToNewMemberCommand): List<MemberEvent> {
 
-        val member: Member = memberRepository.get(MemberId(event.memberId))
+        val member = eventStore.get(MemberId(event.memberId))
 
-        mailer.sendEmail(
-            member.email,
-            "Thank you for subscribing ${member.email} !"
-        )
+        mailer.sendWelcomeEmail(member)
 
-        member.markWelcomeEmailAsSent()
-
-        memberRepository.store(member)
+        eventStore.store(member.recordedEvents)
 
         return member.recordedEvents
     }

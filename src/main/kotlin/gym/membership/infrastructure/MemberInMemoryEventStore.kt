@@ -3,9 +3,8 @@ package gym.membership.infrastructure
 import common.AggregateHistory
 import common.AggregateId
 import common.DomainEvent
-import gym.membership.domain.MemberEvent
-import gym.membership.domain.MemberEventStore
-import gym.membership.domain.MemberId
+import gym.membership.domain.*
+import java.time.LocalDate
 import java.util.*
 
 class MemberInMemoryEventStore : MemberEventStore {
@@ -26,6 +25,36 @@ class MemberInMemoryEventStore : MemberEventStore {
         return AggregateHistory(
             aggregateId,
             getAggregateEvents(aggregateId)
+        )
+    }
+
+    override fun get(memberId: MemberId): Member {
+        return Member.restoreFrom(getAggregateHistoryFor(memberId))
+    }
+
+    override fun findByEmailAddress(emailAddress: EmailAddress): Member? {
+        events.values.forEach { memberEvents ->
+            memberEvents.forEach { memberEvent ->
+                if (memberEvent.getEmailAddress() == emailAddress.value) {
+                    return restoreMember(memberEvent.aggregateId())
+                }
+            }
+        }
+
+        return null
+    }
+
+    override fun threeYearsAnniversaryMembers(date: LocalDate): List<Member> {
+        return events.keys
+            .map { memberId -> restoreMember(memberId.toString()) }
+            .filter { member -> member.isThreeYearsAnniversary(date) }
+    }
+
+    private fun restoreMember(aggregateId: String): Member {
+        val memberId = MemberId(aggregateId)
+
+        return Member.restoreFrom(
+            AggregateHistory(memberId, this.events[memberId]!!.toList())
         )
     }
 

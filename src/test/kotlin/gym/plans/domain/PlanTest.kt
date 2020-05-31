@@ -10,24 +10,24 @@ class PlanTest {
     @Test
     fun `a duration cannot be anything but 1 month or 12 months`() {
         assertFailsWith<IllegalArgumentException> {
-            Plan(PlanId("abc"), 400, 4)
+            Plan.new(PlanId("abc"), 400, 4)
         }
     }
 
     @Test
     fun `a price cannot be negative`() {
         assertFailsWith<IllegalArgumentException> {
-            Plan(PlanId("abc"), -10, 1)
+            Plan.new(PlanId("abc"), -10, 1)
         }
     }
 
     @Test
     fun `can change its price`() {
-        val tested = Plan(PlanId("abc"), 400, 1)
+        val tested = Plan.new(PlanId("abc"), 400, 1)
         tested.changePrice(500)
 
         assertEquals(
-            Plan(PlanId("abc"), 500, 1),
+            Plan.new(PlanId("abc"), 500, 1),
             tested
         )
     }
@@ -35,7 +35,7 @@ class PlanTest {
     @Test
     fun `can be restored from events`() {
         val planId = PlanId("planId 42")
-        val tested = Plan(planId, 800, 12)
+        val tested = Plan.new(planId, 800, 12)
         tested.changePrice(900)
 
         val restoredFromEvents = Plan.restoreFrom(AggregateHistory(planId, tested.recordedEvents))

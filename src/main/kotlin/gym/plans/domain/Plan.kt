@@ -10,40 +10,22 @@ inline class PlanId(private val id: String) : AggregateId {
 class Plan private constructor(val planId: PlanId) {
 
     private lateinit var price: Price
-    private lateinit var durationInMonths: Duration
-
-    constructor(planId: PlanId, priceAmount: Int, durationInMonths: Int) : this(planId) {
-
-        val planPrice = Price(priceAmount)
-        val planDurationInMonths = Duration(durationInMonths)
-
-        recordEvent(
-            NewPlanCreated(
-                planId.toString(),
-                planPrice.amount,
-                planDurationInMonths.durationInMonths
-            )
-        )
-    }
+    private lateinit var duration: Duration
 
     val recordedEvents: MutableList<PlanEvent> = mutableListOf()
 
-    private fun recordEvent(event: PlanEvent) {
-        recordedEvents.add(event)
-
-        apply(event)
-    }
-
-    private fun apply(event: PlanEvent) {
+    private fun applyChange(event: PlanEvent) {
         when (event) {
             is NewPlanCreated -> apply(event)
             is PlanPriceChanged -> apply(event)
         }
+
+        recordedEvents.add(event)
     }
 
     private fun apply(event: NewPlanCreated) {
         this.price = Price(event.planPrice)
-        this.durationInMonths = Duration(event.planDurationInMonths)
+        this.duration = Duration(event.planDurationInMonths)
     }
 
     private fun apply(event: PlanPriceChanged) {
@@ -51,6 +33,26 @@ class Plan private constructor(val planId: PlanId) {
     }
 
     companion object {
+        fun new(
+            id: PlanId,
+            priceAmount: Int,
+            durationInMonths: Int
+        ): Plan {
+            val plan = Plan(id)
+            val price = Price(priceAmount)
+            val duration = Duration(durationInMonths)
+
+            plan.applyChange(
+                NewPlanCreated(
+                    id.toString(),
+                    price.amount,
+                    duration.durationInMonths
+                )
+            )
+
+            return plan
+        }
+
         fun restoreFrom(aggregateHistory: AggregateHistory): Plan {
             require(aggregateHistory.events.isNotEmpty()) {
                 "Cannot restore without any event."
@@ -61,7 +63,7 @@ class Plan private constructor(val planId: PlanId) {
             )
 
             aggregateHistory.events.forEach {
-                plan.apply(it as PlanEvent)
+                plan.applyChange(it as PlanEvent)
             }
 
             return plan
@@ -70,21 +72,16 @@ class Plan private constructor(val planId: PlanId) {
 
     fun changePrice(newPriceAmount: Int) {
         val newPrice = Price(newPriceAmount)
-        val latestPrice = latestPrice()
 
-        if (latestPrice != newPrice) {
-            recordEvent(
+        if (price != newPrice) {
+            applyChange(
                 PlanPriceChanged(
                     this.planId.toString(),
-                    latestPrice.amount,
+                    price.amount,
                     newPrice.amount
                 )
             )
         }
-    }
-
-    private fun latestPrice(): Price {
-        return this.price
     }
 
     override fun equals(other: Any?): Boolean {
@@ -95,7 +92,7 @@ class Plan private constructor(val planId: PlanId) {
 
         if (planId != other.planId) return false
         if (price != other.price) return false
-        if (durationInMonths != other.durationInMonths) return false
+        if (duration != other.duration) return false
 
         return true
     }
@@ -103,7 +100,7 @@ class Plan private constructor(val planId: PlanId) {
     override fun hashCode(): Int {
         var result = planId.hashCode()
         result = 31 * result + price.hashCode()
-        result = 31 * result + durationInMonths.hashCode()
+        result = 31 * result + duration.hashCode()
         return result
     }
 }

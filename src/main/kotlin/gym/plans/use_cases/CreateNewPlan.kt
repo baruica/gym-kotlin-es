@@ -4,18 +4,18 @@ import gym.plans.domain.Plan
 import gym.plans.domain.PlanEvent
 import gym.plans.domain.PlanEventStore
 
-class CreateNewPlan(private val planEventStore: PlanEventStore) {
+class CreateNewPlan(private val eventStore: PlanEventStore) {
 
     fun handle(command: CreateNewPlanCommand): List<PlanEvent> {
 
-        val newPlan = Plan(
+        val plan = Plan.new(
             command.planId,
             command.planPrice,
             command.planDurationInMonths
         )
 
-        planEventStore.store(newPlan.recordedEvents)
+        eventStore.store(plan.recordedEvents)
 
-        return newPlan.recordedEvents
+        return plan.recordedEvents
     }
 }

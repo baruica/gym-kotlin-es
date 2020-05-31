@@ -7,20 +7,20 @@ import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
 
 class SubscribeToPlan(
-    private val subscriptionRepository: SubscriptionEventStore
+    private val eventStore: SubscriptionEventStore
 ) {
     fun handle(command: SubscribeToPlanCommand): List<SubscriptionEvent> {
 
-        val subscription = Subscription(
+        val subscription = Subscription.subscribe(
             SubscriptionId(command.subscriptionId),
-            LocalDate.parse(command.startDate),
             command.planDurationInMonths,
+            LocalDate.parse(command.startDate),
             command.planPrice,
             command.email,
             command.isStudent
         )
 
-        subscriptionRepository.store(subscription.recordedEvents)
+        eventStore.store(subscription.recordedEvents)
 
         return subscription.recordedEvents
     }
