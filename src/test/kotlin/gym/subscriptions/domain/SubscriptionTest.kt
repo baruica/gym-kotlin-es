@@ -58,10 +58,10 @@ class SubscriptionTest {
     @Test
     fun `has a monthly turnover`() {
         val monthlySubscription = monthlySubscription(100, fifthOfJune())
-        assertEquals(100.0, monthlySubscription.monthlyTurnover())
+        assertEquals(100, monthlySubscription.monthlyTurnover())
 
         val yearlySubscription = yearlySubscription(1200, fifthOfJune())
-        assertEquals(70.0, yearlySubscription.monthlyTurnover())
+        assertEquals(70, yearlySubscription.monthlyTurnover())
     }
 
     @Test

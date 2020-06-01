@@ -58,9 +58,9 @@ class TurnoverForAGivenMonthTest {
         val tested = TurnoverForAGivenMonth(subscriptionEventStore)
 
         assertEquals(2, subscriptionEventStore.onGoingSubscriptions(today).size)
-        assertEquals(83.toDouble(), tested.handle(TurnoverForAGivenMonthQuery(today)))
+        assertEquals(83, tested.handle(TurnoverForAGivenMonthQuery(today)))
 
         assertEquals(3, subscriptionEventStore.onGoingSubscriptions(inTwoMonths).size)
-        assertEquals(124.toDouble(), tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)))
+        assertEquals(124, tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)))
     }
 }

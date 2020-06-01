@@ -98,8 +98,8 @@ class Subscription private constructor(val id: SubscriptionId) {
         return asOfDate in startDate..endDate
     }
 
-    fun monthlyTurnover(): Double {
-        return (price.amount / duration.value).toDouble()
+    fun monthlyTurnover(): Int {
+        return (price.amount / duration.value)
     }
 
     override fun equals(other: Any?): Boolean {
