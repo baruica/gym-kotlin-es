@@ -19,12 +19,8 @@
   - *Value Object* ([read](https://dev.to/flbenz/kotlin-and-domain-driven-design-value-objects-4m32))
   - *Domain Event* ([read](http://verraes.net/2014/11/domain-events/))
   - *Repository*
-- *Aggregate* ids are provided by their *repository* ([read](https://matthiasnoback.nl/2018/05/when-and-where-to-determine-the-id-of-an-entity/))
+- *Aggregate* ids are provided by their *event store* ([read](https://matthiasnoback.nl/2018/05/when-and-where-to-determine-the-id-of-an-entity/))
 - *Aggregate* ids have their own types ([read](https://buildplease.com/pages/vo-ids/))
+- *Aggregate roots* are constructed through factory methods ([read](https://buildplease.com/pages/constructing-aggregates/))
 - *Domain events* are put aside during the aggregate's execution, then "collected" and published by the use case ([read](https://lostechies.com/jimmybogard/2014/05/13/a-better-domain-events-pattern/))
 - avoid *get/set* prefixes ([read](https://blog.pragmatists.com/refactoring-from-anemic-model-to-ddd-880d3dd3d45f))
-
-## Links
-
-- [Arnaud Lemaire's "DDD & CQRS" talk](https://www.youtube.com/watch?v=qBLtZN3p3FU)
-  - [Slides](https://speakerdeck.com/lilobase/ddd-and-cqrs-php-tour-2018)
