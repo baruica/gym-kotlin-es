@@ -132,7 +132,7 @@ class Subscription private constructor(val id: SubscriptionId) {
 private data class Price(val amount: Int) {
     init {
         require(amount >= 0) {
-            "Price amount must be non-negative, was $amount"
+            "Price amount must be non-negative, was [$amount]"
         }
     }
 
@@ -155,7 +155,7 @@ internal data class Discount(internal var rate: Double = 0.0) {
 private data class Duration(val value: Int) {
     init {
         require(listOf(1, 12).contains(value)) {
-            "Plan duration is either 1 month or 12 months, was $value"
+            "Plan duration is either 1 month or 12 months, was [$value]"
         }
     }
 }

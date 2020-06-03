@@ -110,7 +110,7 @@ class Plan private constructor(val planId: PlanId) {
 private data class Price(val amount: Int) {
     init {
         require(amount >= 0) {
-            "Price amount must be non-negative, was $amount"
+            "Price amount must be non-negative, was [$amount]"
         }
     }
 }
@@ -118,7 +118,7 @@ private data class Price(val amount: Int) {
 private data class Duration(val durationInMonths: Int) {
     init {
         require(listOf(1, 12).contains(durationInMonths)) {
-            "Plan duration is either 1 month or 12 months, was $durationInMonths"
+            "Plan duration is either 1 month or 12 months, was [$durationInMonths]"
         }
     }
 }
