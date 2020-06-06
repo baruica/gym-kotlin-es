@@ -121,8 +121,6 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     }
 }
 
-// invariants
-
 private data class Price(val amount: Int) {
     init {
         require(amount >= 0) {

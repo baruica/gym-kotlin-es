@@ -99,8 +99,6 @@ class Plan private constructor(planId: PlanId) : Aggregate<PlanId>(planId) {
     }
 }
 
-// invariants
-
 private data class Price(val amount: Int) {
     init {
         require(amount >= 0) {

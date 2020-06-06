@@ -9,18 +9,18 @@ data class AggregateHistory(
 
 abstract class Aggregate<T : Any>(val id: T) {
 
-    internal val occuredEvents: MutableList<DomainEvent> = mutableListOf()
+    internal val events: MutableList<DomainEvent> = mutableListOf()
 
     fun occuredEvents(): List<DomainEvent> {
-        val events = occuredEvents.toMutableList()
-        occuredEvents.clear()
+        val occuredEvents = events.toMutableList()
+        events.clear()
 
-        return events
+        return occuredEvents
     }
 
     protected fun applyChange(event: DomainEvent) {
         whenEvent(event)
-        occuredEvents.add(event)
+        events.add(event)
     }
 
     protected abstract fun whenEvent(event: DomainEvent)

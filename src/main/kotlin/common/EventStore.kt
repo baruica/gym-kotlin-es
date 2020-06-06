@@ -9,7 +9,7 @@ interface EventStore {
     }
 
     fun store(aggregate: Aggregate<out AggregateId>) {
-        store(aggregate.occuredEvents)
+        store(aggregate.events)
     }
 
     fun store(events: List<DomainEvent>)
