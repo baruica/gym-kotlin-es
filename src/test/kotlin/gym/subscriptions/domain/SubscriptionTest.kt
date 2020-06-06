@@ -69,7 +69,7 @@ class SubscriptionTest {
         val tested = Subscription.subscribe(
             "aggregateId",
             12,
-            "2018-07-04",
+            LocalDate.parse("2018-07-04"),
             900,
             "Han@gmail.com",
             isStudent = false
@@ -89,16 +89,16 @@ class SubscriptionTest {
         }
     }
 
-    private fun monthlySubscription(basePrice: Int, startDate: LocalDate, isStudent: Boolean = false): Subscription {
-        return newSubscription(startDate, basePrice, 1, isStudent)
+    private fun monthlySubscription(basePrice: Int, subscriptionDate: LocalDate, isStudent: Boolean = false): Subscription {
+        return newSubscription(subscriptionDate, basePrice, 1, isStudent)
     }
 
-    private fun yearlySubscription(basePrice: Int, startDate: LocalDate, isStudent: Boolean = false): Subscription {
-        return newSubscription(startDate, basePrice, 12, isStudent)
+    private fun yearlySubscription(basePrice: Int, subscriptionDate: LocalDate, isStudent: Boolean = false): Subscription {
+        return newSubscription(subscriptionDate, basePrice, 12, isStudent)
     }
 
     private fun newSubscription(
-        startDate: LocalDate,
+        subscriptionDate: LocalDate,
         basePrice: Int,
         durationInMonths: Int,
         isStudent: Boolean
@@ -106,7 +106,7 @@ class SubscriptionTest {
         return Subscription.subscribe(
             UUID.randomUUID().toString(),
             durationInMonths,
-            startDate.toString(),
+            subscriptionDate,
             basePrice,
             "luke@gmail.com",
             isStudent

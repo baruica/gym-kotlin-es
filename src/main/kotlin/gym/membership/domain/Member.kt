@@ -39,7 +39,7 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
             id: String,
             emailAddress: EmailAddress,
             subscriptionId: SubscriptionId,
-            memberSince: String
+            memberSince: LocalDate
         ): Member {
             val member = Member(MemberId(id))
 
@@ -48,7 +48,7 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
                     member.id.toString(),
                     emailAddress.toString(),
                     subscriptionId.toString(),
-                    LocalDate.parse(memberSince).toString()
+                    memberSince.toString()
                 )
             )
 

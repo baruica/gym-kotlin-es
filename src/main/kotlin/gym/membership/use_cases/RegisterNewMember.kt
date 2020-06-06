@@ -5,6 +5,7 @@ import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEventStore
 import gym.subscriptions.domain.SubscriptionId
+import java.time.LocalDate
 
 class RegisterNewMember(
     private val eventStore: MemberEventStore
@@ -19,7 +20,7 @@ class RegisterNewMember(
                 eventStore.nextId(),
                 emailAddress,
                 SubscriptionId(command.subscriptionId),
-                command.subscriptionStartDate
+                LocalDate.parse(command.subscriptionStartDate)
             )
             eventStore.store(member)
 

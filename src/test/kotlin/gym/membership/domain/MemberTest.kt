@@ -18,7 +18,7 @@ class MemberTest {
             "member abc",
             EmailAddress("julie@gmail.com"),
             SubscriptionId("def"),
-            fifthOfJune().minusYears(3).toString()
+            fifthOfJune().minusYears(3)
         )
 
         assertFalse(memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-04")))
@@ -32,7 +32,7 @@ class MemberTest {
             "aggregateId",
             EmailAddress("julie@gmail.com"),
             SubscriptionId("subscription 42"),
-            LocalDate.now().toString()
+            LocalDate.now()
         )
         tested.markWelcomeEmailAsSent()
 
