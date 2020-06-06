@@ -19,25 +19,19 @@ class Member private constructor(val id: MemberId) : Aggregate() {
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
-            is NewMemberRegistered -> apply(event)
-            is WelcomeEmailWasSentToNewMember -> apply(event)
-            is ThreeYearsAnniversaryThankYouEmailSent -> apply(event)
+            is NewMemberRegistered -> {
+                emailAddress = EmailAddress(event.memberEmailAddress)
+                subscriptionId = SubscriptionId(event.subscriptionId).toString()
+                memberSince = LocalDate.parse(event.memberSince)
+            }
+            is WelcomeEmailWasSentToNewMember -> {
+                emailAddress = EmailAddress(event.memberEmailAddress)
+                memberSince = LocalDate.parse(event.memberSince)
+            }
+            is ThreeYearsAnniversaryThankYouEmailSent -> {
+                memberSince = LocalDate.parse(event.memberSince)
+            }
         }
-    }
-
-    private fun apply(event: NewMemberRegistered) {
-        emailAddress = EmailAddress(event.memberEmailAddress)
-        subscriptionId = SubscriptionId(event.subscriptionId).toString()
-        memberSince = LocalDate.parse(event.memberSince)
-    }
-
-    private fun apply(event: WelcomeEmailWasSentToNewMember) {
-        emailAddress = EmailAddress(event.memberEmailAddress)
-        memberSince = LocalDate.parse(event.memberSince)
-    }
-
-    private fun apply(event: ThreeYearsAnniversaryThankYouEmailSent) {
-        memberSince = LocalDate.parse(event.memberSince)
     }
 
     companion object {

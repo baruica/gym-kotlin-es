@@ -15,7 +15,7 @@ class SendWelcomeEmailToNewMember(
 
         mailer.sendWelcomeEmail(member)
 
-        eventStore.store(member.changes)
+        eventStore.store(member)
 
         return member.changes
     }

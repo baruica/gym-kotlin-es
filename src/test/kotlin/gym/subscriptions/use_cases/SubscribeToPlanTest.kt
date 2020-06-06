@@ -26,7 +26,7 @@ class SubscribeToPlanTest {
             )
         )
 
-        val aggregateHistory = subscriptionEventStore.getAggregateHistoryFor(SubscriptionId(subscriptionId))
+        val aggregateHistory = subscriptionEventStore.getAggregateHistory(SubscriptionId(subscriptionId))
 
         assertEquals(1, aggregateHistory.events.size)
         assertEquals(

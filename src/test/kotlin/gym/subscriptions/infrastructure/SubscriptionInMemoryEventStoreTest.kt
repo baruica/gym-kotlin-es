@@ -29,7 +29,7 @@ class SubscriptionInMemoryEventStoreTest {
                 subscriptionId1Event1,
                 subscriptionId1Event2
             ),
-            tested.getAggregateHistoryFor(SubscriptionId("subscriptionId1")).events
+            tested.getAggregateHistory(SubscriptionId("subscriptionId1")).events
         )
 
         assertEquals(
@@ -37,7 +37,7 @@ class SubscriptionInMemoryEventStoreTest {
                 subscriptionId2Event1,
                 subscriptionId2Event2
             ),
-            tested.getAggregateHistoryFor(SubscriptionId("subscriptionId2")).events
+            tested.getAggregateHistory(SubscriptionId("subscriptionId2")).events
         )
     }
 }

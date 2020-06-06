@@ -5,15 +5,10 @@ import common.AggregateId
 import common.DomainEvent
 import gym.membership.domain.*
 import java.time.LocalDate
-import java.util.*
 
 class MemberInMemoryEventStore : MemberEventStore {
 
     private val events = mutableMapOf<MemberId, MutableList<MemberEvent>>()
-
-    override fun nextId(): String {
-        return UUID.randomUUID().toString()
-    }
 
     override fun store(events: List<DomainEvent>) {
         events.forEach {
@@ -21,16 +16,12 @@ class MemberInMemoryEventStore : MemberEventStore {
         }
     }
 
-    override fun getAggregateHistoryFor(aggregateId: AggregateId): AggregateHistory {
-        return AggregateHistory(
-            aggregateId,
-            getAggregateEvents(aggregateId)
-        )
+    override fun get(memberId: MemberId): Member {
+        return Member.restoreFrom(getAggregateHistory(memberId))
     }
 
-    override fun get(memberId: MemberId): Member {
-        return Member.restoreFrom(getAggregateHistoryFor(memberId))
-    }
+    override fun getAggregateEvents(aggregateId: AggregateId): MutableList<MemberEvent> =
+        this.events.getOrDefault(aggregateId as MemberId, mutableListOf())
 
     override fun findByEmailAddress(emailAddress: EmailAddress): Member? {
         events.values.forEach { memberEvents ->
@@ -57,7 +48,4 @@ class MemberInMemoryEventStore : MemberEventStore {
             AggregateHistory(memberId, this.events[memberId]!!.toList())
         )
     }
-
-    private fun getAggregateEvents(id: AggregateId): MutableList<MemberEvent> =
-        this.events.getOrDefault(id as MemberId, mutableListOf())
 }

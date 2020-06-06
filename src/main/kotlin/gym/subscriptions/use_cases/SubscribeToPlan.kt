@@ -20,7 +20,7 @@ class SubscribeToPlan(
             command.isStudent
         )
 
-        eventStore.store(subscription.changes)
+        eventStore.store(subscription)
 
         return subscription.changes
     }

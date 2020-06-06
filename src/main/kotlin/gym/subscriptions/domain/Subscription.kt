@@ -19,20 +19,16 @@ class Subscription private constructor(val id: SubscriptionId) : Aggregate() {
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
-            is NewSubscription -> apply(event)
-            is SubscriptionRenewed -> apply(event)
+            is NewSubscription -> {
+                price = Price(event.subscriptionPrice)
+                startDate = LocalDate.parse(event.subscriptionStartDate)
+                endDate = LocalDate.parse(event.subscriptionEndDate)
+                duration = Duration(event.planDurationInMonths)
+            }
+            is SubscriptionRenewed -> {
+                endDate = LocalDate.parse(event.newEndDate)
+            }
         }
-    }
-
-    private fun apply(event: NewSubscription) {
-        this.price = Price(event.subscriptionPrice)
-        this.startDate = LocalDate.parse(event.subscriptionStartDate)
-        this.endDate = LocalDate.parse(event.subscriptionEndDate)
-        this.duration = Duration(event.planDurationInMonths)
-    }
-
-    private fun apply(event: SubscriptionRenewed) {
-        this.endDate = LocalDate.parse(event.newEndDate)
     }
 
     companion object {

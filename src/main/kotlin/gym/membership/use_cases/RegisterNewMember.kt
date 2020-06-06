@@ -23,7 +23,7 @@ class RegisterNewMember(
                 SubscriptionId(command.subscriptionId),
                 LocalDate.parse(command.subscriptionStartDate)
             )
-            eventStore.store(member.changes)
+            eventStore.store(member)
 
             return member.changes
         }

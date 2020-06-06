@@ -16,18 +16,14 @@ class Plan private constructor(val id: PlanId) : Aggregate() {
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
-            is NewPlanCreated -> apply(event)
-            is PlanPriceChanged -> apply(event)
+            is NewPlanCreated -> {
+                price = Price(event.planPrice)
+                duration = Duration(event.planDurationInMonths)
+            }
+            is PlanPriceChanged -> {
+                price = Price(event.newPrice)
+            }
         }
-    }
-
-    private fun apply(event: NewPlanCreated) {
-        this.price = Price(event.planPrice)
-        this.duration = Duration(event.planDurationInMonths)
-    }
-
-    private fun apply(event: PlanPriceChanged) {
-        this.price = Price(event.newPrice)
     }
 
     companion object {

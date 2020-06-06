@@ -24,7 +24,7 @@ class ChangePlanPriceTest {
             ChangePriceOfPlanCommand(planId, 400)
         )
 
-        val aggregateHistory = planEventStore.getAggregateHistoryFor(PlanId(planId))
+        val aggregateHistory = planEventStore.getAggregateHistory(PlanId(planId))
 
         assertEquals(
             aggregateHistory.events.last(),

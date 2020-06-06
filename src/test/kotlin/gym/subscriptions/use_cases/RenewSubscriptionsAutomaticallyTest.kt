@@ -32,7 +32,7 @@ class RenewSubscriptionsAutomaticallyTest {
             RenewSubscriptionsAutomaticallyCommand("2018-07-09")
         )
 
-        val aggregateHistory = subscriptionEventStore.getAggregateHistoryFor(SubscriptionId(subscriptionId))
+        val aggregateHistory = subscriptionEventStore.getAggregateHistory(SubscriptionId(subscriptionId))
 
         assertEquals(
             aggregateHistory.events.last(),

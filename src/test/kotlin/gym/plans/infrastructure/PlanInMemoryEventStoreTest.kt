@@ -32,7 +32,7 @@ class PlanInMemoryEventStoreTest {
                 planId1Event2,
                 planId1Event3
             ),
-            tested.getAggregateHistoryFor(PlanId("planId1")).events
+            tested.getAggregateHistory(PlanId("planId1")).events
         )
 
         assertEquals(
@@ -40,7 +40,7 @@ class PlanInMemoryEventStoreTest {
                 planId2Event1,
                 planId2Event2
             ),
-            tested.getAggregateHistoryFor(PlanId("planId2")).events
+            tested.getAggregateHistory(PlanId("planId2")).events
         )
     }
 }
