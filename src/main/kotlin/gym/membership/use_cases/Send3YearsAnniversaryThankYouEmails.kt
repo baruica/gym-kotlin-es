@@ -20,7 +20,7 @@ class Send3YearsAnniversaryThankYouEmails(
         }
 
         return threeYearsAnniversaryMembers.map {
-            it.changes.last()
+            it.occuredEvents().last()
         }
     }
 }

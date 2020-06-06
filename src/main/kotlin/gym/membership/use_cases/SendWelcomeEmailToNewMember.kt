@@ -17,6 +17,6 @@ class SendWelcomeEmailToNewMember(
 
         eventStore.store(member)
 
-        return member.changes
+        return member.occuredEvents()
     }
 }

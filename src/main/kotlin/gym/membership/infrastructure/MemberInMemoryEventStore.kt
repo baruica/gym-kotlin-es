@@ -12,7 +12,7 @@ class MemberInMemoryEventStore : MemberEventStore {
 
     override fun store(events: List<DomainEvent>) {
         events.forEach {
-            this.events.getOrPut(MemberId(it.aggregateId())) { mutableListOf() }.add(it as MemberEvent)
+            this.events.getOrPut(MemberId(it.getAggregateId())) { mutableListOf() }.add(it as MemberEvent)
         }
     }
 
@@ -27,7 +27,7 @@ class MemberInMemoryEventStore : MemberEventStore {
         events.values.forEach { memberEvents ->
             memberEvents.forEach { memberEvent ->
                 if (memberEvent.getEmailAddress() == emailAddress.value) {
-                    return restoreMember(memberEvent.aggregateId())
+                    return restoreMember(memberEvent.getAggregateId())
                 }
             }
         }

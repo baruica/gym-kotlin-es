@@ -16,6 +16,6 @@ class RenewSubscriptionsAutomatically(
             eventStore.store(it)
         }
 
-        return endedSubscriptionsAsOf.flatMap { it.changes }
+        return endedSubscriptionsAsOf.flatMap { it.occuredEvents() }
     }
 }

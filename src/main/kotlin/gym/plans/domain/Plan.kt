@@ -9,7 +9,7 @@ inline class PlanId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
-class Plan private constructor(val id: PlanId) : Aggregate() {
+class Plan private constructor(planId: PlanId) : Aggregate<PlanId>(planId) {
 
     private lateinit var price: Price
     private lateinit var duration: Duration
@@ -70,7 +70,7 @@ class Plan private constructor(val id: PlanId) : Aggregate() {
         if (price != newPrice) {
             applyChange(
                 PlanPriceChanged(
-                    this.id.toString(),
+                    id.toString(),
                     price.amount,
                     newPrice.amount
                 )

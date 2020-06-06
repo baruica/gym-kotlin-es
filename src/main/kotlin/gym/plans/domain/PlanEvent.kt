@@ -4,7 +4,7 @@ import common.DomainEvent
 import java.time.Instant
 
 sealed class PlanEvent : DomainEvent {
-    override fun aggregateId(): String = planId
+    override fun getAggregateId(): String = planId
     override val created: Instant = Instant.now()
 
     abstract val planId: String

@@ -16,6 +16,6 @@ class CreateNewPlan(private val eventStore: PlanEventStore) {
 
         eventStore.store(plan)
 
-        return plan.changes
+        return plan.occuredEvents()
     }
 }

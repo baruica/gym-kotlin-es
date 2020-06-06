@@ -11,7 +11,7 @@ inline class MemberId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
-class Member private constructor(val id: MemberId) : Aggregate() {
+class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(memberId) {
 
     lateinit var emailAddress: EmailAddress
     private lateinit var subscriptionId: String

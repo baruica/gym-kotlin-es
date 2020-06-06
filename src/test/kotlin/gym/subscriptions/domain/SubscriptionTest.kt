@@ -16,32 +16,32 @@ class SubscriptionTest {
     fun `no discount for monthly subscription`() {
         val subscriptionWithoutDiscount = monthlySubscription(300, fifthOfJune(), false)
 
-        assertEquals(300, (subscriptionWithoutDiscount.changes.last() as NewSubscription).subscriptionPrice)
+        assertEquals(300, (subscriptionWithoutDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `30% discount for yearly subscription`() {
         val subscriptionWithYearlyDiscount = yearlySubscription(1000, fifthOfJune(), false)
 
-        assertEquals(700, (subscriptionWithYearlyDiscount.changes.last() as NewSubscription).subscriptionPrice)
+        assertEquals(700, (subscriptionWithYearlyDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `20% discount for students`() {
         val monthlySubscriptionWithStudentDiscount = monthlySubscription(100, fifthOfJune(), true)
-        assertEquals(80, (monthlySubscriptionWithStudentDiscount.changes.last() as NewSubscription).subscriptionPrice)
+        assertEquals(80, (monthlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice)
 
         val yearlySubscriptionWithStudentDiscount = yearlySubscription(100, fifthOfJune(), true)
-        assertEquals(50, (yearlySubscriptionWithStudentDiscount.changes.last() as NewSubscription).subscriptionPrice)
+        assertEquals(50, (yearlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `can be renewed`() {
         val subscription = monthlySubscription(100, fifthOfJune(), isStudent = false)
-        assertEquals("2018-07-04", ((subscription.changes.last()) as SubscriptionEvent).getEndDate())
+        assertEquals("2018-07-04", ((subscription.occuredEvents().last()) as SubscriptionEvent).getEndDate())
 
         subscription.renew()
-        assertEquals("2018-08-03", ((subscription.changes.last()) as SubscriptionEvent).getEndDate())
+        assertEquals("2018-08-03", ((subscription.occuredEvents().last()) as SubscriptionEvent).getEndDate())
     }
 
     @Test
@@ -77,7 +77,7 @@ class SubscriptionTest {
         )
         tested.renew()
 
-        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(subscriptionId, tested.changes))
+        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(subscriptionId, tested.occuredEvents()))
 
         assertEquals(tested, restoredFromEvents)
     }

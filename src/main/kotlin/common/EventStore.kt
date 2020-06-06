@@ -8,8 +8,8 @@ interface EventStore {
         return UUID.randomUUID().toString()
     }
 
-    fun store(aggregate: Aggregate) {
-        store(aggregate.changes)
+    fun store(aggregate: Aggregate<out AggregateId>) {
+        store(aggregate.occuredEvents)
     }
 
     fun store(events: List<DomainEvent>)

@@ -1,10 +1,6 @@
 package common
 
-import java.time.Instant
+interface DomainEvent : Event {
 
-interface DomainEvent {
-
-    val created: Instant
-
-    fun aggregateId(): String
+    fun getAggregateId(): String
 }

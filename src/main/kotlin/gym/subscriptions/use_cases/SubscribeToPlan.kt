@@ -22,6 +22,6 @@ class SubscribeToPlan(
 
         eventStore.store(subscription)
 
-        return subscription.changes
+        return subscription.occuredEvents()
     }
 }

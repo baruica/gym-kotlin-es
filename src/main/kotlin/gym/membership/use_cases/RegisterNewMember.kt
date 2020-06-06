@@ -25,7 +25,7 @@ class RegisterNewMember(
             )
             eventStore.store(member)
 
-            return member.changes
+            return member.occuredEvents()
         }
 
         return emptyList()

@@ -10,7 +10,7 @@ inline class SubscriptionId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
-class Subscription private constructor(val id: SubscriptionId) : Aggregate() {
+class Subscription private constructor(subscriptionId: SubscriptionId) : Aggregate<SubscriptionId>(subscriptionId) {
 
     private lateinit var price: Price
     private lateinit var startDate: LocalDate

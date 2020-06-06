@@ -13,7 +13,7 @@ class PlanInMemoryEventStore : PlanEventStore {
 
     override fun store(events: List<DomainEvent>) {
         events.forEach {
-            this.events.getOrPut(PlanId(it.aggregateId())) { mutableListOf() }.add(it as PlanEvent)
+            this.events.getOrPut(PlanId(it.getAggregateId())) { mutableListOf() }.add(it as PlanEvent)
         }
     }
 

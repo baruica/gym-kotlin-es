@@ -12,7 +12,7 @@ class SubscriptionInMemoryEventStore : SubscriptionEventStore {
 
     override fun store(events: List<DomainEvent>) {
         events.forEach {
-            this.events.getOrPut(SubscriptionId(it.aggregateId())) { mutableListOf() }.add(it as SubscriptionEvent)
+            this.events.getOrPut(SubscriptionId(it.getAggregateId())) { mutableListOf() }.add(it as SubscriptionEvent)
         }
     }
 
@@ -31,7 +31,7 @@ class SubscriptionInMemoryEventStore : SubscriptionEventStore {
                 if (subscriptionEvent is NewSubscription) {
                     if (LocalDate.parse(subscriptionEvent.subscriptionEndDate) == date) {
                         subscriptionsEnding.add(
-                            restoreSubscription(subscriptionEvent.aggregateId())
+                            restoreSubscription(subscriptionEvent.getAggregateId())
                         )
                     }
                 }
@@ -50,7 +50,7 @@ class SubscriptionInMemoryEventStore : SubscriptionEventStore {
                     val startDate = LocalDate.parse(subscriptionEvent.subscriptionStartDate)
                     if (startDate.isBefore(date) || startDate.isEqual(date)) {
                         subscriptionsThatStartedBeforeDate.add(
-                            restoreSubscription(subscriptionEvent.aggregateId())
+                            restoreSubscription(subscriptionEvent.getAggregateId())
                         )
                     }
                 }
