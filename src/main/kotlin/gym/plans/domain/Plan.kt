@@ -1,26 +1,24 @@
 package gym.plans.domain
 
+import common.Aggregate
 import common.AggregateHistory
 import common.AggregateId
+import common.DomainEvent
 
 inline class PlanId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
-class Plan private constructor(val planId: PlanId) {
+class Plan private constructor(val id: PlanId) : Aggregate() {
 
     private lateinit var price: Price
     private lateinit var duration: Duration
 
-    val recordedEvents: MutableList<PlanEvent> = mutableListOf()
-
-    private fun applyChange(event: PlanEvent) {
+    override fun whenEvent(event: DomainEvent) {
         when (event) {
             is NewPlanCreated -> apply(event)
             is PlanPriceChanged -> apply(event)
         }
-
-        recordedEvents.add(event)
     }
 
     private fun apply(event: NewPlanCreated) {
@@ -76,7 +74,7 @@ class Plan private constructor(val planId: PlanId) {
         if (price != newPrice) {
             applyChange(
                 PlanPriceChanged(
-                    this.planId.toString(),
+                    this.id.toString(),
                     price.amount,
                     newPrice.amount
                 )
@@ -90,7 +88,7 @@ class Plan private constructor(val planId: PlanId) {
 
         other as Plan
 
-        if (planId != other.planId) return false
+        if (id != other.id) return false
         if (price != other.price) return false
         if (duration != other.duration) return false
 
@@ -98,7 +96,7 @@ class Plan private constructor(val planId: PlanId) {
     }
 
     override fun hashCode(): Int {
-        var result = planId.hashCode()
+        var result = id.hashCode()
         result = 31 * result + price.hashCode()
         result = 31 * result + duration.hashCode()
         return result

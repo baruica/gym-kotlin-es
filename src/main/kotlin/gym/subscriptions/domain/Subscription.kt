@@ -1,29 +1,27 @@
 package gym.subscriptions.domain
 
+import common.Aggregate
 import common.AggregateHistory
 import common.AggregateId
+import common.DomainEvent
 import java.time.LocalDate
 
 inline class SubscriptionId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
-class Subscription private constructor(val id: SubscriptionId) {
+class Subscription private constructor(val id: SubscriptionId) : Aggregate() {
 
     private lateinit var price: Price
     private lateinit var startDate: LocalDate
     private lateinit var endDate: LocalDate
     private lateinit var duration: Duration
 
-    val recordedEvents: MutableList<SubscriptionEvent> = mutableListOf()
-
-    private fun applyChange(event: SubscriptionEvent) {
+    override fun whenEvent(event: DomainEvent) {
         when (event) {
             is NewSubscription -> apply(event)
             is SubscriptionRenewed -> apply(event)
         }
-
-        recordedEvents.add(event)
     }
 
     private fun apply(event: NewSubscription) {

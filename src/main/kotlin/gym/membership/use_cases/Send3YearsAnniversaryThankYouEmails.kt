@@ -1,7 +1,7 @@
 package gym.membership.use_cases
 
+import common.DomainEvent
 import gym.membership.domain.Mailer
-import gym.membership.domain.MemberEvent
 import gym.membership.domain.MemberEventStore
 import java.time.LocalDate
 
@@ -9,7 +9,7 @@ class Send3YearsAnniversaryThankYouEmails(
     private val eventStore: MemberEventStore,
     private val mailer: Mailer
 ) {
-    fun handle(command: Send3YearsAnniversaryThankYouEmailsCommand): List<MemberEvent> {
+    fun handle(command: Send3YearsAnniversaryThankYouEmailsCommand): List<DomainEvent> {
 
         val threeYearsAnniversaryMembers = eventStore.threeYearsAnniversaryMembers(
             LocalDate.parse(command.asOfDate)
@@ -20,7 +20,7 @@ class Send3YearsAnniversaryThankYouEmails(
         }
 
         return threeYearsAnniversaryMembers.map {
-            it.recordedEvents.last()
+            it.changes.last()
         }
     }
 }

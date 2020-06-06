@@ -16,32 +16,32 @@ class SubscriptionTest {
     fun `no discount for monthly subscription`() {
         val subscriptionWithoutDiscount = monthlySubscription(300, fifthOfJune(), false)
 
-        assertEquals(300, (subscriptionWithoutDiscount.recordedEvents.last() as NewSubscription).subscriptionPrice)
+        assertEquals(300, (subscriptionWithoutDiscount.changes.last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `30% discount for yearly subscription`() {
         val subscriptionWithYearlyDiscount = yearlySubscription(1000, fifthOfJune(), false)
 
-        assertEquals(700, (subscriptionWithYearlyDiscount.recordedEvents.last() as NewSubscription).subscriptionPrice)
+        assertEquals(700, (subscriptionWithYearlyDiscount.changes.last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `20% discount for students`() {
         val monthlySubscriptionWithStudentDiscount = monthlySubscription(100, fifthOfJune(), true)
-        assertEquals(80, (monthlySubscriptionWithStudentDiscount.recordedEvents.last() as NewSubscription).subscriptionPrice)
+        assertEquals(80, (monthlySubscriptionWithStudentDiscount.changes.last() as NewSubscription).subscriptionPrice)
 
         val yearlySubscriptionWithStudentDiscount = yearlySubscription(100, fifthOfJune(), true)
-        assertEquals(50, (yearlySubscriptionWithStudentDiscount.recordedEvents.last() as NewSubscription).subscriptionPrice)
+        assertEquals(50, (yearlySubscriptionWithStudentDiscount.changes.last() as NewSubscription).subscriptionPrice)
     }
 
     @Test
     fun `can be renewed`() {
         val subscription = monthlySubscription(100, fifthOfJune(), isStudent = false)
-        assertEquals("2018-07-04", (subscription.recordedEvents.last()).getEndDate())
+        assertEquals("2018-07-04", ((subscription.changes.last()) as SubscriptionEvent).getEndDate())
 
         subscription.renew()
-        assertEquals("2018-08-03", (subscription.recordedEvents.last()).getEndDate())
+        assertEquals("2018-08-03", ((subscription.changes.last()) as SubscriptionEvent).getEndDate())
     }
 
     @Test
@@ -65,14 +65,6 @@ class SubscriptionTest {
     }
 
     @Test
-    fun `can tell if it'll be ended as from a given date`() {
-        val subscriptionEndingEndOfJune = monthlySubscription(100, fifthOfJune())
-
-        //assertFalse(subscriptionEndingEndOfJune.willBeEnded(LocalDate.parse("2018-07-04")))
-        //assertTrue(subscriptionEndingEndOfJune.willBeEnded(LocalDate.parse("2018-07-05")))
-    }
-
-    @Test
     fun `can be restored from events`() {
         val subscriptionId = SubscriptionId("aggregateId")
         val tested = Subscription.subscribe(
@@ -85,7 +77,7 @@ class SubscriptionTest {
         )
         tested.renew()
 
-        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(subscriptionId, tested.recordedEvents))
+        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(subscriptionId, tested.changes))
 
         assertEquals(tested, restoredFromEvents)
     }

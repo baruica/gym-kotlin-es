@@ -1,7 +1,9 @@
 package gym.membership.domain
 
+import common.Aggregate
 import common.AggregateHistory
 import common.AggregateId
+import common.DomainEvent
 import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
 
@@ -9,22 +11,18 @@ inline class MemberId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
-class Member private constructor(val id: MemberId) {
+class Member private constructor(val id: MemberId) : Aggregate() {
 
     lateinit var emailAddress: EmailAddress
     private lateinit var subscriptionId: String
     private lateinit var memberSince: LocalDate
 
-    val recordedEvents = mutableListOf<MemberEvent>()
-
-    private fun applyChange(event: MemberEvent) {
+    override fun whenEvent(event: DomainEvent) {
         when (event) {
             is NewMemberRegistered -> apply(event)
             is WelcomeEmailWasSentToNewMember -> apply(event)
             is ThreeYearsAnniversaryThankYouEmailSent -> apply(event)
         }
-
-        recordedEvents.add(event)
     }
 
     private fun apply(event: NewMemberRegistered) {

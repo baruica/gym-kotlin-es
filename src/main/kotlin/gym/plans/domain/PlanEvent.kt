@@ -8,13 +8,6 @@ sealed class PlanEvent : DomainEvent {
     override val created: Instant = Instant.now()
 
     abstract val planId: String
-
-    fun getPrice(): Int {
-        return when (this) {
-            is NewPlanCreated -> planPrice
-            is PlanPriceChanged -> newPrice
-        }
-    }
 }
 
 data class NewPlanCreated(

@@ -23,9 +23,9 @@ class RegisterNewMember(
                 SubscriptionId(command.subscriptionId),
                 LocalDate.parse(command.subscriptionStartDate)
             )
-            eventStore.store(member.recordedEvents)
+            eventStore.store(member.changes)
 
-            return member.recordedEvents
+            return member.changes
         }
 
         return emptyList()
