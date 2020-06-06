@@ -66,20 +66,20 @@ class SubscriptionTest {
 
     @Test
     fun `can be restored from events`() {
-        val subscriptionId = SubscriptionId("aggregateId")
         val tested = Subscription.subscribe(
-            subscriptionId,
+            "aggregateId",
             12,
-            LocalDate.parse("2018-07-04"),
+            "2018-07-04",
             900,
             "Han@gmail.com",
             isStudent = false
         )
         tested.renew()
 
-        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(subscriptionId, tested.occuredEvents()))
+        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
 
         assertEquals(tested, restoredFromEvents)
+        assertEquals(emptyList(), tested.occuredEvents())
     }
 
     @Test
@@ -104,9 +104,9 @@ class SubscriptionTest {
         isStudent: Boolean
     ): Subscription {
         return Subscription.subscribe(
-            SubscriptionId(UUID.randomUUID().toString()),
+            UUID.randomUUID().toString(),
             durationInMonths,
-            startDate,
+            startDate.toString(),
             basePrice,
             "luke@gmail.com",
             isStudent

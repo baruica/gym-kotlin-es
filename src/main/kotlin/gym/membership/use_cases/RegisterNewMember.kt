@@ -4,9 +4,7 @@ import common.DomainEvent
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEventStore
-import gym.membership.domain.MemberId
 import gym.subscriptions.domain.SubscriptionId
-import java.time.LocalDate
 
 class RegisterNewMember(
     private val eventStore: MemberEventStore
@@ -18,10 +16,10 @@ class RegisterNewMember(
 
         if (knownMember == null) {
             val member = Member.register(
-                MemberId(eventStore.nextId()),
+                eventStore.nextId(),
                 emailAddress,
                 SubscriptionId(command.subscriptionId),
-                LocalDate.parse(command.subscriptionStartDate)
+                command.subscriptionStartDate
             )
             eventStore.store(member)
 

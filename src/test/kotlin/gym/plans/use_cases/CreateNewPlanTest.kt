@@ -17,7 +17,7 @@ class CreateNewPlanTest {
 
         val tested = CreateNewPlan(planEventStore)
 
-        tested.handle(CreateNewPlanCommand(PlanId(planId), 300, 1))
+        tested.handle(CreateNewPlanCommand(planId, 300, 1))
 
         val aggregateHistory = planEventStore.getAggregateHistory(PlanId(planId))
 

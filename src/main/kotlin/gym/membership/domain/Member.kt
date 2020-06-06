@@ -36,19 +36,19 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
 
     companion object {
         fun register(
-            id: MemberId,
+            id: String,
             emailAddress: EmailAddress,
             subscriptionId: SubscriptionId,
-            memberSince: LocalDate
+            memberSince: String
         ): Member {
-            val member = Member(id)
+            val member = Member(MemberId(id))
 
             member.applyChange(
                 NewMemberRegistered(
                     member.id.toString(),
                     emailAddress.toString(),
                     subscriptionId.toString(),
-                    memberSince.toString()
+                    LocalDate.parse(memberSince).toString()
                 )
             )
 
@@ -94,5 +94,27 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
                 memberSince.toString()
             )
         )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Member
+
+        if (id != other.id) return false
+        if (emailAddress != other.emailAddress) return false
+        if (subscriptionId != other.subscriptionId) return false
+        if (memberSince != other.memberSince) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + emailAddress.hashCode()
+        result = 31 * result + subscriptionId.hashCode()
+        result = 31 * result + memberSince.hashCode()
+        return result
     }
 }

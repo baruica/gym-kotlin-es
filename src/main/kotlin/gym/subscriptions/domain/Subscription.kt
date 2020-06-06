@@ -33,23 +33,23 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
 
     companion object {
         fun subscribe(
-            subscriptionId: SubscriptionId,
+            subscriptionId: String,
             planDurationInMonths: Int,
-            startDate: LocalDate,
+            startDate: String,
             planPrice: Int,
             email: String,
             isStudent: Boolean
         ): Subscription {
-            val subscription = Subscription(subscriptionId)
+            val subscription = Subscription(SubscriptionId(subscriptionId))
             val priceAfterDiscount = Price(planPrice).applyDiscount(Discount(planDurationInMonths, isStudent))
-            val subscriptionEndDate = (startDate.plusMonths(planDurationInMonths.toLong())).minusDays(1)
+            val subscriptionEndDate = (LocalDate.parse(startDate).plusMonths(planDurationInMonths.toLong())).minusDays(1)
 
             subscription.applyChange(
                 NewSubscription(
-                    subscriptionId.toString(),
+                    subscriptionId,
                     priceAfterDiscount.amount,
                     Duration(planDurationInMonths).value,
-                    startDate.toString(),
+                    LocalDate.parse(startDate).toString(),
                     subscriptionEndDate.toString(),
                     email,
                     isStudent

@@ -28,17 +28,17 @@ class Plan private constructor(planId: PlanId) : Aggregate<PlanId>(planId) {
 
     companion object {
         fun new(
-            id: PlanId,
+            id: String,
             priceAmount: Int,
             durationInMonths: Int
         ): Plan {
-            val plan = Plan(id)
+            val plan = Plan(PlanId(id))
             val price = Price(priceAmount)
             val duration = Duration(durationInMonths)
 
             plan.applyChange(
                 NewPlanCreated(
-                    id.toString(),
+                    plan.id.toString(),
                     price.amount,
                     duration.durationInMonths
                 )
