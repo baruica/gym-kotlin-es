@@ -38,7 +38,7 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
         fun register(
             id: String,
             emailAddress: EmailAddress,
-            subscriptionId: SubscriptionId,
+            subscriptionId: String,
             memberSince: LocalDate
         ): Member {
             val member = Member(MemberId(id))
@@ -47,7 +47,7 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
                 NewMemberRegistered(
                     member.id.toString(),
                     emailAddress.toString(),
-                    subscriptionId.toString(),
+                    SubscriptionId(subscriptionId).toString(),
                     memberSince.toString()
                 )
             )

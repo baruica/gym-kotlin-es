@@ -2,7 +2,6 @@ package gym.membership.domain
 
 import common.AggregateHistory
 import gym.fifthOfJune
-import gym.subscriptions.domain.SubscriptionId
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
@@ -17,7 +16,7 @@ class MemberTest {
         val memberWith3yearsAnniversaryOnTheFifthOfJune = Member.register(
             "member abc",
             EmailAddress("julie@gmail.com"),
-            SubscriptionId("def"),
+            "subscription def",
             fifthOfJune().minusYears(3)
         )
 
@@ -31,7 +30,7 @@ class MemberTest {
         val tested = Member.register(
             "aggregateId",
             EmailAddress("julie@gmail.com"),
-            SubscriptionId("subscription 42"),
+            "subscription 42",
             LocalDate.now()
         )
         tested.markWelcomeEmailAsSent()
