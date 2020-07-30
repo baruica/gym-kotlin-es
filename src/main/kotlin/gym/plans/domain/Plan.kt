@@ -57,7 +57,7 @@ class Plan private constructor(planId: PlanId) : Aggregate<PlanId>(planId) {
             )
 
             aggregateHistory.events.forEach {
-                plan.applyChange(it as PlanEvent)
+                plan.whenEvent(it as PlanEvent)
             }
 
             return plan

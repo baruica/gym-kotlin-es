@@ -69,7 +69,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
             )
 
             aggregateHistory.events.forEach {
-                subscription.applyChange(it as SubscriptionEvent)
+                subscription.whenEvent(it as SubscriptionEvent)
             }
 
             return subscription

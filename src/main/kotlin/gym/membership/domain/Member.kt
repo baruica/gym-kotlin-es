@@ -65,7 +65,7 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
             )
 
             aggregateHistory.events.forEach {
-                member.applyChange(it as MemberEvent)
+                member.whenEvent(it as MemberEvent)
             }
 
             return member
