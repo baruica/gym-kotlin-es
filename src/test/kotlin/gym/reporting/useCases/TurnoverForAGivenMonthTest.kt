@@ -1,5 +1,6 @@
 package gym.reporting.useCases
 
+import gym.reporting.Turnover
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.SubscriptionInMemoryEventStore
@@ -58,9 +59,9 @@ class TurnoverForAGivenMonthTest {
         val tested = TurnoverForAGivenMonth(subscriptionEventStore)
 
         assertEquals(2, subscriptionEventStore.onGoingSubscriptions(today).size)
-        assertEquals(83, tested.handle(TurnoverForAGivenMonthQuery(today)))
+        assertEquals(Turnover(83), tested.handle(TurnoverForAGivenMonthQuery(today)))
 
         assertEquals(3, subscriptionEventStore.onGoingSubscriptions(inTwoMonths).size)
-        assertEquals(124, tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)))
+        assertEquals(Turnover(124), tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)))
     }
 }
