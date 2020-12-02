@@ -41,7 +41,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
             isStudent: Boolean
         ): Subscription {
             val subscription = Subscription(SubscriptionId(subscriptionId))
-            val priceAfterDiscount = Price(planPrice).applyDiscount(Discount(planDurationInMonths, isStudent))
+            val priceAfterDiscount = Price(planPrice).applyDiscount(planDurationInMonths, isStudent)
             val subscriptionEndDate = (subscriptionDate.plusMonths(planDurationInMonths.toLong())).minusDays(1)
 
             subscription.applyChange(
@@ -128,19 +128,15 @@ private data class Price(val amount: Int) {
         }
     }
 
-    internal fun applyDiscount(discount: Discount): Price {
-        return Price((amount.toDouble() * (1 - discount.rate)).toInt())
-    }
-}
-
-internal data class Discount(internal var rate: Double = 0.0) {
-    constructor(durationInMonths: Int, isStudent: Boolean) : this() {
+    fun applyDiscount(durationInMonths: Int, isStudent: Boolean): Price {
+        var rate = 0.0
         if (durationInMonths == 12) {
             rate += 0.3
         }
         if (isStudent) {
             rate += 0.2
         }
+        return Price((amount.toDouble() * (1 - rate)).toInt())
     }
 }
 
