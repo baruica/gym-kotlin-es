@@ -14,17 +14,19 @@ class RenewSubscriptionsAutomaticallyTest {
         val subscriptionEventStore = SubscriptionInMemoryEventStore()
         val subscriptionId = subscriptionEventStore.nextId()
 
-        subscriptionEventStore.store(listOf(
-            NewSubscription(
-                subscriptionId,
-                300,
-                1,
-                "2018-06-09",
-                "2018-07-09",
-                "luke@gmail.com",
-                false
+        subscriptionEventStore.store(
+            listOf(
+                NewSubscription(
+                    subscriptionId,
+                    300,
+                    1,
+                    "2018-06-09",
+                    "2018-07-09",
+                    "luke@gmail.com",
+                    false
+                )
             )
-        ))
+        )
 
         val tested = RenewSubscriptionsAutomatically(subscriptionEventStore)
 

@@ -18,13 +18,15 @@ class PlanInMemoryEventStoreTest {
         val planId2Event1 = NewPlanCreated("planId2", 100, 1)
         val planId2Event2 = PlanPriceChanged("planId2", 100, 120)
 
-        tested.store(listOf(
-            planId1Event1,
-            planId1Event2,
-            planId2Event1,
-            planId2Event2,
-            planId1Event3
-        ))
+        tested.store(
+            listOf(
+                planId1Event1,
+                planId1Event2,
+                planId2Event1,
+                planId2Event2,
+                planId1Event3
+            )
+        )
 
         assertEquals(
             listOf(

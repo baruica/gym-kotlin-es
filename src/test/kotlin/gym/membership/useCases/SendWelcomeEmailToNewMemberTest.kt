@@ -22,14 +22,16 @@ class SendWelcomeEmailToNewMemberTest {
         val memberSince = LocalDate.now()
 
         val memberEventStore = MemberInMemoryEventStore()
-        memberEventStore.store(listOf(
-            NewMemberRegistered(
-                memberId.toString(),
-                emailAddress,
-                subscriptionId.toString(),
-                memberSince.toString()
+        memberEventStore.store(
+            listOf(
+                NewMemberRegistered(
+                    memberId.toString(),
+                    emailAddress,
+                    subscriptionId.toString(),
+                    memberSince.toString()
+                )
             )
-        ))
+        )
 
         val mailer = InMemoryMailer()
 

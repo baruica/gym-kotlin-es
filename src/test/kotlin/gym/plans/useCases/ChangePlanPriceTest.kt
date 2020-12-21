@@ -14,9 +14,11 @@ class ChangePlanPriceTest {
         val planEventStore = PlanInMemoryEventStore()
         val planId = planEventStore.nextId()
 
-        planEventStore.store(listOf(
-            NewPlanCreated(planId, 450, 12)
-        ))
+        planEventStore.store(
+            listOf(
+                NewPlanCreated(planId, 450, 12)
+            )
+        )
 
         val tested = ChangePlanPrice(planEventStore)
 

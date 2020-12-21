@@ -26,11 +26,13 @@ class Send3YearsAnniversaryThankYouEmailsTest {
         val memberSinceLuke = fifthOfJune().minusYears(3)
         val newMemberRegisteredLuke = newMemberRegistered("luke@gmail.com", memberSinceLuke)
 
-        memberEventStore.store(listOf(
-            newMemberRegisteredJulie,
-            newMemberRegisteredBob,
-            newMemberRegisteredLuke
-        ))
+        memberEventStore.store(
+            listOf(
+                newMemberRegisteredJulie,
+                newMemberRegisteredBob,
+                newMemberRegisteredLuke
+            )
+        )
 
         val mailer = InMemoryMailer()
 
@@ -41,25 +43,37 @@ class Send3YearsAnniversaryThankYouEmailsTest {
         )
 
         assertTrue(mailer.threeYearsAnniversaryWasSentTo("julie@gmail.com"))
-        assertTrue(events.contains(ThreeYearsAnniversaryThankYouEmailSent(
-            newMemberRegisteredJulie.memberId,
-            newMemberRegisteredJulie.memberEmailAddress,
-            memberSinceJulie.toString()
-        )))
+        assertTrue(
+            events.contains(
+                ThreeYearsAnniversaryThankYouEmailSent(
+                    newMemberRegisteredJulie.memberId,
+                    newMemberRegisteredJulie.memberEmailAddress,
+                    memberSinceJulie.toString()
+                )
+            )
+        )
 
         assertFalse(mailer.threeYearsAnniversaryWasSentTo("bob@gmail.com"))
-        assertFalse(events.contains(ThreeYearsAnniversaryThankYouEmailSent(
-            newMemberRegisteredBob.memberId,
-            newMemberRegisteredBob.memberEmailAddress,
-            memberSinceBob.toString()
-        )))
+        assertFalse(
+            events.contains(
+                ThreeYearsAnniversaryThankYouEmailSent(
+                    newMemberRegisteredBob.memberId,
+                    newMemberRegisteredBob.memberEmailAddress,
+                    memberSinceBob.toString()
+                )
+            )
+        )
 
         assertTrue(mailer.threeYearsAnniversaryWasSentTo("luke@gmail.com"))
-        assertTrue(events.contains(ThreeYearsAnniversaryThankYouEmailSent(
-            newMemberRegisteredLuke.memberId,
-            newMemberRegisteredLuke.memberEmailAddress,
-            memberSinceLuke.toString()
-        )))
+        assertTrue(
+            events.contains(
+                ThreeYearsAnniversaryThankYouEmailSent(
+                    newMemberRegisteredLuke.memberId,
+                    newMemberRegisteredLuke.memberEmailAddress,
+                    memberSinceLuke.toString()
+                )
+            )
+        )
     }
 
     private fun newMemberRegistered(email: String, memberSince: LocalDate): NewMemberRegistered = NewMemberRegistered(

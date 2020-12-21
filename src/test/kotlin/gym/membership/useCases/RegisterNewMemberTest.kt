@@ -22,11 +22,13 @@ internal class RegisterNewMemberTest {
 
         val tested = RegisterNewMember(memberEventStore)
 
-        val events = tested.handle(RegisterNewMemberCommand(
-            subscriptionId,
-            "2018-06-05",
-            email
-        ))
+        val events = tested.handle(
+            RegisterNewMemberCommand(
+                subscriptionId,
+                "2018-06-05",
+                email
+            )
+        )
 
         assertEquals(
             events.last(),

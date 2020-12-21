@@ -29,10 +29,16 @@ class SubscriptionTest {
     @Test
     fun `20% discount for students`() {
         val monthlySubscriptionWithStudentDiscount = monthlySubscription(100, fifthOfJune(), true)
-        assertEquals(80, (monthlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice)
+        assertEquals(
+            80,
+            (monthlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice
+        )
 
         val yearlySubscriptionWithStudentDiscount = yearlySubscription(100, fifthOfJune(), true)
-        assertEquals(50, (yearlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice)
+        assertEquals(
+            50,
+            (yearlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice
+        )
     }
 
     @Test
@@ -89,11 +95,19 @@ class SubscriptionTest {
         }
     }
 
-    private fun monthlySubscription(basePrice: Int, subscriptionDate: LocalDate, isStudent: Boolean = false): Subscription {
+    private fun monthlySubscription(
+        basePrice: Int,
+        subscriptionDate: LocalDate,
+        isStudent: Boolean = false
+    ): Subscription {
         return newSubscription(subscriptionDate, basePrice, 1, isStudent)
     }
 
-    private fun yearlySubscription(basePrice: Int, subscriptionDate: LocalDate, isStudent: Boolean = false): Subscription {
+    private fun yearlySubscription(
+        basePrice: Int,
+        subscriptionDate: LocalDate,
+        isStudent: Boolean = false
+    ): Subscription {
         return newSubscription(subscriptionDate, basePrice, 12, isStudent)
     }
 
