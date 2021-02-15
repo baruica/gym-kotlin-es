@@ -7,7 +7,7 @@ import gym.membership.domain.MemberId
 
 class SendWelcomeEmailToNewMember(
     private val eventStore: MemberEventStore,
-    private val mailer: Mailer
+    private val mailer: Mailer,
 ) {
     fun handle(event: SendWelcomeEmailToNewMemberCommand): List<DomainEvent> {
 

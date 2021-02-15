@@ -6,5 +6,5 @@ data class SubscribeToPlanCommand(
     val planDurationInMonths: Int,
     val startDate: String,
     val isStudent: Boolean,
-    val email: String
+    val email: String,
 )

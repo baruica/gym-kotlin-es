@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 class Send3YearsAnniversaryThankYouEmails(
     private val eventStore: MemberEventStore,
-    private val mailer: Mailer
+    private val mailer: Mailer,
 ) {
     fun handle(command: Send3YearsAnniversaryThankYouEmailsCommand): List<DomainEvent> {
 
