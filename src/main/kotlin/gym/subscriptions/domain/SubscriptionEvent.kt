@@ -8,13 +8,6 @@ sealed class SubscriptionEvent : DomainEvent {
     override val created: Instant = Instant.now()
 
     abstract val subscriptionId: String
-
-    fun getEndDate(): String {
-        return when (this) {
-            is NewSubscription -> subscriptionEndDate
-            is SubscriptionRenewed -> newEndDate
-        }
-    }
 }
 
 data class NewSubscription(

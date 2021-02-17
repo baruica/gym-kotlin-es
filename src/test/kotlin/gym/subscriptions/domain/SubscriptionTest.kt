@@ -44,10 +44,10 @@ class SubscriptionTest {
     @Test
     fun `can be renewed`() {
         val subscription = monthlySubscription(100, fifthOfJune(), isStudent = false)
-        assertEquals("2018-07-04", ((subscription.occuredEvents().last()) as SubscriptionEvent).getEndDate())
+        assertEquals("2018-07-04", ((subscription.occuredEvents().last()) as NewSubscription).subscriptionEndDate)
 
         subscription.renew()
-        assertEquals("2018-08-03", ((subscription.occuredEvents().last()) as SubscriptionEvent).getEndDate())
+        assertEquals("2018-08-03", ((subscription.occuredEvents().last()) as SubscriptionRenewed).newEndDate)
     }
 
     @Test
