@@ -27,8 +27,8 @@ class PlanTest {
         tested.changePrice(500)
 
         assertEquals(
-            Plan.new("plan abc", 500, 1),
-            tested
+            PlanPriceChanged("plan abc", 400, 500),
+            tested.events.last()
         )
     }
 
@@ -39,7 +39,9 @@ class PlanTest {
 
         val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
 
-        assertEquals(tested, restoredFromEvents)
+        assertEquals(tested.price, restoredFromEvents.price)
+        assertEquals(tested.duration, restoredFromEvents.duration)
+
         assertEquals(emptyList(), tested.occuredEvents())
     }
 

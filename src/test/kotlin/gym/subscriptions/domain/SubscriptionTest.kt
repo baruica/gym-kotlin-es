@@ -84,7 +84,11 @@ class SubscriptionTest {
 
         val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
 
-        assertEquals(tested, restoredFromEvents)
+        assertEquals(tested.price, restoredFromEvents.price)
+        assertEquals(tested.startDate, restoredFromEvents.startDate)
+        assertEquals(tested.endDate, restoredFromEvents.endDate)
+        assertEquals(tested.duration, restoredFromEvents.duration)
+
         assertEquals(emptyList(), tested.occuredEvents())
     }
 

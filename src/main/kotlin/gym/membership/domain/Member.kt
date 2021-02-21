@@ -13,9 +13,9 @@ inline class MemberId(private val id: String) : AggregateId {
 
 class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(memberId) {
 
-    lateinit var emailAddress: EmailAddress
-    private lateinit var subscriptionId: String
-    private lateinit var memberSince: LocalDate
+    internal lateinit var emailAddress: EmailAddress
+    internal lateinit var subscriptionId: String
+    internal lateinit var memberSince: LocalDate
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
@@ -94,27 +94,5 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
                 memberSince.toString()
             )
         )
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Member
-
-        if (id != other.id) return false
-        if (emailAddress != other.emailAddress) return false
-        if (subscriptionId != other.subscriptionId) return false
-        if (memberSince != other.memberSince) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + emailAddress.hashCode()
-        result = 31 * result + subscriptionId.hashCode()
-        result = 31 * result + memberSince.hashCode()
-        return result
     }
 }

@@ -12,10 +12,10 @@ inline class SubscriptionId(private val id: String) : AggregateId {
 
 class Subscription private constructor(subscriptionId: SubscriptionId) : Aggregate<SubscriptionId>(subscriptionId) {
 
-    private lateinit var price: Price
-    private lateinit var startDate: LocalDate
-    private lateinit var endDate: LocalDate
-    private lateinit var duration: Duration
+    internal lateinit var price: Price
+    internal lateinit var startDate: LocalDate
+    internal lateinit var endDate: LocalDate
+    internal lateinit var duration: Duration
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
@@ -95,33 +95,9 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     fun monthlyTurnover(): Int {
         return (price.amount / duration.value)
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Subscription
-
-        if (id != other.id) return false
-        if (price != other.price) return false
-        if (startDate != other.startDate) return false
-        if (endDate != other.endDate) return false
-        if (duration != other.duration) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + price.hashCode()
-        result = 31 * result + startDate.hashCode()
-        result = 31 * result + endDate.hashCode()
-        result = 31 * result + duration.hashCode()
-        return result
-    }
 }
 
-private data class Price(val amount: Int) {
+internal data class Price(val amount: Int) {
     init {
         require(amount >= 0) {
             "Price amount must be non-negative, was [$amount]"
@@ -140,7 +116,7 @@ private data class Price(val amount: Int) {
     }
 }
 
-private data class Duration(val value: Int) {
+internal data class Duration(val value: Int) {
     init {
         require(listOf(1, 12).contains(value)) {
             "Plan duration is either 1 month or 12 months, was [$value]"

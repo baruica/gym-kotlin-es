@@ -37,7 +37,10 @@ class MemberTest {
 
         val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
 
-        assertEquals(tested, restoredFromEvents)
+        assertEquals(tested.emailAddress, restoredFromEvents.emailAddress)
+        assertEquals(tested.subscriptionId, restoredFromEvents.subscriptionId)
+        assertEquals(tested.memberSince, restoredFromEvents.memberSince)
+
         assertEquals(emptyList(), tested.occuredEvents())
     }
 
