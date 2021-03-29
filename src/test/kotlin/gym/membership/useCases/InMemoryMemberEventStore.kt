@@ -1,4 +1,4 @@
-package gym.membership.infrastructure
+package gym.membership.useCases
 
 import common.AggregateHistory
 import common.AggregateId
@@ -6,7 +6,7 @@ import common.DomainEvent
 import gym.membership.domain.*
 import java.time.LocalDate
 
-class MemberInMemoryEventStore : MemberEventStore {
+class InMemoryMemberEventStore : MemberEventStore {
 
     private val events = mutableMapOf<MemberId, MutableList<MemberEvent>>()
 

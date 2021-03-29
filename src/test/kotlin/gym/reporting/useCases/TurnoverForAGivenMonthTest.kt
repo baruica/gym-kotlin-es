@@ -3,7 +3,7 @@ package gym.reporting.useCases
 import gym.reporting.Turnover
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionRenewed
-import gym.subscriptions.infrastructure.SubscriptionInMemoryEventStore
+import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
@@ -12,7 +12,7 @@ class TurnoverForAGivenMonthTest {
 
     @Test
     fun `turnover for a given month with ongoing subscriptions`() {
-        val subscriptionEventStore = SubscriptionInMemoryEventStore()
+        val subscriptionEventStore = InMemorySubscriptionEventStore()
 
         val today = LocalDate.parse("2018-06-09")
         val inAMonth = LocalDate.parse("2018-07-09")

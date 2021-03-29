@@ -6,7 +6,7 @@ import common.DomainEvent
 import gym.subscriptions.domain.*
 import java.time.LocalDate
 
-class SubscriptionInMemoryEventStore : SubscriptionEventStore {
+class InMemorySubscriptionEventStore : SubscriptionEventStore {
 
     private val events = mutableMapOf<SubscriptionId, MutableList<SubscriptionEvent>>()
 

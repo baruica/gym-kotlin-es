@@ -3,7 +3,7 @@ package gym.plans.useCases
 import gym.plans.domain.NewPlanCreated
 import gym.plans.domain.PlanId
 import gym.plans.domain.PlanPriceChanged
-import gym.plans.infrastructure.PlanInMemoryEventStore
+import gym.plans.infrastructure.InMemoryPlanEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -11,7 +11,7 @@ class ChangePlanPriceTest {
 
     @Test
     fun handle() {
-        val planEventStore = PlanInMemoryEventStore()
+        val planEventStore = InMemoryPlanEventStore()
         val planId = planEventStore.nextId()
 
         planEventStore.store(

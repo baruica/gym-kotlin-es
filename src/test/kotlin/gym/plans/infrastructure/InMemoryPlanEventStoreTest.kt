@@ -6,11 +6,11 @@ import gym.plans.domain.PlanPriceChanged
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class PlanInMemoryEventStoreTest {
+class InMemoryPlanEventStoreTest {
 
     @Test
     fun `what is stored can be retrived`() {
-        val tested = PlanInMemoryEventStore()
+        val tested = InMemoryPlanEventStore()
 
         val planId1Event1 = NewPlanCreated("planId1", 200, 1)
         val planId1Event2 = PlanPriceChanged("planId1", 200, 250)

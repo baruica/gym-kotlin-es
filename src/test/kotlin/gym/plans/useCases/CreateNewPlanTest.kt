@@ -2,7 +2,7 @@ package gym.plans.useCases
 
 import gym.plans.domain.NewPlanCreated
 import gym.plans.domain.PlanId
-import gym.plans.infrastructure.PlanInMemoryEventStore
+import gym.plans.infrastructure.InMemoryPlanEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -10,7 +10,7 @@ class CreateNewPlanTest {
 
     @Test
     fun handle() {
-        val planEventStore = PlanInMemoryEventStore()
+        val planEventStore = InMemoryPlanEventStore()
         val planId = planEventStore.nextId()
 
         assertEquals(0, planEventStore.getAggregateHistory(PlanId(planId)).events.size)

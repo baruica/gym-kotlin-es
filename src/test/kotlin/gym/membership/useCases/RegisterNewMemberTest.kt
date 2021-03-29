@@ -2,7 +2,6 @@ package gym.membership.useCases
 
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.NewMemberRegistered
-import gym.membership.infrastructure.MemberInMemoryEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -11,7 +10,7 @@ internal class RegisterNewMemberTest {
 
     @Test
     fun handle() {
-        val memberEventStore = MemberInMemoryEventStore()
+        val memberEventStore = InMemoryMemberEventStore()
 
         val email = "luke@gmail.com"
 

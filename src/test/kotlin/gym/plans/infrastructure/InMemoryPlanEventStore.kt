@@ -7,7 +7,7 @@ import gym.plans.domain.PlanEvent
 import gym.plans.domain.PlanEventStore
 import gym.plans.domain.PlanId
 
-class PlanInMemoryEventStore : PlanEventStore {
+class InMemoryPlanEventStore : PlanEventStore {
 
     private val events = mutableMapOf<PlanId, MutableList<PlanEvent>>()
 

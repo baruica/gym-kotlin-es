@@ -2,7 +2,7 @@ package gym.subscriptions.useCases
 
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionId
-import gym.subscriptions.infrastructure.SubscriptionInMemoryEventStore
+import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -10,7 +10,7 @@ class SubscribeToPlanTest {
 
     @Test
     fun handle() {
-        val subscriptionEventStore = SubscriptionInMemoryEventStore()
+        val subscriptionEventStore = InMemorySubscriptionEventStore()
         val subscriptionId = subscriptionEventStore.nextId()
 
         val tested = SubscribeToPlan(subscriptionEventStore)

@@ -6,11 +6,11 @@ import gym.subscriptions.domain.SubscriptionRenewed
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class SubscriptionInMemoryEventStoreTest {
+class InMemorySubscriptionEventStoreTest {
 
     @Test
     fun `what is stores can be retrived`() {
-        val tested = SubscriptionInMemoryEventStore()
+        val tested = InMemorySubscriptionEventStore()
 
         val subscriptionId1Event1 =
             NewSubscription("subscriptionId1", 300, 12, "2018-02-23", "2019-02-23", "Luke@gmail.com", false)
