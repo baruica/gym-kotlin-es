@@ -23,13 +23,15 @@ class InMemorySubscriptionEventStore : SubscriptionEventStore {
     override fun getAggregateEvents(aggregateId: AggregateId): MutableList<SubscriptionEvent> =
         this.events.getOrDefault(aggregateId as SubscriptionId, mutableListOf())
 
-    override fun subscriptionsEnding(date: LocalDate): List<Subscription> {
+    override fun endedMonthlySubscriptions(date: LocalDate): List<Subscription> {
         val subscriptionsEnding = mutableListOf<Subscription>()
 
         events.values.forEach { subscriptionEvents ->
             subscriptionEvents.forEach { subscriptionEvent ->
                 if (subscriptionEvent is NewSubscription) {
-                    if (LocalDate.parse(subscriptionEvent.subscriptionEndDate) == date) {
+                    if (LocalDate.parse(subscriptionEvent.subscriptionEndDate) == date
+                        && subscriptionEvent.planDurationInMonths == 1
+                    ) {
                         subscriptionsEnding.add(
                             restoreSubscription(subscriptionEvent.getAggregateId())
                         )

@@ -1,45 +1,53 @@
 package gym.subscriptions.useCases
 
 import gym.subscriptions.domain.NewSubscription
-import gym.subscriptions.domain.SubscriptionId
 import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class RenewSubscriptionsAutomaticallyTest {
+class RenewMonthlySubscriptionsAutomaticallyTest {
 
     @Test
     fun handle() {
         val subscriptionEventStore = InMemorySubscriptionEventStore()
-        val subscriptionId = subscriptionEventStore.nextId()
+        val monthlySubscriptionId = subscriptionEventStore.nextId()
+        val yearlySubscriptionId = subscriptionEventStore.nextId()
 
         subscriptionEventStore.store(
             listOf(
                 NewSubscription(
-                    subscriptionId,
+                    monthlySubscriptionId,
                     300,
                     1,
                     "2018-06-09",
                     "2018-07-09",
                     "luke@gmail.com",
                     false
+                ),
+                NewSubscription(
+                    yearlySubscriptionId,
+                    1200,
+                    12,
+                    "2018-06-12",
+                    "2019-06-12",
+                    "leia@gmail.com",
+                    true
                 )
             )
         )
 
-        val tested = RenewSubscriptionsAutomatically(subscriptionEventStore)
+        val tested = RenewMonthlySubscriptionsAutomatically(subscriptionEventStore)
 
-        tested.handle(
-            RenewSubscriptionsAutomaticallyCommand("2018-07-09")
+        val events = tested.handle(
+            RenewMonthlySubscriptionsAutomaticallyCommand("2018-07-09")
         )
 
-        val aggregateHistory = subscriptionEventStore.getAggregateHistory(SubscriptionId(subscriptionId))
-
+        assertEquals(1, events.size)
         assertEquals(
-            aggregateHistory.events.last(),
+            events.last(),
             SubscriptionRenewed(
-                subscriptionId,
+                monthlySubscriptionId,
                 "2018-07-09",
                 "2018-08-08"
             )
