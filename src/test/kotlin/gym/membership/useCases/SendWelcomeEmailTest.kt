@@ -9,7 +9,7 @@ import java.time.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class SendWelcomeEmailToNewMemberTest {
+class SendWelcomeEmailTest {
 
     @Test
     fun handle() {
@@ -33,10 +33,10 @@ class SendWelcomeEmailToNewMemberTest {
 
         val mailer = InMemoryMailer()
 
-        val tested = SendWelcomeEmailToNewMember(memberEventStore, mailer)
+        val tested = SendWelcomeEmail(memberEventStore, mailer)
 
         val events = tested.handle(
-            SendWelcomeEmailToNewMemberCommand(memberId.toString())
+            SendWelcomeEmailCommand(memberId.toString())
         )
 
         assertEquals(
