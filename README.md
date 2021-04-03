@@ -2,23 +2,24 @@
 
 ## Requirements
 
-- I want to create monthly or yearly subscription plans, with a base price
-- Yearly subscriptions get 30% off
+- Owners can create monthly or yearly subscription plans, with a base price
+- Yearly subscriptions get 10% off
 - Students that subscribe to any plan get 20% off
-- I want to see my turnover for a given month, based on the ongoing subscriptions
-- I want to change the price of a plan
-- Subscriptions are renewed automatically
+- Owners can see how much they make from ongoing subscriptions for a given month
+- Owners can change the price of a plan
+- Monthly subscriptions are renewed automatically
 - A welcome email is sent to new members
-- After 3 years of membership, members receive a "thank you" email
+- A summary of the new subscriptions is sent by email
+- After 3 years of membership, we apply 5% off all their subscriptions and give them the good news with an email
 
 ## Choices
 
 - DDD tactical patterns
-  - *Aggregate* ([read](https://vaughnvernon.co/?p=838))
-  - *Entity* ([read](http://thepaulrayner.com/blog/aggregates-and-entities-in-domain-driven-design/))
-  - *Value Object* ([read](https://dev.to/flbenz/kotlin-and-domain-driven-design-value-objects-4m32))
-  - *Domain Event* ([read](http://verraes.net/2014/11/domain-events/))
-  - *Repository*
+    - *Aggregate* ([read](https://vaughnvernon.co/?p=838))
+    - *Entity* ([read](http://thepaulrayner.com/blog/aggregates-and-entities-in-domain-driven-design/))
+    - *Value Object* ([read](https://dev.to/flbenz/kotlin-and-domain-driven-design-value-objects-4m32))
+    - *Domain Event* ([read](http://verraes.net/2014/11/domain-events/))
+    - *Repository*
 - *Aggregate* ids are provided by their *event store* ([read](https://matthiasnoback.nl/2018/05/when-and-where-to-determine-the-id-of-an-entity/))
 - *Aggregate* ids have their own types ([read](https://buildplease.com/pages/vo-ids/))
 - *Aggregate roots* are constructed through factory methods ([read](https://buildplease.com/pages/constructing-aggregates/))
