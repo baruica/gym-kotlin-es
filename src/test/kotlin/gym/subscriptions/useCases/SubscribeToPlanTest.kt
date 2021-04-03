@@ -33,7 +33,7 @@ class SubscribeToPlanTest {
             aggregateHistory.events.last(),
             NewSubscription(
                 aggregateHistory.aggregateId.toString(),
-                700,
+                900,
                 12,
                 "2018-12-18",
                 "2019-12-17",
