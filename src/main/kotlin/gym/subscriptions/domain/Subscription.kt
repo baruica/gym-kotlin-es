@@ -5,6 +5,7 @@ import common.AggregateHistory
 import common.AggregateId
 import common.DomainEvent
 import java.time.LocalDate
+import java.time.Period
 
 inline class SubscriptionId(private val id: String) : AggregateId {
     override fun toString(): String = id
@@ -77,7 +78,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     }
 
     fun renew() {
-        val newEndDate = (endDate.plusMonths(duration.value.toLong())).minusDays(1)
+        val newEndDate = (endDate.plus(Period.ofMonths(duration.value))).minusDays(1)
 
         applyChange(
             SubscriptionRenewed(
