@@ -13,7 +13,7 @@ class Send3YearsAnniversaryThankYouEmailsTest {
 
     @Test
     fun handle() {
-        val memberEventStore = InMemoryMemberEventStore()
+        val eventStore = InMemoryMemberEventStore()
 
         val memberSinceJulie = fifthOfJune().minusYears(3)
         val newMemberRegisteredJulie = newMemberRegistered("julie@gmail.com", memberSinceJulie)
@@ -24,7 +24,7 @@ class Send3YearsAnniversaryThankYouEmailsTest {
         val memberSinceLuke = fifthOfJune().minusYears(3)
         val newMemberRegisteredLuke = newMemberRegistered("luke@gmail.com", memberSinceLuke)
 
-        memberEventStore.store(
+        eventStore.store(
             listOf(
                 newMemberRegisteredJulie,
                 newMemberRegisteredBob,
@@ -34,7 +34,7 @@ class Send3YearsAnniversaryThankYouEmailsTest {
 
         val mailer = InMemoryMailer()
 
-        val tested = Send3YearsAnniversaryThankYouEmails(memberEventStore, mailer)
+        val tested = Send3YearsAnniversaryThankYouEmails(eventStore, mailer)
 
         val events = tested.handle(
             Send3YearsAnniversaryThankYouEmailsCommand("2018-06-05")

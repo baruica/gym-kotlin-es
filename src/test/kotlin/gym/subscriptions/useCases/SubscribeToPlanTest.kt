@@ -10,10 +10,10 @@ class SubscribeToPlanTest {
 
     @Test
     fun handle() {
-        val subscriptionEventStore = InMemorySubscriptionEventStore()
-        val subscriptionId = subscriptionEventStore.nextId()
+        val eventStore = InMemorySubscriptionEventStore()
+        val subscriptionId = eventStore.nextId()
 
-        val tested = SubscribeToPlan(subscriptionEventStore)
+        val tested = SubscribeToPlan(eventStore)
 
         tested.handle(
             SubscribeToPlanCommand(
@@ -26,7 +26,7 @@ class SubscribeToPlanTest {
             )
         )
 
-        val aggregateHistory = subscriptionEventStore.getAggregateHistory(SubscriptionId(subscriptionId))
+        val aggregateHistory = eventStore.getAggregateHistory(SubscriptionId(subscriptionId))
 
         assertEquals(1, aggregateHistory.events.size)
         assertEquals(

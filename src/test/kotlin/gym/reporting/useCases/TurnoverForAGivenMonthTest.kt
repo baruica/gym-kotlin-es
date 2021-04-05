@@ -12,16 +12,16 @@ class TurnoverForAGivenMonthTest {
 
     @Test
     fun `turnover for a given month with ongoing subscriptions`() {
-        val subscriptionEventStore = InMemorySubscriptionEventStore()
+        val eventStore = InMemorySubscriptionEventStore()
 
         val today = LocalDate.parse("2018-06-09")
         val inAMonth = LocalDate.parse("2018-07-09")
         val inTwoMonths = LocalDate.parse("2018-08-09")
 
-        val subscriptionToBeRenewedId = subscriptionEventStore.nextId()
+        val subscriptionToBeRenewedId = eventStore.nextId()
         val subscriptionToBeRenewedEndDate = today.plusMonths(1)
 
-        subscriptionEventStore.store(
+        eventStore.store(
             listOf(
                 NewSubscription(
                     subscriptionToBeRenewedId,
@@ -33,7 +33,7 @@ class TurnoverForAGivenMonthTest {
                     false
                 ),
                 NewSubscription(
-                    subscriptionEventStore.nextId(),
+                    eventStore.nextId(),
                     400.0,
                     12,
                     today.toString(),
@@ -47,7 +47,7 @@ class TurnoverForAGivenMonthTest {
                     subscriptionToBeRenewedEndDate.plusMonths(1).toString()
                 ),
                 NewSubscription(
-                    subscriptionEventStore.nextId(),
+                    eventStore.nextId(),
                     500.0,
                     12,
                     inAMonth.toString(),
@@ -58,12 +58,12 @@ class TurnoverForAGivenMonthTest {
             )
         )
 
-        val tested = TurnoverForAGivenMonth(subscriptionEventStore)
+        val tested = TurnoverForAGivenMonth(eventStore)
 
-        assertEquals(2, subscriptionEventStore.onGoingSubscriptions(today).size)
+        assertEquals(2, eventStore.onGoingSubscriptions(today).size)
         assertEquals(Turnover(83), tested.handle(TurnoverForAGivenMonthQuery(today)))
 
-        assertEquals(3, subscriptionEventStore.onGoingSubscriptions(inTwoMonths).size)
+        assertEquals(3, eventStore.onGoingSubscriptions(inTwoMonths).size)
         assertEquals(Turnover(125), tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)))
     }
 }

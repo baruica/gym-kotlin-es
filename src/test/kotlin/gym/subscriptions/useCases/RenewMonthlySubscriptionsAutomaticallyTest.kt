@@ -10,11 +10,11 @@ class RenewMonthlySubscriptionsAutomaticallyTest {
 
     @Test
     fun handle() {
-        val subscriptionEventStore = InMemorySubscriptionEventStore()
-        val monthlySubscriptionId = subscriptionEventStore.nextId()
-        val yearlySubscriptionId = subscriptionEventStore.nextId()
+        val eventStore = InMemorySubscriptionEventStore()
+        val monthlySubscriptionId = eventStore.nextId()
+        val yearlySubscriptionId = eventStore.nextId()
 
-        subscriptionEventStore.store(
+        eventStore.store(
             listOf(
                 NewSubscription(
                     monthlySubscriptionId,
@@ -37,7 +37,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest {
             )
         )
 
-        val tested = RenewMonthlySubscriptionsAutomatically(subscriptionEventStore)
+        val tested = RenewMonthlySubscriptionsAutomatically(eventStore)
 
         val events = tested.handle(
             RenewMonthlySubscriptionsAutomaticallyCommand("2018-07-09")

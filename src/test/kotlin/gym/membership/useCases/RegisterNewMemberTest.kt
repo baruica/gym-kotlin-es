@@ -10,16 +10,16 @@ internal class RegisterNewMemberTest {
 
     @Test
     fun handle() {
-        val memberEventStore = InMemoryMemberEventStore()
+        val eventStore = InMemoryMemberEventStore()
 
         val email = "luke@gmail.com"
 
-        assertNull(memberEventStore.findByEmailAddress(EmailAddress(email)))
+        assertNull(eventStore.findByEmailAddress(EmailAddress(email)))
 
         val subscriptionId = "subscriptionId def"
         val subscriptionStartDate = "2018-06-05"
 
-        val tested = RegisterNewMember(memberEventStore)
+        val tested = RegisterNewMember(eventStore)
 
         val events = tested.handle(
             RegisterNewMemberCommand(

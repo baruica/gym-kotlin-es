@@ -11,22 +11,22 @@ class ChangePlanPriceTest {
 
     @Test
     fun handle() {
-        val planEventStore = InMemoryPlanEventStore()
-        val planId = planEventStore.nextId()
+        val eventStore = InMemoryPlanEventStore()
+        val planId = eventStore.nextId()
 
-        planEventStore.store(
+        eventStore.store(
             listOf(
                 NewPlanCreated(planId, 450, 12)
             )
         )
 
-        val tested = ChangePlanPrice(planEventStore)
+        val tested = ChangePlanPrice(eventStore)
 
         tested.handle(
             ChangePriceOfPlanCommand(planId, 400)
         )
 
-        val aggregateHistory = planEventStore.getAggregateHistory(PlanId(planId))
+        val aggregateHistory = eventStore.getAggregateHistory(PlanId(planId))
 
         assertEquals(
             aggregateHistory.events.last(),

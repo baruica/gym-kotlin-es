@@ -10,16 +10,16 @@ class CreateNewPlanTest {
 
     @Test
     fun handle() {
-        val planEventStore = InMemoryPlanEventStore()
-        val planId = planEventStore.nextId()
+        val eventStore = InMemoryPlanEventStore()
+        val planId = eventStore.nextId()
 
-        assertEquals(0, planEventStore.getAggregateHistory(PlanId(planId)).events.size)
+        assertEquals(0, eventStore.getAggregateHistory(PlanId(planId)).events.size)
 
-        val tested = CreateNewPlan(planEventStore)
+        val tested = CreateNewPlan(eventStore)
 
         tested.handle(CreateNewPlanCommand(planId, 300, 1))
 
-        val aggregateHistory = planEventStore.getAggregateHistory(PlanId(planId))
+        val aggregateHistory = eventStore.getAggregateHistory(PlanId(planId))
 
         assertEquals(1, aggregateHistory.events.size)
         assertEquals(

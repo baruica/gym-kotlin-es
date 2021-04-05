@@ -19,8 +19,8 @@ class SendWelcomeEmailTest {
         val subscriptionId = SubscriptionId("subscription def")
         val memberSince = LocalDate.now()
 
-        val memberEventStore = InMemoryMemberEventStore()
-        memberEventStore.store(
+        val eventStore = InMemoryMemberEventStore()
+        eventStore.store(
             listOf(
                 NewMemberRegistered(
                     memberId.toString(),
@@ -33,7 +33,7 @@ class SendWelcomeEmailTest {
 
         val mailer = InMemoryMailer()
 
-        val tested = SendWelcomeEmail(memberEventStore, mailer)
+        val tested = SendWelcomeEmail(eventStore, mailer)
 
         val events = tested.handle(
             SendWelcomeEmailCommand(memberId.toString())
