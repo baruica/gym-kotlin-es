@@ -40,12 +40,12 @@ class SendWelcomeEmailTest {
         )
 
         assertEquals(
-            events.last(),
             WelcomeEmailWasSentToNewMember(
                 memberId.toString(),
                 emailAddress,
                 memberSince.toString()
-            )
+            ),
+            events.last()
         )
         assertTrue(mailer.welcomeEmailWasSentTo("bob@gmail.com"))
     }

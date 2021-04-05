@@ -23,12 +23,12 @@ class CreateNewPlanTest {
 
         assertEquals(1, aggregateHistory.events.size)
         assertEquals(
-            aggregateHistory.events.last(),
             NewPlanCreated(
                 aggregateHistory.aggregateId.toString(),
                 300,
                 1
-            )
+            ),
+            aggregateHistory.events.last()
         )
     }
 }

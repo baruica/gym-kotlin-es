@@ -45,12 +45,12 @@ class RenewMonthlySubscriptionsAutomaticallyTest {
 
         assertEquals(1, events.size)
         assertEquals(
-            events.last(),
             SubscriptionRenewed(
                 monthlySubscriptionId,
                 "2018-07-09",
                 "2018-08-08"
-            )
+            ),
+            events.last()
         )
     }
 }

@@ -30,13 +30,13 @@ internal class RegisterNewMemberTest {
         )
 
         assertEquals(
-            events.last(),
             NewMemberRegistered(
                 events.last().getAggregateId(),
                 email,
                 subscriptionId,
                 subscriptionStartDate
-            )
+            ),
+            events.last()
         )
     }
 }

@@ -30,7 +30,6 @@ class SubscribeToPlanTest {
 
         assertEquals(1, aggregateHistory.events.size)
         assertEquals(
-            aggregateHistory.events.last(),
             NewSubscription(
                 aggregateHistory.aggregateId.toString(),
                 900.0,
@@ -39,7 +38,8 @@ class SubscribeToPlanTest {
                 "2019-12-17",
                 "bob@mail.com",
                 false
-            )
+            ),
+            aggregateHistory.events.last()
         )
     }
 }
