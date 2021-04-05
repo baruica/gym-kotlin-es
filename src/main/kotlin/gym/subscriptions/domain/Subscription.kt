@@ -121,7 +121,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     }
 
     private fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
-        return date == startDate.plus(Period.ofYears(3))
+        return date == startDate.plusYears(3)
             && date == endDate
     }
 }

@@ -5,7 +5,6 @@ import common.AggregateId
 import common.DomainEvent
 import gym.subscriptions.domain.*
 import java.time.LocalDate
-import java.time.Period
 
 class InMemorySubscriptionEventStore : SubscriptionEventStore {
 
@@ -50,7 +49,7 @@ class InMemorySubscriptionEventStore : SubscriptionEventStore {
         events.values.forEach { subscriptionEvents ->
             subscriptionEvents.forEach { subscriptionEvent ->
                 if (subscriptionEvent is NewSubscription) {
-                    if (LocalDate.parse(subscriptionEvent.subscriptionStartDate).plus(Period.ofYears(3)).equals(date)) {
+                    if (LocalDate.parse(subscriptionEvent.subscriptionStartDate).plusYears(3).equals(date)) {
                         threeYearsAnniversarySubscriptions.add(
                             restoreSubscription(subscriptionEvent.getAggregateId())
                         )
