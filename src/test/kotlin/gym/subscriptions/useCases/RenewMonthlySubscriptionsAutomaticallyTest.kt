@@ -18,7 +18,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest {
             listOf(
                 NewSubscription(
                     monthlySubscriptionId,
-                    300,
+                    300.0,
                     1,
                     "2018-06-09",
                     "2018-07-09",
@@ -27,7 +27,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest {
                 ),
                 NewSubscription(
                     yearlySubscriptionId,
-                    1200,
+                    1200.0,
                     12,
                     "2018-06-12",
                     "2019-06-12",

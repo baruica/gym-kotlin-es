@@ -12,7 +12,7 @@ sealed class SubscriptionEvent : DomainEvent {
 
 data class NewSubscription(
     override val subscriptionId: String,
-    val subscriptionPrice: Int,
+    val subscriptionPrice: Double,
     val planDurationInMonths: Int,
     val subscriptionStartDate: String,
     val subscriptionEndDate: String,

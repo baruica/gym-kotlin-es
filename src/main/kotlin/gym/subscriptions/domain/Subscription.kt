@@ -6,6 +6,7 @@ import common.AggregateId
 import common.DomainEvent
 import java.time.LocalDate
 import java.time.Period
+import kotlin.math.roundToInt
 
 inline class SubscriptionId(private val id: String) : AggregateId {
     override fun toString(): String = id
@@ -42,7 +43,11 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
             isStudent: Boolean
         ): Subscription {
             val subscription = Subscription(SubscriptionId(subscriptionId))
-            val priceAfterDiscount = Price(planPrice).applyDiscount(planDurationInMonths, isStudent)
+
+            val priceAfterDiscount = Price(planPrice)
+                .applyDurationDiscount(planDurationInMonths)
+                .applyStudentDiscount(isStudent)
+
             val subscriptionEndDate = (subscriptionDate.plusMonths(planDurationInMonths.toLong())).minusDays(1)
 
             subscription.applyChange(
@@ -94,26 +99,33 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     }
 
     fun monthlyTurnover(): Int {
-        return (price.amount / duration.value)
+        return (price.amount / duration.value).roundToInt()
     }
 }
 
-internal data class Price(val amount: Int) {
+internal data class Price(val amount: Double) {
+    constructor(amount: Int) : this(amount.toDouble())
+
     init {
         require(amount >= 0) {
             "Price amount must be non-negative, was [$amount]"
         }
     }
 
-    fun applyDiscount(durationInMonths: Int, isStudent: Boolean): Price {
-        var rate = 0.0
-        if (durationInMonths == 12) {
-            rate += 0.1
-        }
-        if (isStudent) {
-            rate += 0.2
-        }
-        return Price((amount.toDouble() * (1 - rate)).toInt())
+    fun applyDurationDiscount(durationInMonths: Int): Price {
+        return if (durationInMonths == 12) {
+            applyDiscount(0.1)
+        } else this
+    }
+
+    fun applyStudentDiscount(isStudent: Boolean): Price {
+        return if (isStudent) {
+            applyDiscount(0.2)
+        } else this
+    }
+
+    private fun applyDiscount(rate: Double): Price {
+        return Price(amount * (1 - rate))
     }
 }
 

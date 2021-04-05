@@ -25,7 +25,7 @@ class TurnoverForAGivenMonthTest {
             listOf(
                 NewSubscription(
                     subscriptionToBeRenewedId,
-                    50,
+                    50.0,
                     1,
                     today.toString(),
                     subscriptionToBeRenewedEndDate.toString(),
@@ -34,7 +34,7 @@ class TurnoverForAGivenMonthTest {
                 ),
                 NewSubscription(
                     subscriptionEventStore.nextId(),
-                    400,
+                    400.0,
                     12,
                     today.toString(),
                     today.plusMonths(12).toString(),
@@ -48,7 +48,7 @@ class TurnoverForAGivenMonthTest {
                 ),
                 NewSubscription(
                     subscriptionEventStore.nextId(),
-                    500,
+                    500.0,
                     12,
                     inAMonth.toString(),
                     inAMonth.plusMonths(12).toString(),
@@ -64,6 +64,6 @@ class TurnoverForAGivenMonthTest {
         assertEquals(Turnover(83), tested.handle(TurnoverForAGivenMonthQuery(today)))
 
         assertEquals(3, subscriptionEventStore.onGoingSubscriptions(inTwoMonths).size)
-        assertEquals(Turnover(124), tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)))
+        assertEquals(Turnover(125), tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)))
     }
 }
