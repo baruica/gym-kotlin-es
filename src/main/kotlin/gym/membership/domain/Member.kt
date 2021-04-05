@@ -82,8 +82,8 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
         )
     }
 
-    fun isThreeYearsAnniversary(asOfDate: LocalDate): Boolean {
-        return asOfDate.minusYears(3).isEqual(memberSince)
+    fun isThreeYearsAnniversary(date: LocalDate): Boolean {
+        return date.minusYears(3).isEqual(memberSince)
     }
 
     fun mark3YearsAnniversaryThankYouEmailAsSent() {

@@ -89,8 +89,8 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
         )
     }
 
-    fun isOngoing(asOfDate: LocalDate): Boolean {
-        return asOfDate in startDate..endDate
+    fun isOngoing(date: LocalDate): Boolean {
+        return date in startDate..endDate
     }
 
     fun monthlyTurnover(): Int {
