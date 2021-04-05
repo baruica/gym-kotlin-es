@@ -25,3 +25,8 @@ data class SubscriptionRenewed(
     val oldEndDate: String,
     val newEndDate: String
 ) : SubscriptionEvent()
+
+data class SubscriptionDiscountedFor3YearsAnniversary(
+    override val subscriptionId: String,
+    val discountedPrice: Double
+) : SubscriptionEvent()

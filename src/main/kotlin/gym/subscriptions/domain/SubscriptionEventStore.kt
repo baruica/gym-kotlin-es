@@ -10,4 +10,6 @@ interface SubscriptionEventStore : EventStore {
     fun endedMonthlySubscriptions(date: LocalDate): List<Subscription>
 
     fun onGoingSubscriptions(date: LocalDate): List<Subscription>
+
+    fun threeYearsAnniversarySubscriptions(date: LocalDate): List<Subscription>
 }

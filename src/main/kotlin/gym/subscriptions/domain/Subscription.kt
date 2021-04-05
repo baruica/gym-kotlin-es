@@ -30,6 +30,9 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
             is SubscriptionRenewed -> {
                 endDate = LocalDate.parse(event.newEndDate)
             }
+            is SubscriptionDiscountedFor3YearsAnniversary -> {
+                price = Price(event.discountedPrice)
+            }
         }
     }
 
@@ -101,6 +104,25 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     fun monthlyTurnover(): Int {
         return (price.amount / duration.value).roundToInt()
     }
+
+    fun applyThreeYearsAnniversaryDiscount(date: LocalDate) {
+        val discountedPrice = price.applyThreeYearsAnniversaryDiscount(
+            hasThreeYearsAnniversaryOn(date)
+        )
+
+        if (price != discountedPrice) {
+            applyChange(
+                SubscriptionDiscountedFor3YearsAnniversary(
+                    id.toString(),
+                    discountedPrice.amount
+                )
+            )
+        }
+    }
+
+    private fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
+        return startDate.plus(Period.ofYears(3)).equals(date)
+    }
 }
 
 internal data class Price(val amount: Double) {
@@ -121,6 +143,12 @@ internal data class Price(val amount: Double) {
     fun applyStudentDiscount(isStudent: Boolean): Price {
         return if (isStudent) {
             applyDiscount(0.2)
+        } else this
+    }
+
+    fun applyThreeYearsAnniversaryDiscount(hasThreeYearsAnniversary: Boolean): Price {
+        return if (hasThreeYearsAnniversary) {
+            applyDiscount(0.05)
         } else this
     }
 

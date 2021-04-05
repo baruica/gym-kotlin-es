@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
 class SubscriptionTest {
 
     @Test
-    fun `no discount for monthly subscription`() {
+    fun `no discount for a non-student subscribing to a monthly subscription`() {
         val subscriptionWithoutDiscount = monthlySubscription(300, fifthOfJune(), false)
 
         assertEquals(300.0, (subscriptionWithoutDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice)
@@ -42,6 +42,15 @@ class SubscriptionTest {
             72.0,
             (yearlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice
         )
+    }
+
+    @Test
+    fun `5 percent discount after 3 years`() {
+        val threeYearsOldSubscription = yearlySubscription(1000, fifthOfJune())
+        assertEquals(Price(900), threeYearsOldSubscription.price)
+
+        threeYearsOldSubscription.applyThreeYearsAnniversaryDiscount(LocalDate.parse("2021-06-05"))
+        assertEquals(Price(855), threeYearsOldSubscription.price)
     }
 
     @Test
