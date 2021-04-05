@@ -51,7 +51,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
                 .applyDurationDiscount(planDurationInMonths)
                 .applyStudentDiscount(isStudent)
 
-            val subscriptionEndDate = (subscriptionDate.plusMonths(planDurationInMonths.toLong())).minusDays(1)
+            val endDate = subscriptionDate.plusMonths(planDurationInMonths.toLong())
 
             subscription.applyChange(
                 NewSubscription(
@@ -59,7 +59,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
                     priceAfterDiscount.amount,
                     Duration(planDurationInMonths).value,
                     subscriptionDate.toString(),
-                    subscriptionEndDate.toString(),
+                    endDate.toString(),
                     email,
                     isStudent
                 )
@@ -86,7 +86,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     }
 
     fun renew() {
-        val newEndDate = (endDate.plus(Period.ofMonths(duration.value))).minusDays(1)
+        val newEndDate = endDate.plus(Period.ofMonths(duration.value))
 
         applyChange(
             SubscriptionRenewed(
@@ -121,7 +121,8 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     }
 
     private fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
-        return startDate.plus(Period.ofYears(3)).equals(date)
+        return date == startDate.plus(Period.ofYears(3))
+            && date == endDate
     }
 }
 

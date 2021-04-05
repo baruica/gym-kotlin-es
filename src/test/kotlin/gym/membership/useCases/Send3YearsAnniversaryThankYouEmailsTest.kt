@@ -1,6 +1,5 @@
 package gym.membership.useCases
 
-import gym.fifthOfJune
 import gym.membership.domain.NewMemberRegistered
 import gym.membership.domain.ThreeYearsAnniversaryThankYouEmailSent
 import org.junit.jupiter.api.Test
@@ -15,13 +14,13 @@ class Send3YearsAnniversaryThankYouEmailsTest {
     fun handle() {
         val eventStore = InMemoryMemberEventStore()
 
-        val memberSinceJulie = fifthOfJune().minusYears(3)
+        val memberSinceJulie = LocalDate.parse("2018-06-05").minusYears(3)
         val newMemberRegisteredJulie = newMemberRegistered("julie@gmail.com", memberSinceJulie)
 
-        val memberSinceBob = fifthOfJune().minusYears(2)
+        val memberSinceBob = LocalDate.parse("2018-06-05").minusYears(2)
         val newMemberRegisteredBob = newMemberRegistered("bob@gmail.com", memberSinceBob)
 
-        val memberSinceLuke = fifthOfJune().minusYears(3)
+        val memberSinceLuke = LocalDate.parse("2018-06-05").minusYears(3)
         val newMemberRegisteredLuke = newMemberRegistered("luke@gmail.com", memberSinceLuke)
 
         eventStore.store(

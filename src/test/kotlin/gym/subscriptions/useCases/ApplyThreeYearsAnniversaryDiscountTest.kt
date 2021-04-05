@@ -2,6 +2,7 @@ package gym.subscriptions.useCases
 
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionDiscountedFor3YearsAnniversary
+import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -15,7 +16,9 @@ internal class ApplyThreeYearsAnniversaryDiscountTest {
         val subscriptionId = eventStore.nextId()
         eventStore.store(
             listOf(
-                NewSubscription(subscriptionId, 1000.0, 12, "2015-07-09", "2016-07-09", "leia@gmail.com", false)
+                NewSubscription(subscriptionId, 1000.0, 12, "2015-07-09", "2016-07-09", "leia@gmail.com", false),
+                SubscriptionRenewed(subscriptionId, "2016-07-09", "2017-07-09"),
+                SubscriptionRenewed(subscriptionId, "2017-07-09", "2018-07-09")
             )
         )
 

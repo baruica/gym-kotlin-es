@@ -48,7 +48,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest {
             SubscriptionRenewed(
                 monthlySubscriptionId,
                 "2018-07-09",
-                "2018-08-08"
+                "2018-08-09"
             ),
             events.last()
         )
