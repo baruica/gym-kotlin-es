@@ -106,23 +106,34 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
     }
 
     fun applyThreeYearsAnniversaryDiscount(date: LocalDate) {
-        val discountedPrice = price.applyThreeYearsAnniversaryDiscount(
-            hasThreeYearsAnniversaryOn(date)
-        )
-
-        if (price != discountedPrice) {
-            applyChange(
-                SubscriptionDiscountedFor3YearsAnniversary(
-                    id.toString(),
-                    discountedPrice.amount
-                )
+        if (threeYearsDiscountNotYetApplied()) {
+            val discountedPrice = price.applyThreeYearsAnniversaryDiscount(
+                hasThreeYearsAnniversaryOn(date)
             )
+
+            if (price != discountedPrice) {
+                applyChange(
+                    SubscriptionDiscountedFor3YearsAnniversary(
+                        id.toString(),
+                        discountedPrice.amount
+                    )
+                )
+            }
         }
     }
 
     private fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
         return date == startDate.plusYears(3)
             && date == endDate
+    }
+
+    private fun threeYearsDiscountNotYetApplied(): Boolean {
+        return !this.events.contains(
+            SubscriptionDiscountedFor3YearsAnniversary(
+                id.toString(),
+                price.amount
+            )
+        )
     }
 }
 
