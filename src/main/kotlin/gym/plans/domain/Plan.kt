@@ -5,7 +5,8 @@ import common.AggregateHistory
 import common.AggregateId
 import common.DomainEvent
 
-inline class PlanId(private val id: String) : AggregateId {
+@JvmInline
+value class PlanId(private val id: String) : AggregateId {
     override fun toString(): String = id
 }
 
