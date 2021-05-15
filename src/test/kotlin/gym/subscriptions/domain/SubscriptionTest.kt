@@ -16,23 +16,25 @@ class SubscriptionTest : AnnotationSpec() {
     fun `no discount for a non-student subscribing to a monthly subscription`() {
         val subscriptionWithoutDiscount = monthlySubscription(300, LocalDate.parse("2018-06-05"), false)
 
-        (subscriptionWithoutDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice shouldBe 300.0
+        (subscriptionWithoutDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice shouldBe 300
     }
 
     @Test
     fun `10 percent discount for yearly subscription`() {
         val subscriptionWithYearlyDiscount = yearlySubscription(1000, LocalDate.parse("2018-06-05"), false)
 
-        (subscriptionWithYearlyDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice shouldBe 900.0
+        (subscriptionWithYearlyDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice shouldBe 900
     }
 
     @Test
     fun `20 percent discount for students`() {
         val monthlySubscriptionWithStudentDiscount = monthlySubscription(100, LocalDate.parse("2018-06-05"), true)
-        (monthlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice shouldBe 80.0
+        (monthlySubscriptionWithStudentDiscount.occuredEvents()
+            .last() as NewSubscription).subscriptionPrice shouldBe 80
 
         val yearlySubscriptionWithStudentDiscount = yearlySubscription(100, LocalDate.parse("2018-06-05"), true)
-        (yearlySubscriptionWithStudentDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice shouldBe 72.0
+        (yearlySubscriptionWithStudentDiscount.occuredEvents()
+            .last() as NewSubscription).subscriptionPrice shouldBe 72
     }
 
     @Test
