@@ -4,10 +4,11 @@ import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionDiscountedFor3YearsAnniversary
 import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldEndWith
 
-internal class ApplyThreeYearsAnniversaryDiscountTest {
+internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
 
     @Test
     fun handle() {
@@ -27,22 +28,19 @@ internal class ApplyThreeYearsAnniversaryDiscountTest {
         val eventsBeforeThreeYearsAnniversary = tested.handle(
             ApplyThreeYearsAnniversaryDiscountCommand("2018-07-08")
         )
-        assertEquals(0, eventsBeforeThreeYearsAnniversary.size)
+        eventsBeforeThreeYearsAnniversary.shouldBeEmpty()
 
         val eventsWithThreeYearsDiscount = tested.handle(
             ApplyThreeYearsAnniversaryDiscountCommand("2018-07-09")
         )
-        assertEquals(
-            SubscriptionDiscountedFor3YearsAnniversary(
-                subscriptionId,
-                950.0
-            ),
-            eventsWithThreeYearsDiscount.last()
+        eventsWithThreeYearsDiscount shouldEndWith SubscriptionDiscountedFor3YearsAnniversary(
+            subscriptionId,
+            950.0
         )
 
         val eventsAfterThreeYearsAnniversary = tested.handle(
             ApplyThreeYearsAnniversaryDiscountCommand("2018-07-10")
         )
-        assertEquals(0, eventsAfterThreeYearsAnniversary.size)
+        eventsAfterThreeYearsAnniversary.shouldBeEmpty()
     }
 }

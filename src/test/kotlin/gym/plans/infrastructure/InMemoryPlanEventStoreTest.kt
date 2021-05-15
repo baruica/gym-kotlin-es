@@ -3,10 +3,10 @@ package gym.plans.infrastructure
 import gym.plans.domain.NewPlanCreated
 import gym.plans.domain.PlanId
 import gym.plans.domain.PlanPriceChanged
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldContainExactly
 
-class InMemoryPlanEventStoreTest {
+class InMemoryPlanEventStoreTest : AnnotationSpec() {
 
     @Test
     fun `what is stored can be retrived`() {
@@ -28,21 +28,19 @@ class InMemoryPlanEventStoreTest {
             )
         )
 
-        assertEquals(
+        tested.getAggregateHistory(PlanId("planId1")).events.shouldContainExactly(
             listOf(
                 planId1Event1,
                 planId1Event2,
                 planId1Event3
-            ),
-            tested.getAggregateHistory(PlanId("planId1")).events
+            )
         )
 
-        assertEquals(
+        tested.getAggregateHistory(PlanId("planId2")).events.shouldContainExactly(
             listOf(
                 planId2Event1,
                 planId2Event2
-            ),
-            tested.getAggregateHistory(PlanId("planId2")).events
+            )
         )
     }
 }

@@ -4,11 +4,12 @@ import gym.reporting.Turnover
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import java.time.LocalDate
-import kotlin.test.assertEquals
 
-class TurnoverForAGivenMonthTest {
+class TurnoverForAGivenMonthTest : AnnotationSpec() {
 
     @Test
     fun `turnover for a given month with ongoing subscriptions`() {
@@ -60,10 +61,10 @@ class TurnoverForAGivenMonthTest {
 
         val tested = TurnoverForAGivenMonth(eventStore)
 
-        assertEquals(2, eventStore.onGoingSubscriptions(today).size)
-        assertEquals(Turnover(83), tested.handle(TurnoverForAGivenMonthQuery(today)))
+        eventStore.onGoingSubscriptions(today).shouldHaveSize(2)
+        tested.handle(TurnoverForAGivenMonthQuery(today)) shouldBe Turnover(83)
 
-        assertEquals(3, eventStore.onGoingSubscriptions(inTwoMonths).size)
-        assertEquals(Turnover(125), tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)))
+        eventStore.onGoingSubscriptions(inTwoMonths).shouldHaveSize(3)
+        tested.handle(TurnoverForAGivenMonthQuery(inTwoMonths)) shouldBe Turnover(125)
     }
 }

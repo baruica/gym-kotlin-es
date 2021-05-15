@@ -1,22 +1,24 @@
 package gym.plans.domain
 
 import common.AggregateHistory
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldEndWith
+import io.kotest.matchers.shouldBe
 
-class PlanTest {
+class PlanTest : AnnotationSpec() {
 
     @Test
     fun `a duration cannot be anything but 1 month or 12 months`() {
-        assertFailsWith<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             Plan.new("plan abc", 400, 4)
         }
     }
 
     @Test
     fun `a price cannot be negative`() {
-        assertFailsWith<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             Plan.new("plan abc", -10, 1)
         }
     }
@@ -26,9 +28,8 @@ class PlanTest {
         val tested = Plan.new("plan abc", 400, 1)
         tested.changePrice(500)
 
-        assertEquals(
-            PlanPriceChanged("plan abc", 400, 500),
-            tested.events.last()
+        tested.events.shouldEndWith(
+            PlanPriceChanged("plan abc", 400, 500)
         )
     }
 
@@ -39,15 +40,15 @@ class PlanTest {
 
         val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
 
-        assertEquals(tested.price, restoredFromEvents.price)
-        assertEquals(tested.duration, restoredFromEvents.duration)
+        restoredFromEvents.price shouldBe tested.price
+        restoredFromEvents.duration shouldBe tested.duration
 
-        assertEquals(emptyList(), tested.occuredEvents())
+        tested.occuredEvents().shouldBeEmpty()
     }
 
     @Test
     fun `cannot be restored if no events`() {
-        assertFailsWith<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             Plan.restoreFrom(AggregateHistory(PlanId("planId 42"), listOf()))
         }
     }

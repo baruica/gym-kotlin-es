@@ -4,10 +4,10 @@ import gym.plans.domain.NewPlanCreated
 import gym.plans.domain.PlanId
 import gym.plans.domain.PlanPriceChanged
 import gym.plans.infrastructure.InMemoryPlanEventStore
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldEndWith
 
-class ChangePlanPriceTest {
+class ChangePlanPriceTest : AnnotationSpec() {
 
     @Test
     fun handle() {
@@ -28,9 +28,8 @@ class ChangePlanPriceTest {
 
         val aggregateHistory = eventStore.getAggregateHistory(PlanId(planId))
 
-        assertEquals(
-            PlanPriceChanged(planId, 450, 400),
-            aggregateHistory.events.last()
+        aggregateHistory.events.shouldEndWith(
+            PlanPriceChanged(planId, 450, 400)
         )
     }
 }

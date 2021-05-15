@@ -3,10 +3,11 @@ package gym.subscriptions.useCases
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldEndWith
+import io.kotest.matchers.collections.shouldHaveSize
 
-class RenewMonthlySubscriptionsAutomaticallyTest {
+class RenewMonthlySubscriptionsAutomaticallyTest : AnnotationSpec() {
 
     @Test
     fun handle() {
@@ -43,14 +44,13 @@ class RenewMonthlySubscriptionsAutomaticallyTest {
             RenewMonthlySubscriptionsAutomaticallyCommand("2018-07-09")
         )
 
-        assertEquals(1, events.size)
-        assertEquals(
+        events.shouldHaveSize(1)
+        events.shouldEndWith(
             SubscriptionRenewed(
                 monthlySubscriptionId,
                 "2018-07-09",
                 "2018-08-09"
-            ),
-            events.last()
+            )
         )
     }
 }

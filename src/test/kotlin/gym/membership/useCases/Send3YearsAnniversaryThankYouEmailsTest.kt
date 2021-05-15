@@ -2,13 +2,15 @@ package gym.membership.useCases
 
 import gym.membership.domain.NewMemberRegistered
 import gym.membership.domain.ThreeYearsAnniversaryThankYouEmailSent
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldNotContain
 import java.time.LocalDate
 import java.util.*
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
-class Send3YearsAnniversaryThankYouEmailsTest {
+class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
 
     @Test
     fun handle() {
@@ -39,36 +41,30 @@ class Send3YearsAnniversaryThankYouEmailsTest {
             Send3YearsAnniversaryThankYouEmailsCommand("2018-06-05")
         )
 
-        assertTrue(mailer.threeYearsAnniversaryWasSentTo("julie@gmail.com"))
-        assertTrue(
-            events.contains(
-                ThreeYearsAnniversaryThankYouEmailSent(
-                    newMemberRegisteredJulie.memberId,
-                    newMemberRegisteredJulie.memberEmailAddress,
-                    memberSinceJulie.toString()
-                )
+        mailer.threeYearsAnniversaryWasSentTo("julie@gmail.com").shouldBeTrue()
+        events.shouldContain(
+            ThreeYearsAnniversaryThankYouEmailSent(
+                newMemberRegisteredJulie.memberId,
+                newMemberRegisteredJulie.memberEmailAddress,
+                memberSinceJulie.toString()
             )
         )
 
-        assertFalse(mailer.threeYearsAnniversaryWasSentTo("bob@gmail.com"))
-        assertFalse(
-            events.contains(
-                ThreeYearsAnniversaryThankYouEmailSent(
-                    newMemberRegisteredBob.memberId,
-                    newMemberRegisteredBob.memberEmailAddress,
-                    memberSinceBob.toString()
-                )
+        mailer.threeYearsAnniversaryWasSentTo("bob@gmail.com").shouldBeFalse()
+        events.shouldNotContain(
+            ThreeYearsAnniversaryThankYouEmailSent(
+                newMemberRegisteredBob.memberId,
+                newMemberRegisteredBob.memberEmailAddress,
+                memberSinceBob.toString()
             )
         )
 
-        assertTrue(mailer.threeYearsAnniversaryWasSentTo("luke@gmail.com"))
-        assertTrue(
-            events.contains(
-                ThreeYearsAnniversaryThankYouEmailSent(
-                    newMemberRegisteredLuke.memberId,
-                    newMemberRegisteredLuke.memberEmailAddress,
-                    memberSinceLuke.toString()
-                )
+        mailer.threeYearsAnniversaryWasSentTo("luke@gmail.com").shouldBeTrue()
+        events.shouldContain(
+            ThreeYearsAnniversaryThankYouEmailSent(
+                newMemberRegisteredLuke.memberId,
+                newMemberRegisteredLuke.memberEmailAddress,
+                memberSinceLuke.toString()
             )
         )
     }

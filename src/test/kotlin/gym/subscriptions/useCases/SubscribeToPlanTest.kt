@@ -3,10 +3,11 @@ package gym.subscriptions.useCases
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionId
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldEndWith
+import io.kotest.matchers.collections.shouldHaveSize
 
-class SubscribeToPlanTest {
+class SubscribeToPlanTest : AnnotationSpec() {
 
     @Test
     fun handle() {
@@ -28,8 +29,8 @@ class SubscribeToPlanTest {
 
         val aggregateHistory = eventStore.getAggregateHistory(SubscriptionId(subscriptionId))
 
-        assertEquals(1, aggregateHistory.events.size)
-        assertEquals(
+        aggregateHistory.events.shouldHaveSize(1)
+        aggregateHistory.events.shouldEndWith(
             NewSubscription(
                 aggregateHistory.aggregateId.toString(),
                 900.0,
@@ -38,8 +39,7 @@ class SubscribeToPlanTest {
                 "2019-12-18",
                 "bob@mail.com",
                 false
-            ),
-            aggregateHistory.events.last()
+            )
         )
     }
 }

@@ -3,17 +3,19 @@ package gym.plans.useCases
 import gym.plans.domain.NewPlanCreated
 import gym.plans.domain.PlanId
 import gym.plans.infrastructure.InMemoryPlanEventStore
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldEndWith
+import io.kotest.matchers.collections.shouldHaveSize
 
-class CreateNewPlanTest {
+class CreateNewPlanTest : AnnotationSpec() {
 
     @Test
     fun handle() {
         val eventStore = InMemoryPlanEventStore()
         val planId = eventStore.nextId()
 
-        assertEquals(0, eventStore.getAggregateHistory(PlanId(planId)).events.size)
+        eventStore.getAggregateHistory(PlanId(planId)).events.shouldBeEmpty()
 
         val tested = CreateNewPlan(eventStore)
 
@@ -21,14 +23,13 @@ class CreateNewPlanTest {
 
         val aggregateHistory = eventStore.getAggregateHistory(PlanId(planId))
 
-        assertEquals(1, aggregateHistory.events.size)
-        assertEquals(
+        aggregateHistory.events.shouldHaveSize(1)
+        aggregateHistory.events.shouldEndWith(
             NewPlanCreated(
                 aggregateHistory.aggregateId.toString(),
                 300,
                 1
-            ),
-            aggregateHistory.events.last()
+            )
         )
     }
 }

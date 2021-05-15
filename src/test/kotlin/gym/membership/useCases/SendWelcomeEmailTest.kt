@@ -4,12 +4,12 @@ import gym.membership.domain.MemberId
 import gym.membership.domain.NewMemberRegistered
 import gym.membership.domain.WelcomeEmailWasSentToNewMember
 import gym.subscriptions.domain.SubscriptionId
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldEndWith
 import java.time.LocalDate
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
-class SendWelcomeEmailTest {
+class SendWelcomeEmailTest : AnnotationSpec() {
 
     @Test
     fun handle() {
@@ -39,14 +39,13 @@ class SendWelcomeEmailTest {
             SendWelcomeEmailCommand(memberId.toString())
         )
 
-        assertEquals(
+        events.shouldEndWith(
             WelcomeEmailWasSentToNewMember(
                 memberId.toString(),
                 emailAddress,
                 memberSince.toString()
-            ),
-            events.last()
+            )
         )
-        assertTrue(mailer.welcomeEmailWasSentTo("bob@gmail.com"))
+        mailer.welcomeEmailWasSentTo("bob@gmail.com").shouldBeTrue()
     }
 }

@@ -1,14 +1,15 @@
 package gym.membership.domain
 
 import common.AggregateHistory
-import org.junit.jupiter.api.Test
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import java.time.LocalDate
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
-class MemberTest {
+class MemberTest : AnnotationSpec() {
 
     @Test
     fun `is 3 years anniversary`() {
@@ -19,9 +20,9 @@ class MemberTest {
             LocalDate.parse("2018-06-05").minusYears(3)
         )
 
-        assertFalse(memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-04")))
-        assertTrue(memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-05")))
-        assertFalse(memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-07-06")))
+        memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-04")).shouldBeFalse()
+        memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-05")).shouldBeTrue()
+        memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-07-06")).shouldBeFalse()
     }
 
     @Test
@@ -36,16 +37,16 @@ class MemberTest {
 
         val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
 
-        assertEquals(tested.emailAddress, restoredFromEvents.emailAddress)
-        assertEquals(tested.subscriptionId, restoredFromEvents.subscriptionId)
-        assertEquals(tested.memberSince, restoredFromEvents.memberSince)
+        restoredFromEvents.emailAddress shouldBe tested.emailAddress
+        restoredFromEvents.subscriptionId shouldBe tested.subscriptionId
+        restoredFromEvents.memberSince shouldBe tested.memberSince
 
-        assertEquals(emptyList(), tested.occuredEvents())
+        tested.occuredEvents().shouldBeEmpty()
     }
 
     @Test
     fun `cannot be restored if no events`() {
-        assertFailsWith<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             Member.restoreFrom(AggregateHistory(MemberId("memberId 42"), listOf()))
         }
     }

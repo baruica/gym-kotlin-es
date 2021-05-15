@@ -2,11 +2,11 @@ package gym.membership.useCases
 
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.NewMemberRegistered
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldEndWith
+import io.kotest.matchers.nulls.shouldBeNull
 
-internal class RegisterNewMemberTest {
+internal class RegisterNewMemberTest : AnnotationSpec() {
 
     @Test
     fun handle() {
@@ -14,7 +14,7 @@ internal class RegisterNewMemberTest {
 
         val email = "luke@gmail.com"
 
-        assertNull(eventStore.findByEmailAddress(EmailAddress(email)))
+        eventStore.findByEmailAddress(EmailAddress(email)).shouldBeNull()
 
         val subscriptionId = "subscriptionId def"
         val subscriptionStartDate = "2018-06-05"
@@ -29,14 +29,13 @@ internal class RegisterNewMemberTest {
             )
         )
 
-        assertEquals(
+        events.shouldEndWith(
             NewMemberRegistered(
                 events.last().getAggregateId(),
                 email,
                 subscriptionId,
                 subscriptionStartDate
-            ),
-            events.last()
+            )
         )
     }
 }
