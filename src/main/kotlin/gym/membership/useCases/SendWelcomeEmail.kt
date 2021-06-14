@@ -1,6 +1,6 @@
 package gym.membership.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.membership.domain.Mailer
 import gym.membership.domain.MemberEventStore
 
@@ -16,6 +16,6 @@ class SendWelcomeEmail(
 
         eventStore.store(member)
 
-        return member.occuredEvents()
+        return member.recentEvents()
     }
 }

@@ -1,6 +1,6 @@
 package gym.membership.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.subscriptions.domain.NewSubscription
 
 class NewSubscriptionEventListener(

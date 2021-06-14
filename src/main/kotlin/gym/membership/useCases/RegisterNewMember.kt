@@ -1,6 +1,6 @@
 package gym.membership.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEventStore
@@ -23,7 +23,7 @@ class RegisterNewMember(
             )
             eventStore.store(member)
 
-            return member.occuredEvents()
+            return member.recentEvents()
         }
 
         return emptyList()

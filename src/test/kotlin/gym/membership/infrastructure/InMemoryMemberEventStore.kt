@@ -1,7 +1,6 @@
 package gym.membership.infrastructure
 
 import InMemoryEventStore
-import common.AggregateHistory
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEventStore
@@ -11,10 +10,7 @@ class InMemoryMemberEventStore : InMemoryEventStore<Member>(), MemberEventStore 
 
     override fun get(memberId: String): Member {
         return Member.restoreFrom(
-            AggregateHistory(
-                memberId,
-                getAggregateEvents(memberId)
-            )
+            getAggregateHistory(memberId)
         )
     }
 

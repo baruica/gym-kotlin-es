@@ -1,6 +1,6 @@
 package gym.membership.domain
 
-import common.AggregateHistory
+import AggregateHistory
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
@@ -35,13 +35,13 @@ class MemberTest : AnnotationSpec() {
         )
         tested.markWelcomeEmailAsSent()
 
-        val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
+        val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.id, tested.recentEvents()))
 
         restoredFromEvents.emailAddress shouldBe tested.emailAddress
         restoredFromEvents.subscriptionId shouldBe tested.subscriptionId
         restoredFromEvents.memberSince shouldBe tested.memberSince
 
-        tested.occuredEvents().shouldBeEmpty()
+        tested.recentEvents().shouldBeEmpty()
     }
 
     @Test

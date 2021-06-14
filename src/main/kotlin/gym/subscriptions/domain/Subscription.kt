@@ -1,9 +1,9 @@
 package gym.subscriptions.domain
 
-import common.Aggregate
-import common.AggregateHistory
-import common.AggregateId
-import common.DomainEvent
+import Aggregate
+import AggregateHistory
+import AggregateId
+import DomainEvent
 import java.time.LocalDate
 import java.time.Period
 import kotlin.math.roundToInt

@@ -1,6 +1,6 @@
 package gym.subscriptions.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
@@ -16,6 +16,6 @@ class RenewMonthlySubscriptionsAutomatically(
             eventStore.store(it)
         }
 
-        return endedMonthlySubscriptionsAsOf.flatMap { it.occuredEvents() }
+        return endedMonthlySubscriptionsAsOf.flatMap { it.recentEvents() }
     }
 }

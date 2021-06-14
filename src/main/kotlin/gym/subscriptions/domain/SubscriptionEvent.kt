@@ -1,6 +1,6 @@
 package gym.subscriptions.domain
 
-import common.DomainEvent
+import DomainEvent
 import java.time.Instant
 
 sealed class SubscriptionEvent : DomainEvent {

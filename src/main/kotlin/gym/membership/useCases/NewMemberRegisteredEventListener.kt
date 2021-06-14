@@ -1,6 +1,6 @@
 package gym.membership.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.membership.domain.NewMemberRegistered
 
 class NewMemberRegisteredEventListener(

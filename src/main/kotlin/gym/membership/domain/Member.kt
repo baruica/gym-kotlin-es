@@ -1,9 +1,9 @@
 package gym.membership.domain
 
-import common.Aggregate
-import common.AggregateHistory
-import common.AggregateId
-import common.DomainEvent
+import Aggregate
+import AggregateHistory
+import AggregateId
+import DomainEvent
 import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
 

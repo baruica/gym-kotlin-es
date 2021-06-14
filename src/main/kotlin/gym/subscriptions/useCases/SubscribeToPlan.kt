@@ -1,6 +1,6 @@
 package gym.subscriptions.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.subscriptions.domain.Subscription
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
@@ -21,6 +21,6 @@ class SubscribeToPlan(
 
         eventStore.store(subscription)
 
-        return subscription.occuredEvents()
+        return subscription.recentEvents()
     }
 }

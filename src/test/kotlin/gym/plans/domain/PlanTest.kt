@@ -1,6 +1,6 @@
 package gym.plans.domain
 
-import common.AggregateHistory
+import AggregateHistory
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -38,12 +38,12 @@ class PlanTest : AnnotationSpec() {
         val tested = Plan.new("planId 42", 800, 12)
         tested.changePrice(900)
 
-        val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
+        val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.id, tested.recentEvents()))
 
         restoredFromEvents.price shouldBe tested.price
         restoredFromEvents.duration shouldBe tested.duration
 
-        tested.occuredEvents().shouldBeEmpty()
+        tested.recentEvents().shouldBeEmpty()
     }
 
     @Test

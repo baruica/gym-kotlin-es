@@ -1,5 +1,3 @@
-package common
-
 open class AggregateId(private val id: String) {
     override fun toString(): String = id
 }
@@ -23,11 +21,11 @@ abstract class Aggregate private constructor(val id: AggregateId) {
         return events
     }
 
-    fun occuredEvents(): List<DomainEvent> {
-        val occuredEvents = events.toMutableList()
+    fun recentEvents(): List<DomainEvent> {
+        val recentEvents = events.toList()
         events.clear()
 
-        return occuredEvents
+        return recentEvents
     }
 
     protected fun applyChange(event: DomainEvent) {

@@ -1,6 +1,6 @@
 package gym.subscriptions.domain
 
-import common.EventStore
+import EventStore
 import java.time.LocalDate
 
 interface SubscriptionEventStore : EventStore<Subscription> {

@@ -1,7 +1,6 @@
 package gym.subscriptions.infrastructure
 
 import InMemoryEventStore
-import common.AggregateHistory
 import gym.subscriptions.domain.Subscription
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
@@ -10,10 +9,7 @@ class InMemorySubscriptionEventStore : InMemoryEventStore<Subscription>(), Subsc
 
     override fun get(subscriptionId: String): Subscription {
         return Subscription.restoreFrom(
-            AggregateHistory(
-                subscriptionId,
-                getAggregateEvents(subscriptionId)
-            )
+            getAggregateHistory(subscriptionId)
         )
     }
 

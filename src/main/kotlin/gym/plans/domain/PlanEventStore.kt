@@ -1,6 +1,6 @@
 package gym.plans.domain
 
-import common.EventStore
+import EventStore
 
 interface PlanEventStore : EventStore<Plan> {
 

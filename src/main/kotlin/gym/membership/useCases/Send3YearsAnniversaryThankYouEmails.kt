@@ -1,6 +1,6 @@
 package gym.membership.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.membership.domain.Mailer
 import gym.membership.domain.MemberEventStore
 import java.time.LocalDate
@@ -20,7 +20,7 @@ class Send3YearsAnniversaryThankYouEmails(
         }
 
         return threeYearsAnniversaryMembers.map {
-            it.occuredEvents().last()
+            it.recentEvents().last()
         }
     }
 }

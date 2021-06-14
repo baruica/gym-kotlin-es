@@ -1,6 +1,6 @@
 package gym.subscriptions.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
@@ -17,6 +17,6 @@ class ApplyThreeYearsAnniversaryDiscount(
             eventStore.store(it)
         }
 
-        return threeYearsAnniversarySubscriptions.flatMap { it.occuredEvents() }
+        return threeYearsAnniversarySubscriptions.flatMap { it.recentEvents() }
     }
 }

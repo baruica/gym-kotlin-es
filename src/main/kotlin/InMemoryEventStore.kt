@@ -1,6 +1,3 @@
-import common.Aggregate
-import common.DomainEvent
-import common.EventStore
 import java.util.*
 
 open class InMemoryEventStore<T : Aggregate> : EventStore<T> {
@@ -9,7 +6,11 @@ open class InMemoryEventStore<T : Aggregate> : EventStore<T> {
 
     override fun nextId(): String = UUID.randomUUID().toString()
 
-    override fun store(aggregate: T) = storeEvents(aggregate.getEvents())
+    override fun store(aggregate: T) {
+        aggregate.getEvents().forEach {
+            this.events.getOrPut(aggregate.id.toString()) { mutableListOf() }.add(it)
+        }
+    }
 
     override fun storeEvents(events: List<DomainEvent>) {
         events.forEach {
@@ -17,6 +18,10 @@ open class InMemoryEventStore<T : Aggregate> : EventStore<T> {
         }
     }
 
-    override fun getAggregateEvents(aggregateId: String): List<DomainEvent> =
-        this.events.getOrDefault(aggregateId, mutableListOf())
+    override fun getAggregateHistory(aggregateId: String): AggregateHistory {
+        return AggregateHistory(
+            aggregateId,
+            this.events.getOrDefault(aggregateId, mutableListOf())
+        )
+    }
 }

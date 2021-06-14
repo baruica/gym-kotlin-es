@@ -15,7 +15,7 @@ internal class InMemoryEventStoreTest : AnnotationSpec() {
         val tested = InMemoryEventStore<Plan>()
         tested.store(aggregate)
 
-        tested.getAggregateEvents("id1").shouldContainExactly(
+        tested.getAggregateHistory("id1").events.shouldContainExactly(
             listOf(
                 NewPlanCreated("id1", 200, 1),
                 PlanPriceChanged("id1", 200, 180)

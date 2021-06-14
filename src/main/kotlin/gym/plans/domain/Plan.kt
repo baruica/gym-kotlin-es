@@ -1,9 +1,9 @@
 package gym.plans.domain
 
-import common.Aggregate
-import common.AggregateHistory
-import common.AggregateId
-import common.DomainEvent
+import Aggregate
+import AggregateHistory
+import AggregateId
+import DomainEvent
 
 class PlanId(planId: String) : AggregateId(planId)
 

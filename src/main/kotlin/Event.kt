@@ -1,5 +1,3 @@
-package common
-
 import java.time.Instant
 
 interface Event {

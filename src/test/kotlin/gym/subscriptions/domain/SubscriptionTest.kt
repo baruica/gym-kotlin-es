@@ -1,6 +1,6 @@
 package gym.subscriptions.domain
 
-import common.AggregateHistory
+import AggregateHistory
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
@@ -16,24 +16,24 @@ class SubscriptionTest : AnnotationSpec() {
     fun `no discount for a non-student subscribing to a monthly subscription`() {
         val subscriptionWithoutDiscount = monthlySubscription(300, LocalDate.parse("2018-06-05"), false)
 
-        (subscriptionWithoutDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice shouldBe 300
+        (subscriptionWithoutDiscount.recentEvents().last() as NewSubscription).subscriptionPrice shouldBe 300
     }
 
     @Test
     fun `10 percent discount for yearly subscription`() {
         val subscriptionWithYearlyDiscount = yearlySubscription(1000, LocalDate.parse("2018-06-05"), false)
 
-        (subscriptionWithYearlyDiscount.occuredEvents().last() as NewSubscription).subscriptionPrice shouldBe 900
+        (subscriptionWithYearlyDiscount.recentEvents().last() as NewSubscription).subscriptionPrice shouldBe 900
     }
 
     @Test
     fun `20 percent discount for students`() {
         val monthlySubscriptionWithStudentDiscount = monthlySubscription(100, LocalDate.parse("2018-06-05"), true)
-        (monthlySubscriptionWithStudentDiscount.occuredEvents()
+        (monthlySubscriptionWithStudentDiscount.recentEvents()
             .last() as NewSubscription).subscriptionPrice shouldBe 80
 
         val yearlySubscriptionWithStudentDiscount = yearlySubscription(100, LocalDate.parse("2018-06-05"), true)
-        (yearlySubscriptionWithStudentDiscount.occuredEvents()
+        (yearlySubscriptionWithStudentDiscount.recentEvents()
             .last() as NewSubscription).subscriptionPrice shouldBe 72
     }
 
@@ -69,10 +69,10 @@ class SubscriptionTest : AnnotationSpec() {
     @Test
     fun `can be renewed`() {
         val subscription = yearlySubscription(1000, LocalDate.parse("2018-06-05"), isStudent = false)
-        ((subscription.occuredEvents().last()) as NewSubscription).subscriptionEndDate shouldBe "2019-06-05"
+        ((subscription.recentEvents().last()) as NewSubscription).subscriptionEndDate shouldBe "2019-06-05"
 
         subscription.renew()
-        ((subscription.occuredEvents().last()) as SubscriptionRenewed).newEndDate shouldBe "2020-06-05"
+        ((subscription.recentEvents().last()) as SubscriptionRenewed).newEndDate shouldBe "2020-06-05"
     }
 
     @Test
@@ -107,14 +107,14 @@ class SubscriptionTest : AnnotationSpec() {
         )
         tested.renew()
 
-        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.id, tested.occuredEvents()))
+        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.id, tested.recentEvents()))
 
         restoredFromEvents.price shouldBe tested.price
         restoredFromEvents.startDate shouldBe tested.startDate
         restoredFromEvents.endDate shouldBe tested.endDate
         restoredFromEvents.duration shouldBe tested.duration
 
-        tested.occuredEvents().shouldBeEmpty()
+        tested.recentEvents().shouldBeEmpty()
     }
 
     @Test

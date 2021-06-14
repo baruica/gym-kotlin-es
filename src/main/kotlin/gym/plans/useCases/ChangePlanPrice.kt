@@ -1,6 +1,6 @@
 package gym.plans.useCases
 
-import common.DomainEvent
+import DomainEvent
 import gym.plans.domain.PlanEventStore
 
 class ChangePlanPrice(private val eventStore: PlanEventStore) {
@@ -13,6 +13,6 @@ class ChangePlanPrice(private val eventStore: PlanEventStore) {
 
         eventStore.store(plan)
 
-        return plan.occuredEvents()
+        return plan.recentEvents()
     }
 }
