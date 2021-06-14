@@ -2,13 +2,12 @@ package gym.plans.useCases
 
 import common.DomainEvent
 import gym.plans.domain.PlanEventStore
-import gym.plans.domain.PlanId
 
 class ChangePlanPrice(private val eventStore: PlanEventStore) {
 
     fun handle(command: ChangePriceOfPlanCommand): List<DomainEvent> {
 
-        val plan = eventStore.get(PlanId(command.planId))
+        val plan = eventStore.get(command.planId)
 
         plan.changePrice(command.newPrice)
 

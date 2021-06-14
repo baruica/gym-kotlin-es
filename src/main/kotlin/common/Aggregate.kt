@@ -1,15 +1,27 @@
 package common
 
-interface AggregateId
+open class AggregateId(private val id: String) {
+    override fun toString(): String = id
+}
 
 data class AggregateHistory(
-    val aggregateId: AggregateId,
+    val aggregateId: String,
     val events: List<DomainEvent>
-)
+) {
+    constructor(
+        aggregateId: AggregateId,
+        events: List<DomainEvent>
+    ) : this(aggregateId.toString(), events)
+}
 
-abstract class Aggregate<T : Any>(val id: T) {
+abstract class Aggregate private constructor(val id: AggregateId) {
+    constructor(aggregateId: String) : this(AggregateId(aggregateId))
 
     internal val events: MutableList<DomainEvent> = mutableListOf()
+
+    fun getEvents(): List<DomainEvent> {
+        return events
+    }
 
     fun occuredEvents(): List<DomainEvent> {
         val occuredEvents = events.toMutableList()

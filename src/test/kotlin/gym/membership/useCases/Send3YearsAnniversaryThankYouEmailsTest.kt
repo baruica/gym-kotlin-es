@@ -2,6 +2,8 @@ package gym.membership.useCases
 
 import gym.membership.domain.NewMemberRegistered
 import gym.membership.domain.ThreeYearsAnniversaryThankYouEmailSent
+import gym.membership.infrastructure.InMemoryMailer
+import gym.membership.infrastructure.InMemoryMemberEventStore
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -25,7 +27,7 @@ class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
         val memberSinceLuke = LocalDate.parse("2018-06-05").minusYears(3)
         val newMemberRegisteredLuke = newMemberRegistered("luke@gmail.com", memberSinceLuke)
 
-        eventStore.store(
+        eventStore.storeEvents(
             listOf(
                 newMemberRegisteredJulie,
                 newMemberRegisteredBob,
@@ -69,7 +71,10 @@ class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
         )
     }
 
-    private fun newMemberRegistered(email: String, memberSince: LocalDate): NewMemberRegistered = NewMemberRegistered(
+    private fun newMemberRegistered(
+        email: String,
+        memberSince: LocalDate
+    ): NewMemberRegistered = NewMemberRegistered(
         UUID.randomUUID().toString(),
         email,
         "subscription def",

@@ -1,7 +1,6 @@
 package gym.plans.useCases
 
 import gym.plans.domain.NewPlanCreated
-import gym.plans.domain.PlanId
 import gym.plans.domain.PlanPriceChanged
 import gym.plans.infrastructure.InMemoryPlanEventStore
 import io.kotest.core.spec.style.AnnotationSpec
@@ -14,7 +13,7 @@ class ChangePlanPriceTest : AnnotationSpec() {
         val eventStore = InMemoryPlanEventStore()
         val planId = eventStore.nextId()
 
-        eventStore.store(
+        eventStore.storeEvents(
             listOf(
                 NewPlanCreated(planId, 450, 12)
             )
@@ -22,13 +21,11 @@ class ChangePlanPriceTest : AnnotationSpec() {
 
         val tested = ChangePlanPrice(eventStore)
 
-        tested.handle(
+        val events = tested.handle(
             ChangePriceOfPlanCommand(planId, 400)
         )
 
-        val aggregateHistory = eventStore.getAggregateHistory(PlanId(planId))
-
-        aggregateHistory.events.shouldEndWith(
+        events.shouldEndWith(
             PlanPriceChanged(planId, 450, 400)
         )
     }

@@ -1,9 +1,9 @@
 package gym.membership.useCases
 
-import gym.membership.domain.MemberId
 import gym.membership.domain.NewMemberRegistered
 import gym.membership.domain.WelcomeEmailWasSentToNewMember
-import gym.subscriptions.domain.SubscriptionId
+import gym.membership.infrastructure.InMemoryMailer
+import gym.membership.infrastructure.InMemoryMemberEventStore
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldEndWith
@@ -14,18 +14,18 @@ class SendWelcomeEmailTest : AnnotationSpec() {
     @Test
     fun handle() {
 
-        val memberId = MemberId("member abc")
+        val memberId = "member abc"
         val emailAddress = "bob@gmail.com"
-        val subscriptionId = SubscriptionId("subscription def")
+        val subscriptionId = "subscription def"
         val memberSince = LocalDate.now()
 
         val eventStore = InMemoryMemberEventStore()
-        eventStore.store(
+        eventStore.storeEvents(
             listOf(
                 NewMemberRegistered(
-                    memberId.toString(),
+                    memberId,
                     emailAddress,
-                    subscriptionId.toString(),
+                    subscriptionId,
                     memberSince.toString()
                 )
             )
@@ -36,12 +36,12 @@ class SendWelcomeEmailTest : AnnotationSpec() {
         val tested = SendWelcomeEmail(eventStore, mailer)
 
         val events = tested.handle(
-            SendWelcomeEmailCommand(memberId.toString())
+            SendWelcomeEmailCommand(memberId)
         )
 
         events.shouldEndWith(
             WelcomeEmailWasSentToNewMember(
-                memberId.toString(),
+                memberId,
                 emailAddress,
                 memberSince.toString()
             )

@@ -15,7 +15,7 @@ internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
         val eventStore = InMemorySubscriptionEventStore()
 
         val subscriptionId = eventStore.nextId()
-        eventStore.store(
+        eventStore.storeEvents(
             listOf(
                 NewSubscription(subscriptionId, 1000.0, 12, "2015-07-09", "2016-07-09", "leia@gmail.com", false),
                 SubscriptionRenewed(subscriptionId, "2016-07-09", "2017-07-09"),

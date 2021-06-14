@@ -8,12 +8,9 @@ import java.time.LocalDate
 import java.time.Period
 import kotlin.math.roundToInt
 
-@JvmInline
-value class SubscriptionId(private val id: String) : AggregateId {
-    override fun toString(): String = id
-}
+class SubscriptionId(subscriptionId: String) : AggregateId(subscriptionId)
 
-class Subscription private constructor(subscriptionId: SubscriptionId) : Aggregate<SubscriptionId>(subscriptionId) {
+class Subscription private constructor(subscriptionId: String) : Aggregate(subscriptionId) {
 
     internal lateinit var price: Price
     internal lateinit var startDate: LocalDate
@@ -46,7 +43,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
             email: String,
             isStudent: Boolean
         ): Subscription {
-            val subscription = Subscription(SubscriptionId(subscriptionId))
+            val subscription = Subscription(subscriptionId)
 
             val priceAfterDiscount = Price(planPrice)
                 .applyDurationDiscount(planDurationInMonths)
@@ -74,9 +71,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
                 "Cannot restore without any event."
             }
 
-            val subscription = Subscription(
-                SubscriptionId(aggregateHistory.aggregateId.toString())
-            )
+            val subscription = Subscription(aggregateHistory.aggregateId)
 
             aggregateHistory.events.forEach {
                 subscription.whenEvent(it as SubscriptionEvent)
@@ -102,6 +97,10 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
         return date in startDate..endDate
     }
 
+    fun isEndedMonthly(date: LocalDate): Boolean {
+        return endDate == date && duration.isMonthly()
+    }
+
     fun monthlyTurnover(): Int {
         return (price.amount / duration.value).roundToInt()
     }
@@ -123,7 +122,7 @@ class Subscription private constructor(subscriptionId: SubscriptionId) : Aggrega
         }
     }
 
-    private fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
+    fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
         return date == startDate.plusYears(3)
             && date == endDate
     }
@@ -175,5 +174,9 @@ internal data class Duration(val value: Int) {
         require(listOf(1, 12).contains(value)) {
             "Plan duration is either 1 month or 12 months, was [$value]"
         }
+    }
+
+    fun isMonthly(): Boolean {
+        return value == 1
     }
 }

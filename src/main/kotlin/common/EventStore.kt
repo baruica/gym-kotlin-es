@@ -1,25 +1,12 @@
 package common
 
-import java.util.*
+interface EventStore<T : Aggregate> {
 
-interface EventStore {
+    fun nextId(): String
 
-    fun nextId(): String {
-        return UUID.randomUUID().toString()
-    }
+    fun storeEvents(events: List<DomainEvent>)
 
-    fun store(aggregate: Aggregate<out AggregateId>) {
-        store(aggregate.events)
-    }
+    fun store(aggregate: T)
 
-    fun store(events: List<DomainEvent>)
-
-    fun getAggregateHistory(aggregateId: AggregateId): AggregateHistory {
-        return AggregateHistory(
-            aggregateId,
-            getAggregateEvents(aggregateId)
-        )
-    }
-
-    fun getAggregateEvents(aggregateId: AggregateId): List<DomainEvent>
+    fun getAggregateEvents(aggregateId: String): List<DomainEvent>
 }

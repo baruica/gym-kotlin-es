@@ -2,6 +2,7 @@ package gym.membership.useCases
 
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.NewMemberRegistered
+import gym.membership.infrastructure.InMemoryMemberEventStore
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldEndWith
 import io.kotest.matchers.nulls.shouldBeNull

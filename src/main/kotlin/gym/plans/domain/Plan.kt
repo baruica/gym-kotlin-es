@@ -5,12 +5,9 @@ import common.AggregateHistory
 import common.AggregateId
 import common.DomainEvent
 
-@JvmInline
-value class PlanId(private val id: String) : AggregateId {
-    override fun toString(): String = id
-}
+class PlanId(planId: String) : AggregateId(planId)
 
-class Plan private constructor(planId: PlanId) : Aggregate<PlanId>(planId) {
+class Plan private constructor(planId: String) : Aggregate(planId) {
 
     internal lateinit var price: Price
     internal lateinit var duration: Duration
@@ -33,7 +30,7 @@ class Plan private constructor(planId: PlanId) : Aggregate<PlanId>(planId) {
             priceAmount: Int,
             durationInMonths: Int
         ): Plan {
-            val plan = Plan(PlanId(id))
+            val plan = Plan(id)
             val price = Price(priceAmount)
             val duration = Duration(durationInMonths)
 
@@ -53,9 +50,7 @@ class Plan private constructor(planId: PlanId) : Aggregate<PlanId>(planId) {
                 "Cannot restore without any event."
             }
 
-            val plan = Plan(
-                PlanId(aggregateHistory.aggregateId.toString())
-            )
+            val plan = Plan(aggregateHistory.aggregateId)
 
             aggregateHistory.events.forEach {
                 plan.whenEvent(it as PlanEvent)

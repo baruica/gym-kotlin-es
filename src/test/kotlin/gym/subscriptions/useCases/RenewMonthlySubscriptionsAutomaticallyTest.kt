@@ -15,7 +15,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest : AnnotationSpec() {
         val monthlySubscriptionId = eventStore.nextId()
         val yearlySubscriptionId = eventStore.nextId()
 
-        eventStore.store(
+        eventStore.storeEvents(
             listOf(
                 NewSubscription(
                     monthlySubscriptionId,

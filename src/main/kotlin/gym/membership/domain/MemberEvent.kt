@@ -8,14 +8,6 @@ sealed class MemberEvent : DomainEvent {
     override val created: Instant = Instant.now()
 
     abstract val memberId: String
-
-    fun getEmailAddress(): String {
-        return when (this) {
-            is NewMemberRegistered -> memberEmailAddress
-            is WelcomeEmailWasSentToNewMember -> memberEmailAddress
-            is ThreeYearsAnniversaryThankYouEmailSent -> memberEmailAddress
-        }
-    }
 }
 
 data class NewMemberRegistered(

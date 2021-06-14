@@ -1,10 +1,9 @@
 package gym.plans.useCases
 
 import gym.plans.domain.NewPlanCreated
-import gym.plans.domain.PlanId
 import gym.plans.infrastructure.InMemoryPlanEventStore
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldEndWith
 import io.kotest.matchers.collections.shouldHaveSize
 
@@ -15,18 +14,18 @@ class CreateNewPlanTest : AnnotationSpec() {
         val eventStore = InMemoryPlanEventStore()
         val planId = eventStore.nextId()
 
-        eventStore.getAggregateHistory(PlanId(planId)).events.shouldBeEmpty()
+        shouldThrow<IllegalArgumentException> {
+            eventStore.get(planId)
+        }
 
         val tested = CreateNewPlan(eventStore)
 
-        tested.handle(CreateNewPlanCommand(planId, 300, 1))
+        val events = tested.handle(CreateNewPlanCommand(planId, 300, 1))
 
-        val aggregateHistory = eventStore.getAggregateHistory(PlanId(planId))
-
-        aggregateHistory.events.shouldHaveSize(1)
-        aggregateHistory.events.shouldEndWith(
+        events.shouldHaveSize(1)
+        events.shouldEndWith(
             NewPlanCreated(
-                aggregateHistory.aggregateId.toString(),
+                planId,
                 300,
                 1
             )

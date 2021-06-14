@@ -1,92 +1,37 @@
 package gym.subscriptions.infrastructure
 
+import InMemoryEventStore
 import common.AggregateHistory
-import common.AggregateId
-import common.DomainEvent
-import gym.subscriptions.domain.*
+import gym.subscriptions.domain.Subscription
+import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
-class InMemorySubscriptionEventStore : SubscriptionEventStore {
+class InMemorySubscriptionEventStore : InMemoryEventStore<Subscription>(), SubscriptionEventStore {
 
-    private val events = mutableMapOf<SubscriptionId, MutableList<SubscriptionEvent>>()
-
-    override fun store(events: List<DomainEvent>) {
-        events.forEach {
-            this.events.getOrPut(SubscriptionId(it.getAggregateId())) { mutableListOf() }.add(it as SubscriptionEvent)
-        }
+    override fun get(subscriptionId: String): Subscription {
+        return Subscription.restoreFrom(
+            AggregateHistory(
+                subscriptionId,
+                getAggregateEvents(subscriptionId)
+            )
+        )
     }
-
-    override fun get(subscriptionId: SubscriptionId): Subscription {
-        return Subscription.restoreFrom(getAggregateHistory(subscriptionId))
-    }
-
-    override fun getAggregateEvents(aggregateId: AggregateId): MutableList<SubscriptionEvent> =
-        this.events.getOrDefault(aggregateId as SubscriptionId, mutableListOf())
 
     override fun endedMonthlySubscriptions(date: LocalDate): List<Subscription> {
-        val subscriptionsEnding = mutableListOf<Subscription>()
-
-        events.values.forEach { subscriptionEvents ->
-            subscriptionEvents.forEach { subscriptionEvent ->
-                if (subscriptionEvent is NewSubscription) {
-                    if (LocalDate.parse(subscriptionEvent.subscriptionEndDate) == date
-                        && subscriptionEvent.planDurationInMonths == 1
-                    ) {
-                        subscriptionsEnding.add(
-                            restoreSubscription(subscriptionEvent.getAggregateId())
-                        )
-                    }
-                }
-            }
-        }
-
-        return subscriptionsEnding
+        return events.keys
+            .map { subscriptionId -> get(subscriptionId) }
+            .filter { subscription -> subscription.isEndedMonthly(date) }
     }
 
     override fun threeYearsAnniversarySubscriptions(date: LocalDate): List<Subscription> {
-        val threeYearsAnniversarySubscriptions = mutableListOf<Subscription>()
-
-        events.values.forEach { subscriptionEvents ->
-            subscriptionEvents.forEach { subscriptionEvent ->
-                if (subscriptionEvent is NewSubscription) {
-                    if (LocalDate.parse(subscriptionEvent.subscriptionStartDate).plusYears(3).equals(date)) {
-                        threeYearsAnniversarySubscriptions.add(
-                            restoreSubscription(subscriptionEvent.getAggregateId())
-                        )
-                    }
-                }
-            }
-        }
-
-        return threeYearsAnniversarySubscriptions
+        return events.keys
+            .map { subscriptionId -> get(subscriptionId) }
+            .filter { subscription -> subscription.hasThreeYearsAnniversaryOn(date) }
     }
 
     override fun onGoingSubscriptions(date: LocalDate): List<Subscription> {
-        val subscriptionsThatStartedBeforeDate = mutableListOf<Subscription>()
-
-        events.values.forEach { subscriptionEvents ->
-            subscriptionEvents.forEach { subscriptionEvent ->
-                if (subscriptionEvent is NewSubscription) {
-                    val startDate = LocalDate.parse(subscriptionEvent.subscriptionStartDate)
-                    if (startDate.isBefore(date) || startDate.isEqual(date)) {
-                        subscriptionsThatStartedBeforeDate.add(
-                            restoreSubscription(subscriptionEvent.getAggregateId())
-                        )
-                    }
-                }
-            }
-        }
-
-        return subscriptionsThatStartedBeforeDate.filter {
-            it.isOngoing(date)
-        }
-    }
-
-    private fun restoreSubscription(aggregateId: String): Subscription {
-        val subscriptionId = SubscriptionId(aggregateId)
-
-        return Subscription.restoreFrom(
-            AggregateHistory(subscriptionId, this.events[subscriptionId]!!.toList())
-        )
+        return events.keys
+            .map { subscriptionId -> get(subscriptionId) }
+            .filter { subscription -> subscription.isOngoing(date) }
     }
 }

@@ -22,7 +22,7 @@ class TurnoverForAGivenMonthTest : AnnotationSpec() {
         val subscriptionToBeRenewedId = eventStore.nextId()
         val subscriptionToBeRenewedEndDate = today.plusMonths(1)
 
-        eventStore.store(
+        eventStore.storeEvents(
             listOf(
                 NewSubscription(
                     subscriptionToBeRenewedId,

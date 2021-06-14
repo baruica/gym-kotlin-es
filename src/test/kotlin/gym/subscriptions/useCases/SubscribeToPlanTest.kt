@@ -1,7 +1,6 @@
 package gym.subscriptions.useCases
 
 import gym.subscriptions.domain.NewSubscription
-import gym.subscriptions.domain.SubscriptionId
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldEndWith
@@ -16,7 +15,7 @@ class SubscribeToPlanTest : AnnotationSpec() {
 
         val tested = SubscribeToPlan(eventStore)
 
-        tested.handle(
+        val events = tested.handle(
             SubscribeToPlanCommand(
                 subscriptionId,
                 1000,
@@ -27,12 +26,10 @@ class SubscribeToPlanTest : AnnotationSpec() {
             )
         )
 
-        val aggregateHistory = eventStore.getAggregateHistory(SubscriptionId(subscriptionId))
-
-        aggregateHistory.events.shouldHaveSize(1)
-        aggregateHistory.events.shouldEndWith(
+        events.shouldHaveSize(1)
+        events.shouldEndWith(
             NewSubscription(
-                aggregateHistory.aggregateId.toString(),
+                subscriptionId,
                 900.0,
                 12,
                 "2018-12-18",

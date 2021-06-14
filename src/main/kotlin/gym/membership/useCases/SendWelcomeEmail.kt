@@ -3,7 +3,6 @@ package gym.membership.useCases
 import common.DomainEvent
 import gym.membership.domain.Mailer
 import gym.membership.domain.MemberEventStore
-import gym.membership.domain.MemberId
 
 class SendWelcomeEmail(
     private val eventStore: MemberEventStore,
@@ -11,7 +10,7 @@ class SendWelcomeEmail(
 ) {
     fun handle(event: SendWelcomeEmailCommand): List<DomainEvent> {
 
-        val member = eventStore.get(MemberId(event.memberId))
+        val member = eventStore.get(event.memberId)
 
         mailer.sendWelcomeEmail(member)
 

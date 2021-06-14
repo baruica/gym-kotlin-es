@@ -7,12 +7,9 @@ import common.DomainEvent
 import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
 
-@JvmInline
-value class MemberId(private val id: String) : AggregateId {
-    override fun toString(): String = id
-}
+class MemberId(memberId: String) : AggregateId(memberId)
 
-class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(memberId) {
+class Member private constructor(memberId: String) : Aggregate(memberId) {
 
     internal lateinit var emailAddress: EmailAddress
     internal lateinit var subscriptionId: String
@@ -42,7 +39,7 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
             subscriptionId: String,
             memberSince: LocalDate
         ): Member {
-            val member = Member(MemberId(id))
+            val member = Member(id)
 
             member.applyChange(
                 NewMemberRegistered(
@@ -61,9 +58,7 @@ class Member private constructor(memberId: MemberId) : Aggregate<MemberId>(membe
                 "Cannot restore without any event."
             }
 
-            val member = Member(
-                MemberId(aggregateHistory.aggregateId.toString())
-            )
+            val member = Member(aggregateHistory.aggregateId)
 
             aggregateHistory.events.forEach {
                 member.whenEvent(it as MemberEvent)

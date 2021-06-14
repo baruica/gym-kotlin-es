@@ -1,4 +1,4 @@
-package gym.membership.useCases
+package gym.membership.infrastructure
 
 import gym.membership.domain.Email
 import gym.membership.domain.Email.*
@@ -16,7 +16,12 @@ class InMemoryMailer : Mailer {
         member.markWelcomeEmailAsSent()
     }
 
-    override fun sendSubscriptionSummary(emailAddress: EmailAddress, startDate: String, endDate: String, price: Int) {
+    override fun sendSubscriptionSummary(
+        emailAddress: EmailAddress,
+        startDate: String,
+        endDate: String,
+        price: Int
+    ) {
         sentEmails[UUID.randomUUID().toString()] = SubscriptionSummary(emailAddress, startDate, endDate, price)
     }
 

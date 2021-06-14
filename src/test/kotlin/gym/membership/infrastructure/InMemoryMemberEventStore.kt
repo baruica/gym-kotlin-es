@@ -1,0 +1,32 @@
+package gym.membership.infrastructure
+
+import InMemoryEventStore
+import common.AggregateHistory
+import gym.membership.domain.EmailAddress
+import gym.membership.domain.Member
+import gym.membership.domain.MemberEventStore
+import java.time.LocalDate
+
+class InMemoryMemberEventStore : InMemoryEventStore<Member>(), MemberEventStore {
+
+    override fun get(memberId: String): Member {
+        return Member.restoreFrom(
+            AggregateHistory(
+                memberId,
+                getAggregateEvents(memberId)
+            )
+        )
+    }
+
+    override fun findByEmailAddress(emailAddress: EmailAddress): Member? {
+        return events.keys
+            .map { memberId -> get(memberId) }
+            .firstOrNull { member -> member.emailAddress == emailAddress }
+    }
+
+    override fun threeYearsAnniversaryMembers(date: LocalDate): List<Member> {
+        return events.keys
+            .map { memberId -> get(memberId) }
+            .filter { member -> member.isThreeYearsAnniversary(date) }
+    }
+}

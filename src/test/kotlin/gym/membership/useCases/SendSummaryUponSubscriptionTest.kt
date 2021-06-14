@@ -1,6 +1,7 @@
 package gym.membership.useCases
 
 import gym.membership.domain.EmailAddress
+import gym.membership.infrastructure.InMemoryMailer
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 
