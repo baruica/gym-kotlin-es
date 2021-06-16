@@ -1,11 +1,9 @@
 package gym.plans.domain
 
 import DomainEvent
-import java.time.Instant
 
 sealed class PlanEvent : DomainEvent {
     override fun getAggregateId(): String = planId
-    override val created: Instant = Instant.now()
 
     abstract val planId: String
 }

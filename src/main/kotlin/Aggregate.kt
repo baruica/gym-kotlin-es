@@ -1,32 +1,7 @@
-open class AggregateId(private val id: String) {
-    override fun toString(): String = id
-}
-
-data class AggregateHistory(
-    val aggregateId: String,
-    val events: List<DomainEvent>
-) {
-    constructor(
-        aggregateId: AggregateId,
-        events: List<DomainEvent>
-    ) : this(aggregateId.toString(), events)
-}
-
-abstract class Aggregate private constructor(val id: AggregateId) {
-    constructor(aggregateId: String) : this(AggregateId(aggregateId))
-
+abstract class Aggregate(
     internal val events: MutableList<DomainEvent> = mutableListOf()
-
-    fun getEvents(): List<DomainEvent> {
-        return events
-    }
-
-    fun recentEvents(): List<DomainEvent> {
-        val recentEvents = events.toList()
-        events.clear()
-
-        return recentEvents
-    }
+) {
+    internal abstract fun getId(): String
 
     protected fun applyChange(event: DomainEvent) {
         whenEvent(event)
@@ -34,4 +9,22 @@ abstract class Aggregate private constructor(val id: AggregateId) {
     }
 
     protected abstract fun whenEvent(event: DomainEvent)
+
+    fun recentEvents(): List<DomainEvent> {
+        val recentEvents = events.toList()
+        events.clear()
+
+        return recentEvents
+    }
+}
+
+data class AggregateHistory(
+    val aggregateId: String,
+    val events: List<DomainEvent>
+) {
+    init {
+        require(events.isNotEmpty()) {
+            "No events, no history."
+        }
+    }
 }

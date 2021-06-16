@@ -7,8 +7,8 @@ open class InMemoryEventStore<T : Aggregate> : EventStore<T> {
     override fun nextId(): String = UUID.randomUUID().toString()
 
     override fun store(aggregate: T) {
-        aggregate.getEvents().forEach {
-            this.events.getOrPut(aggregate.id.toString()) { mutableListOf() }.add(it)
+        aggregate.events.forEach {
+            this.events.getOrPut(aggregate.getId()) { mutableListOf() }.add(it)
         }
     }
 

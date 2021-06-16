@@ -25,7 +25,7 @@ internal class RegisterNewMemberTest : AnnotationSpec() {
         val events = tested.handle(
             RegisterNewMemberCommand(
                 subscriptionId,
-                "2018-06-05",
+                subscriptionStartDate,
                 email
             )
         )

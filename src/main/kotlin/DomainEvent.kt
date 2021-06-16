@@ -1,4 +1,4 @@
-interface DomainEvent : Event {
+interface DomainEvent {
 
     fun getAggregateId(): String
 }

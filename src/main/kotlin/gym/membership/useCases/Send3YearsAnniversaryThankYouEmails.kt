@@ -17,6 +17,7 @@ class Send3YearsAnniversaryThankYouEmails(
 
         threeYearsAnniversaryMembers.forEach {
             mailer.send3YearsAnniversaryThankYouEmail(it)
+            eventStore.store(it)
         }
 
         return threeYearsAnniversaryMembers.map {

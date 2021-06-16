@@ -38,18 +38,18 @@ class PlanTest : AnnotationSpec() {
         val tested = Plan.new("planId 42", 800, 12)
         tested.changePrice(900)
 
-        val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.id, tested.recentEvents()))
+        val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.getId(), tested.recentEvents()))
 
         restoredFromEvents.price shouldBe tested.price
         restoredFromEvents.duration shouldBe tested.duration
 
-        tested.recentEvents().shouldBeEmpty()
+        tested.events.shouldBeEmpty()
     }
 
     @Test
     fun `cannot be restored if no events`() {
         shouldThrow<IllegalArgumentException> {
-            Plan.restoreFrom(AggregateHistory(PlanId("planId 42"), listOf()))
+            Plan.restoreFrom(AggregateHistory("planId 42", listOf()))
         }
     }
 }

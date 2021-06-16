@@ -6,23 +6,47 @@ import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldEndWith
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
 class MemberTest : AnnotationSpec() {
 
     @Test
+    fun `can register`() {
+        val email = "luke@gmail.com"
+        val subscriptionId = "subscriptionId def"
+        val subscriptionStartDate = "2018-06-05"
+
+        val tested = Member.register(
+            "member abc",
+            EmailAddress(email),
+            subscriptionId,
+            subscriptionStartDate
+        )
+
+        tested.events.shouldEndWith(
+            NewMemberRegistered(
+                tested.events.last().getAggregateId(),
+                email,
+                subscriptionId,
+                subscriptionStartDate
+            )
+        )
+    }
+
+    @Test
     fun `is 3 years anniversary`() {
-        val memberWith3yearsAnniversaryOnTheFifthOfJune = Member.register(
+        val with3yearsAnniversaryOnTheFifthOfJune = Member.register(
             "member abc",
             EmailAddress("julie@gmail.com"),
             "subscription def",
-            LocalDate.parse("2018-06-05").minusYears(3)
+            LocalDate.parse("2018-06-05").minusYears(3).toString()
         )
 
-        memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-04")).shouldBeFalse()
-        memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-05")).shouldBeTrue()
-        memberWith3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-07-06")).shouldBeFalse()
+        with3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-04")).shouldBeFalse()
+        with3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-05")).shouldBeTrue()
+        with3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-07-06")).shouldBeFalse()
     }
 
     @Test
@@ -31,11 +55,11 @@ class MemberTest : AnnotationSpec() {
             "aggregateId",
             EmailAddress("julie@gmail.com"),
             "subscription 42",
-            LocalDate.now()
+            LocalDate.now().toString()
         )
         tested.markWelcomeEmailAsSent()
 
-        val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.id, tested.recentEvents()))
+        val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.getId(), tested.recentEvents()))
 
         restoredFromEvents.emailAddress shouldBe tested.emailAddress
         restoredFromEvents.subscriptionId shouldBe tested.subscriptionId
@@ -47,7 +71,7 @@ class MemberTest : AnnotationSpec() {
     @Test
     fun `cannot be restored if no events`() {
         shouldThrow<IllegalArgumentException> {
-            Member.restoreFrom(AggregateHistory(MemberId("memberId 42"), listOf()))
+            Member.restoreFrom(AggregateHistory("memberId 42", listOf()))
         }
     }
 }

@@ -2,15 +2,19 @@ package gym.plans.domain
 
 import Aggregate
 import AggregateHistory
-import AggregateId
 import DomainEvent
 
-class PlanId(planId: String) : AggregateId(planId)
+@JvmInline
+value class PlanId(private val id: String) {
+    override fun toString(): String = id
+}
 
-class Plan private constructor(planId: String) : Aggregate(planId) {
+class Plan private constructor(val planId: PlanId) : Aggregate() {
 
     internal lateinit var price: Price
     internal lateinit var duration: Duration
+
+    override fun getId(): String = planId.toString()
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
@@ -30,13 +34,13 @@ class Plan private constructor(planId: String) : Aggregate(planId) {
             priceAmount: Int,
             durationInMonths: Int
         ): Plan {
-            val plan = Plan(id)
+            val plan = Plan(PlanId(id))
             val price = Price(priceAmount)
             val duration = Duration(durationInMonths)
 
             plan.applyChange(
                 NewPlanCreated(
-                    plan.id.toString(),
+                    plan.getId(),
                     price.amount,
                     duration.durationInMonths
                 )
@@ -46,11 +50,7 @@ class Plan private constructor(planId: String) : Aggregate(planId) {
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Plan {
-            require(aggregateHistory.events.isNotEmpty()) {
-                "Cannot restore without any event."
-            }
-
-            val plan = Plan(aggregateHistory.aggregateId)
+            val plan = Plan(PlanId(aggregateHistory.aggregateId))
 
             aggregateHistory.events.forEach {
                 plan.whenEvent(it as PlanEvent)
@@ -66,7 +66,7 @@ class Plan private constructor(planId: String) : Aggregate(planId) {
         if (price != newPrice) {
             applyChange(
                 PlanPriceChanged(
-                    id.toString(),
+                    getId(),
                     price.amount,
                     newPrice.amount
                 )

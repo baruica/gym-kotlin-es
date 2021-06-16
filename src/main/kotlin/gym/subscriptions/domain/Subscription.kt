@@ -2,20 +2,24 @@ package gym.subscriptions.domain
 
 import Aggregate
 import AggregateHistory
-import AggregateId
 import DomainEvent
 import java.time.LocalDate
 import java.time.Period
 import kotlin.math.roundToInt
 
-class SubscriptionId(subscriptionId: String) : AggregateId(subscriptionId)
+@JvmInline
+value class SubscriptionId(private val id: String) {
+    override fun toString(): String = id
+}
 
-class Subscription private constructor(subscriptionId: String) : Aggregate(subscriptionId) {
+class Subscription private constructor(val subscriptionId: SubscriptionId) : Aggregate() {
 
     internal lateinit var price: Price
     internal lateinit var startDate: LocalDate
     internal lateinit var endDate: LocalDate
     internal lateinit var duration: Duration
+
+    override fun getId(): String = subscriptionId.toString()
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
@@ -43,7 +47,7 @@ class Subscription private constructor(subscriptionId: String) : Aggregate(subsc
             email: String,
             isStudent: Boolean
         ): Subscription {
-            val subscription = Subscription(subscriptionId)
+            val subscription = Subscription(SubscriptionId(subscriptionId))
 
             val priceAfterDiscount = Price(planPrice)
                 .applyDurationDiscount(planDurationInMonths)
@@ -67,11 +71,7 @@ class Subscription private constructor(subscriptionId: String) : Aggregate(subsc
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Subscription {
-            require(aggregateHistory.events.isNotEmpty()) {
-                "Cannot restore without any event."
-            }
-
-            val subscription = Subscription(aggregateHistory.aggregateId)
+            val subscription = Subscription(SubscriptionId(aggregateHistory.aggregateId))
 
             aggregateHistory.events.forEach {
                 subscription.whenEvent(it as SubscriptionEvent)
@@ -86,7 +86,7 @@ class Subscription private constructor(subscriptionId: String) : Aggregate(subsc
 
         applyChange(
             SubscriptionRenewed(
-                id.toString(),
+                getId(),
                 endDate.toString(),
                 newEndDate.toString()
             )
@@ -114,7 +114,7 @@ class Subscription private constructor(subscriptionId: String) : Aggregate(subsc
             if (price != discountedPrice) {
                 applyChange(
                     SubscriptionDiscountedFor3YearsAnniversary(
-                        id.toString(),
+                        getId(),
                         discountedPrice.amount
                     )
                 )
@@ -130,7 +130,7 @@ class Subscription private constructor(subscriptionId: String) : Aggregate(subsc
     private fun threeYearsDiscountNotYetApplied(): Boolean {
         return !this.events.contains(
             SubscriptionDiscountedFor3YearsAnniversary(
-                id.toString(),
+                getId(),
                 price.amount
             )
         )

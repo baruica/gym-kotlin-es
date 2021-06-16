@@ -16,24 +16,24 @@ class SubscriptionTest : AnnotationSpec() {
     fun `no discount for a non-student subscribing to a monthly subscription`() {
         val subscriptionWithoutDiscount = monthlySubscription(300, LocalDate.parse("2018-06-05"), false)
 
-        (subscriptionWithoutDiscount.recentEvents().last() as NewSubscription).subscriptionPrice shouldBe 300
+        (subscriptionWithoutDiscount.events.last() as NewSubscription).subscriptionPrice shouldBe 300
     }
 
     @Test
     fun `10 percent discount for yearly subscription`() {
         val subscriptionWithYearlyDiscount = yearlySubscription(1000, LocalDate.parse("2018-06-05"), false)
 
-        (subscriptionWithYearlyDiscount.recentEvents().last() as NewSubscription).subscriptionPrice shouldBe 900
+        (subscriptionWithYearlyDiscount.events.last() as NewSubscription).subscriptionPrice shouldBe 900
     }
 
     @Test
     fun `20 percent discount for students`() {
         val monthlySubscriptionWithStudentDiscount = monthlySubscription(100, LocalDate.parse("2018-06-05"), true)
-        (monthlySubscriptionWithStudentDiscount.recentEvents()
+        (monthlySubscriptionWithStudentDiscount.events
             .last() as NewSubscription).subscriptionPrice shouldBe 80
 
         val yearlySubscriptionWithStudentDiscount = yearlySubscription(100, LocalDate.parse("2018-06-05"), true)
-        (yearlySubscriptionWithStudentDiscount.recentEvents()
+        (yearlySubscriptionWithStudentDiscount.events
             .last() as NewSubscription).subscriptionPrice shouldBe 72
     }
 
@@ -69,10 +69,10 @@ class SubscriptionTest : AnnotationSpec() {
     @Test
     fun `can be renewed`() {
         val subscription = yearlySubscription(1000, LocalDate.parse("2018-06-05"), isStudent = false)
-        ((subscription.recentEvents().last()) as NewSubscription).subscriptionEndDate shouldBe "2019-06-05"
+        ((subscription.events.last()) as NewSubscription).subscriptionEndDate shouldBe "2019-06-05"
 
         subscription.renew()
-        ((subscription.recentEvents().last()) as SubscriptionRenewed).newEndDate shouldBe "2020-06-05"
+        ((subscription.events.last()) as SubscriptionRenewed).newEndDate shouldBe "2020-06-05"
     }
 
     @Test
@@ -107,20 +107,20 @@ class SubscriptionTest : AnnotationSpec() {
         )
         tested.renew()
 
-        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.id, tested.recentEvents()))
+        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.getId(), tested.recentEvents()))
 
         restoredFromEvents.price shouldBe tested.price
         restoredFromEvents.startDate shouldBe tested.startDate
         restoredFromEvents.endDate shouldBe tested.endDate
         restoredFromEvents.duration shouldBe tested.duration
 
-        tested.recentEvents().shouldBeEmpty()
+        tested.events.shouldBeEmpty()
     }
 
     @Test
     fun `cannot be restored if no events`() {
         shouldThrow<IllegalArgumentException> {
-            Subscription.restoreFrom(AggregateHistory(SubscriptionId("subscriptionId 42"), listOf()))
+            Subscription.restoreFrom(AggregateHistory("subscriptionId 42", listOf()))
         }
     }
 

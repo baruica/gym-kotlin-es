@@ -2,18 +2,22 @@ package gym.membership.domain
 
 import Aggregate
 import AggregateHistory
-import AggregateId
 import DomainEvent
 import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
 
-class MemberId(memberId: String) : AggregateId(memberId)
+@JvmInline
+value class MemberId(private val id: String) {
+    override fun toString(): String = id
+}
 
-class Member private constructor(memberId: String) : Aggregate(memberId) {
+class Member private constructor(val memberId: MemberId) : Aggregate() {
 
     internal lateinit var emailAddress: EmailAddress
     internal lateinit var subscriptionId: String
     internal lateinit var memberSince: LocalDate
+
+    override fun getId(): String = memberId.toString()
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
@@ -37,16 +41,16 @@ class Member private constructor(memberId: String) : Aggregate(memberId) {
             id: String,
             emailAddress: EmailAddress,
             subscriptionId: String,
-            memberSince: LocalDate
+            memberSince: String
         ): Member {
-            val member = Member(id)
+            val member = Member(MemberId(id))
 
             member.applyChange(
                 NewMemberRegistered(
-                    member.id.toString(),
+                    member.getId(),
                     emailAddress.toString(),
                     SubscriptionId(subscriptionId).toString(),
-                    memberSince.toString()
+                    LocalDate.parse(memberSince).toString()
                 )
             )
 
@@ -54,11 +58,7 @@ class Member private constructor(memberId: String) : Aggregate(memberId) {
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Member {
-            require(aggregateHistory.events.isNotEmpty()) {
-                "Cannot restore without any event."
-            }
-
-            val member = Member(aggregateHistory.aggregateId)
+            val member = Member(MemberId(aggregateHistory.aggregateId))
 
             aggregateHistory.events.forEach {
                 member.whenEvent(it as MemberEvent)
@@ -71,7 +71,7 @@ class Member private constructor(memberId: String) : Aggregate(memberId) {
     fun markWelcomeEmailAsSent() {
         applyChange(
             WelcomeEmailWasSentToNewMember(
-                id.toString(),
+                getId(),
                 emailAddress.value,
                 memberSince.toString()
             )
@@ -85,7 +85,7 @@ class Member private constructor(memberId: String) : Aggregate(memberId) {
     fun mark3YearsAnniversaryThankYouEmailAsSent() {
         applyChange(
             ThreeYearsAnniversaryThankYouEmailSent(
-                id.toString(),
+                getId(),
                 emailAddress.toString(),
                 memberSince.toString()
             )
