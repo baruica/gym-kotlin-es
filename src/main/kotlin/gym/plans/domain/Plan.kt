@@ -9,12 +9,14 @@ value class PlanId(private val id: String) {
     override fun toString(): String = id
 }
 
-class Plan private constructor(val planId: PlanId) : Aggregate() {
+class Plan private constructor(
+    private val id: PlanId
+) : Aggregate() {
 
     internal lateinit var price: Price
     internal lateinit var duration: Duration
 
-    override fun getId(): String = planId.toString()
+    override fun getId(): String = id.toString()
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {

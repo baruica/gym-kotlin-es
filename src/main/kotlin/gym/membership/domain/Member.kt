@@ -11,13 +11,15 @@ value class MemberId(private val id: String) {
     override fun toString(): String = id
 }
 
-class Member private constructor(val memberId: MemberId) : Aggregate() {
+class Member private constructor(
+    private val id: MemberId
+) : Aggregate() {
 
     internal lateinit var emailAddress: EmailAddress
     internal lateinit var subscriptionId: String
     internal lateinit var memberSince: LocalDate
 
-    override fun getId(): String = memberId.toString()
+    override fun getId(): String = id.toString()
 
     override fun whenEvent(event: DomainEvent) {
         when (event) {
