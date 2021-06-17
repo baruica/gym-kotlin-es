@@ -7,9 +7,9 @@ import gym.membership.domain.Mailer
 import gym.membership.domain.Member
 import java.util.*
 
-class InMemoryMailer : Mailer {
-
-    private val sentEmails = mutableMapOf<String, Email>()
+class InMemoryMailer(
+    private val sentEmails: MutableMap<String, Email> = mutableMapOf()
+) : Mailer {
 
     override fun sendWelcomeEmail(member: Member) {
         sentEmails[UUID.randomUUID().toString()] = Welcome(member.emailAddress)

@@ -1,7 +1,9 @@
 package gym.membership.domain
 
 sealed class Email(open val emailAddress: EmailAddress, val emailBody: String) {
-    data class Welcome(override val emailAddress: EmailAddress) : Email(
+    data class Welcome(
+        override val emailAddress: EmailAddress
+    ) : Email(
         emailAddress,
         "Thank you for subscribing $emailAddress !"
     )
@@ -16,7 +18,9 @@ sealed class Email(open val emailAddress: EmailAddress, val emailBody: String) {
         "Thank you for subscribing, this subscription will run from $startDate until $endDate, and will only cost you $price!"
     )
 
-    data class ThreeYearsAnniversary(override val emailAddress: EmailAddress) : Email(
+    data class ThreeYearsAnniversary(
+        override val emailAddress: EmailAddress
+    ) : Email(
         emailAddress,
         "Thank you for your loyalty $emailAddress !"
     )

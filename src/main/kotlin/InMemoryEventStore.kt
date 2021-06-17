@@ -1,8 +1,8 @@
 import java.util.*
 
-open class InMemoryEventStore<T : Aggregate> : EventStore<T> {
-
+open class InMemoryEventStore<T : Aggregate>(
     val events: MutableMap<String, MutableList<DomainEvent>> = mutableMapOf()
+) : EventStore<T> {
 
     override fun nextId(): String = UUID.randomUUID().toString()
 
