@@ -139,12 +139,16 @@ class Subscription private constructor(
     }
 }
 
-internal data class Price(val amount: Double) {
-    constructor(amount: Int) : this(amount.toDouble())
-
+internal data class Price private constructor(val amount: Double) {
     init {
         require(amount >= 0) {
             "Price amount must be non-negative, was [$amount]"
+        }
+    }
+
+    companion object {
+        operator fun invoke(value: Number): Price {
+            return Price(value.toDouble())
         }
     }
 
