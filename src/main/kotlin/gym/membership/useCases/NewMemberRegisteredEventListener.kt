@@ -8,7 +8,7 @@ class NewMemberRegisteredEventListener(
 ) {
     fun handle(event: NewMemberRegistered): List<DomainEvent> {
 
-        return commandHandler.handle(
+        return commandHandler(
             SendWelcomeEmailCommand(
                 event.memberId
             )

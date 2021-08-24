@@ -8,7 +8,7 @@ class SendWelcomeEmail(
     private val eventStore: MemberEventStore,
     private val mailer: Mailer,
 ) {
-    fun handle(event: SendWelcomeEmailCommand): List<DomainEvent> {
+    operator fun invoke(event: SendWelcomeEmailCommand): List<DomainEvent> {
 
         val member = eventStore.get(event.memberId)
 

@@ -20,7 +20,7 @@ class CreateNewPlanTest : AnnotationSpec() {
 
         val tested = CreateNewPlan(eventStore)
 
-        val events = tested.handle(CreateNewPlanCommand(planId, 300, 1))
+        val events = tested(CreateNewPlanCommand(planId, 300, 1))
 
         events.shouldHaveSize(1)
         events.shouldEndWith(

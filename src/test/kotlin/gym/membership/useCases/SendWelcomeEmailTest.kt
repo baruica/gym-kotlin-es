@@ -35,7 +35,7 @@ class SendWelcomeEmailTest : AnnotationSpec() {
 
         val tested = SendWelcomeEmail(eventStore, mailer)
 
-        val events = tested.handle(
+        val events = tested(
             SendWelcomeEmailCommand(memberId)
         )
 

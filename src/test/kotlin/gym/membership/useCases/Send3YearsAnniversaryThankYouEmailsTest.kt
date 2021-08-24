@@ -39,7 +39,7 @@ class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
 
         val tested = Send3YearsAnniversaryThankYouEmails(eventStore, mailer)
 
-        val events = tested.handle(
+        val events = tested(
             Send3YearsAnniversaryThankYouEmailsCommand("2018-06-05")
         )
 

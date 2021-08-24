@@ -9,7 +9,7 @@ class Send3YearsAnniversaryThankYouEmails(
     private val eventStore: MemberEventStore,
     private val mailer: Mailer,
 ) {
-    fun handle(command: Send3YearsAnniversaryThankYouEmailsCommand): List<DomainEvent> {
+    operator fun invoke(command: Send3YearsAnniversaryThankYouEmailsCommand): List<DomainEvent> {
 
         val threeYearsAnniversaryMembers = eventStore.threeYearsAnniversaryMembers(
             LocalDate.parse(command.asOfDate)

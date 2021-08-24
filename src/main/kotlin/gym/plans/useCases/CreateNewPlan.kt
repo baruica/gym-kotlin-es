@@ -6,7 +6,7 @@ import gym.plans.domain.PlanEventStore
 
 class CreateNewPlan(private val eventStore: PlanEventStore) {
 
-    fun handle(command: CreateNewPlanCommand): List<DomainEvent> {
+    operator fun invoke(command: CreateNewPlanCommand): List<DomainEvent> {
 
         val plan = Plan.new(
             command.planId,

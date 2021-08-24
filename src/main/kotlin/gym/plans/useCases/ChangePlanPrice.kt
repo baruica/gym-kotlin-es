@@ -5,7 +5,7 @@ import gym.plans.domain.PlanEventStore
 
 class ChangePlanPrice(private val eventStore: PlanEventStore) {
 
-    fun handle(command: ChangePriceOfPlanCommand): List<DomainEvent> {
+    operator fun invoke(command: ChangePriceOfPlanCommand): List<DomainEvent> {
 
         val plan = eventStore.get(command.planId)
 

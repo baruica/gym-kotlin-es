@@ -8,7 +8,7 @@ class NewSubscriptionEventListener(
 ) {
     fun handle(event: NewSubscription): List<DomainEvent> {
 
-        return commandHandler.handle(
+        return commandHandler(
             RegisterNewMemberCommand(
                 event.subscriptionId,
                 event.subscriptionStartDate,

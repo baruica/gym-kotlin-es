@@ -22,7 +22,7 @@ internal class RegisterNewMemberTest : AnnotationSpec() {
 
         val tested = RegisterNewMember(eventStore)
 
-        val events = tested.handle(
+        val events = tested(
             RegisterNewMemberCommand(
                 subscriptionId,
                 subscriptionStartDate,

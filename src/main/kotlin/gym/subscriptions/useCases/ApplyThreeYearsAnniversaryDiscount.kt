@@ -7,7 +7,8 @@ import java.time.LocalDate
 class ApplyThreeYearsAnniversaryDiscount(
     private val eventStore: SubscriptionEventStore
 ) {
-    fun handle(command: ApplyThreeYearsAnniversaryDiscountCommand): List<DomainEvent> {
+    operator fun invoke(command: ApplyThreeYearsAnniversaryDiscountCommand): List<DomainEvent> {
+
         val date = LocalDate.parse(command.asOfDate)
 
         val threeYearsAnniversarySubscriptions = eventStore.threeYearsAnniversarySubscriptions(date)

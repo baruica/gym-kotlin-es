@@ -7,7 +7,7 @@ import java.time.LocalDate
 class RenewMonthlySubscriptionsAutomatically(
     private val eventStore: SubscriptionEventStore
 ) {
-    fun handle(command: RenewMonthlySubscriptionsAutomaticallyCommand): List<DomainEvent> {
+    operator fun invoke(command: RenewMonthlySubscriptionsAutomaticallyCommand): List<DomainEvent> {
 
         val endedMonthlySubscriptionsAsOf = eventStore.endedMonthlySubscriptions(LocalDate.parse(command.asOfDate))
 

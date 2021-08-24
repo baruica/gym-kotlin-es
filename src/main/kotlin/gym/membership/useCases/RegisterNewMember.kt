@@ -8,7 +8,7 @@ import gym.membership.domain.MemberEventStore
 class RegisterNewMember(
     private val eventStore: MemberEventStore
 ) {
-    fun handle(command: RegisterNewMemberCommand): List<DomainEvent> {
+    operator fun invoke(command: RegisterNewMemberCommand): List<DomainEvent> {
 
         val emailAddress = EmailAddress(command.email)
         val knownMember: Member? = eventStore.findByEmailAddress(emailAddress)

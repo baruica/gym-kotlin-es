@@ -19,7 +19,7 @@ internal class SendSummaryUponSubscriptionTest : AnnotationSpec() {
 
         val tested = SendSummaryUponSubscription(mailer)
 
-        tested.handle(
+        tested(
             SendSummaryUponSubscriptionCommand(
                 emailAddress,
                 startDate,
