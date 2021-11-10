@@ -4,6 +4,8 @@ import DomainEvent
 import gym.membership.domain.Mailer
 import gym.membership.domain.MemberEventStore
 
+data class SendWelcomeEmailCommand(val memberId: String)
+
 class SendWelcomeEmail(
     private val eventStore: MemberEventStore,
     private val mailer: Mailer,

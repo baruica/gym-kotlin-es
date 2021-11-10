@@ -5,6 +5,8 @@ import gym.membership.domain.Mailer
 import gym.membership.domain.MemberEventStore
 import java.time.LocalDate
 
+data class Send3YearsAnniversaryThankYouEmailsCommand(val asOfDate: String)
+
 class Send3YearsAnniversaryThankYouEmails(
     private val eventStore: MemberEventStore,
     private val mailer: Mailer,

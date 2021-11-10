@@ -5,6 +5,12 @@ import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEventStore
 
+data class RegisterNewMemberCommand(
+    val subscriptionId: String,
+    val subscriptionStartDate: String,
+    val email: String,
+)
+
 class RegisterNewMember(
     private val eventStore: MemberEventStore
 ) {

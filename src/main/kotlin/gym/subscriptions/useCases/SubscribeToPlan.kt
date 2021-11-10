@@ -5,6 +5,15 @@ import gym.subscriptions.domain.Subscription
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
+data class SubscribeToPlanCommand(
+    val subscriptionId: String,
+    val planPrice: Int,
+    val planDurationInMonths: Int,
+    val startDate: String,
+    val isStudent: Boolean,
+    val email: String,
+)
+
 class SubscribeToPlan(
     private val eventStore: SubscriptionEventStore
 ) {

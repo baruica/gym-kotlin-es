@@ -4,6 +4,8 @@ import DomainEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
+class ApplyThreeYearsAnniversaryDiscountCommand(val asOfDate: String)
+
 class ApplyThreeYearsAnniversaryDiscount(
     private val eventStore: SubscriptionEventStore
 ) {
