@@ -15,7 +15,6 @@ value class SubscriptionId(private val id: String) {
 class Subscription private constructor(
     private val id: SubscriptionId
 ) : Aggregate() {
-
     internal lateinit var price: Price
     internal lateinit var startDate: LocalDate
     internal lateinit var endDate: LocalDate
@@ -152,19 +151,19 @@ internal data class Price private constructor(val amount: Double) {
         }
     }
 
-    fun applyDurationDiscount(durationInMonths: Int): Price {
+    internal fun applyDurationDiscount(durationInMonths: Int): Price {
         return if (durationInMonths == 12) {
             applyDiscount(0.1)
         } else this
     }
 
-    fun applyStudentDiscount(isStudent: Boolean): Price {
+    internal fun applyStudentDiscount(isStudent: Boolean): Price {
         return if (isStudent) {
             applyDiscount(0.2)
         } else this
     }
 
-    fun applyThreeYearsAnniversaryDiscount(hasThreeYearsAnniversary: Boolean): Price {
+    internal fun applyThreeYearsAnniversaryDiscount(hasThreeYearsAnniversary: Boolean): Price {
         return if (hasThreeYearsAnniversary) {
             applyDiscount(0.05)
         } else this
