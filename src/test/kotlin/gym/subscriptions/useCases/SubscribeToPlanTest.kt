@@ -35,7 +35,7 @@ class SubscribeToPlanTest : AnnotationSpec() {
                 "2018-12-18",
                 "2019-12-18",
                 "bob@mail.com",
-                false
+                isStudent = false
             )
         )
     }

@@ -24,7 +24,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest : AnnotationSpec() {
                     "2018-06-09",
                     "2018-07-09",
                     "luke@gmail.com",
-                    false
+                    isStudent = false
                 ),
                 NewSubscription(
                     yearlySubscriptionId,
@@ -33,7 +33,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest : AnnotationSpec() {
                     "2018-06-12",
                     "2019-06-12",
                     "leia@gmail.com",
-                    true
+                    isStudent = true
                 )
             )
         )

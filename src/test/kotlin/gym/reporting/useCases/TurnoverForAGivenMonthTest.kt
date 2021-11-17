@@ -31,7 +31,7 @@ class TurnoverForAGivenMonthTest : AnnotationSpec() {
                     today.toString(),
                     subscriptionToBeRenewedEndDate.toString(),
                     "bob@gmail.com",
-                    false
+                    isStudent = false
                 ),
                 NewSubscription(
                     eventStore.nextId(),
@@ -40,7 +40,7 @@ class TurnoverForAGivenMonthTest : AnnotationSpec() {
                     today.toString(),
                     today.plusMonths(12).toString(),
                     "bob@gmail.com",
-                    false
+                    isStudent = false
                 ),
                 SubscriptionRenewed(
                     subscriptionToBeRenewedId,
@@ -54,7 +54,7 @@ class TurnoverForAGivenMonthTest : AnnotationSpec() {
                     inAMonth.toString(),
                     inAMonth.plusMonths(12).toString(),
                     "bob@gmail.com",
-                    false
+                    isStudent = false
                 )
             )
         )
