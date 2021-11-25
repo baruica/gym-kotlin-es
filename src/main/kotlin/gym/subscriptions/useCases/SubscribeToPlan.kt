@@ -1,7 +1,7 @@
 package gym.subscriptions.useCases
 
-import DomainEvent
 import gym.subscriptions.domain.Subscription
+import gym.subscriptions.domain.SubscriptionEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
@@ -17,9 +17,9 @@ data class SubscribeToPlanCommand(
 class SubscribeToPlan(
     private val eventStore: SubscriptionEventStore
 ) {
-    operator fun invoke(command: SubscribeToPlanCommand): List<DomainEvent> {
+    operator fun invoke(command: SubscribeToPlanCommand): SubscriptionEvent {
 
-        val subscription = Subscription.subscribe(
+        val aggregateResult = Subscription.subscribe(
             command.subscriptionId,
             command.planDurationInMonths,
             LocalDate.parse(command.startDate),
@@ -28,8 +28,8 @@ class SubscribeToPlan(
             command.isStudent
         )
 
-        eventStore.store(subscription)
+        eventStore.store(aggregateResult)
 
-        return subscription.recentEvents()
+        return aggregateResult.event as SubscriptionEvent
     }
 }

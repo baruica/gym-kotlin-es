@@ -1,8 +1,8 @@
 package gym.membership.useCases
 
-import DomainEvent
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
+import gym.membership.domain.MemberEvent
 import gym.membership.domain.MemberEventStore
 
 data class RegisterNewMemberCommand(
@@ -14,7 +14,7 @@ data class RegisterNewMemberCommand(
 class RegisterNewMember(
     private val eventStore: MemberEventStore
 ) {
-    operator fun invoke(command: RegisterNewMemberCommand): List<DomainEvent> {
+    operator fun invoke(command: RegisterNewMemberCommand): MemberEvent? {
 
         val emailAddress = EmailAddress(command.email)
         val knownMember: Member? = eventStore.findByEmailAddress(emailAddress)
@@ -28,9 +28,9 @@ class RegisterNewMember(
             )
             eventStore.store(member)
 
-            return member.recentEvents()
+            return member.event as MemberEvent
         }
 
-        return emptyList()
+        return null
     }
 }

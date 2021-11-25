@@ -3,8 +3,7 @@ package gym.subscriptions.useCases
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.matchers.collections.shouldEndWith
-import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 
 class SubscribeToPlanTest : AnnotationSpec() {
 
@@ -15,7 +14,7 @@ class SubscribeToPlanTest : AnnotationSpec() {
 
         val tested = SubscribeToPlan(eventStore)
 
-        val events = tested(
+        val event = tested(
             SubscribeToPlanCommand(
                 subscriptionId,
                 1000,
@@ -26,8 +25,7 @@ class SubscribeToPlanTest : AnnotationSpec() {
             )
         )
 
-        events.shouldHaveSize(1)
-        events.shouldEndWith(
+        event.shouldBeSameInstanceAs(
             NewSubscription(
                 subscriptionId,
                 900.0,

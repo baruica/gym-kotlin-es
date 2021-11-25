@@ -2,6 +2,7 @@ package gym.membership.domain
 
 import Aggregate
 import AggregateHistory
+import AggregateResult
 import DomainEvent
 import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
@@ -44,19 +45,21 @@ class Member private constructor(
             emailAddress: EmailAddress,
             subscriptionId: String,
             memberSince: String
-        ): Member {
+        ): AggregateResult<Aggregate, DomainEvent> {
             val member = Member(MemberId(id))
 
-            member.applyChange(
-                NewMemberRegistered(
-                    member.getId(),
-                    emailAddress.toString(),
-                    SubscriptionId(subscriptionId).toString(),
-                    LocalDate.parse(memberSince).toString()
-                )
+            val event = NewMemberRegistered(
+                member.getId(),
+                emailAddress.toString(),
+                SubscriptionId(subscriptionId).toString(),
+                LocalDate.parse(memberSince).toString()
             )
+            member.applyChange(event)
 
-            return member
+            return AggregateResult.of(
+                member,
+                event
+            )
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Member {
