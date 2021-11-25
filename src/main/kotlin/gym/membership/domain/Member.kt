@@ -70,27 +70,29 @@ class Member private constructor(
         }
     }
 
-    fun markWelcomeEmailAsSent() {
-        applyChange(
-            WelcomeEmailWasSentToNewMember(
-                getId(),
-                emailAddress.value,
-                memberSince.toString()
-            )
+    fun markWelcomeEmailAsSent(): AggregateResult<Member, WelcomeEmailWasSentToNewMember> {
+        val event = WelcomeEmailWasSentToNewMember(
+            getId(),
+            emailAddress.value,
+            memberSince.toString()
         )
+        applyChange(event)
+
+        return AggregateResult.of(this, event)
     }
 
     fun isThreeYearsAnniversary(date: LocalDate): Boolean {
         return date.minusYears(3).isEqual(memberSince)
     }
 
-    fun mark3YearsAnniversaryThankYouEmailAsSent() {
-        applyChange(
-            ThreeYearsAnniversaryThankYouEmailSent(
-                getId(),
-                emailAddress.toString(),
-                memberSince.toString()
-            )
+    fun mark3YearsAnniversaryThankYouEmailAsSent(): AggregateResult<Member, ThreeYearsAnniversaryThankYouEmailSent> {
+        val event = ThreeYearsAnniversaryThankYouEmailSent(
+            getId(),
+            emailAddress.toString(),
+            memberSince.toString()
         )
+        applyChange(event)
+
+        return AggregateResult.of(this, event)
     }
 }

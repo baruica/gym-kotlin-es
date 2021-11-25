@@ -5,7 +5,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldEndWith
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
@@ -18,16 +17,16 @@ class MemberTest : AnnotationSpec() {
         val subscriptionId = "subscriptionId def"
         val subscriptionStartDate = "2018-06-05"
 
-        val tested = Member.register(
+        val (_, events) = Member.register(
             "member abc",
             EmailAddress(email),
             subscriptionId,
             subscriptionStartDate
         )
 
-        tested.events.shouldEndWith(
+        events.shouldEndWith(
             NewMemberRegistered(
-                tested.events.last().getAggregateId(),
+                events.last().getAggregateId(),
                 email,
                 subscriptionId,
                 subscriptionStartDate
@@ -37,7 +36,7 @@ class MemberTest : AnnotationSpec() {
 
     @Test
     fun `is 3 years anniversary`() {
-        val with3yearsAnniversaryOnTheFifthOfJune = Member.register(
+        val (with3yearsAnniversaryOnTheFifthOfJune, _) = Member.register(
             "member abc",
             EmailAddress("julie@gmail.com"),
             "subscription def",
@@ -51,7 +50,7 @@ class MemberTest : AnnotationSpec() {
 
     @Test
     fun `can be restored from events`() {
-        val tested = Member.register(
+        val (tested, events) = Member.register(
             "aggregateId",
             EmailAddress("julie@gmail.com"),
             "subscription 42",
@@ -59,13 +58,11 @@ class MemberTest : AnnotationSpec() {
         )
         tested.markWelcomeEmailAsSent()
 
-        val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.getId(), tested.recentEvents()))
+        val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.getId(), events))
 
         restoredFromEvents.emailAddress shouldBe tested.emailAddress
         restoredFromEvents.subscriptionId shouldBe tested.subscriptionId
         restoredFromEvents.memberSince shouldBe tested.memberSince
-
-        tested.recentEvents().shouldBeEmpty()
     }
 
     @Test

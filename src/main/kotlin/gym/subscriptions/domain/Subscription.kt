@@ -68,10 +68,7 @@ class Subscription private constructor(
             )
             subscription.applyChange(event)
 
-            return AggregateResult.of(
-                subscription,
-                event
-            )
+            return AggregateResult.of(subscription, event)
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Subscription {
@@ -95,10 +92,7 @@ class Subscription private constructor(
         )
         applyChange(event)
 
-        return AggregateResult.of(
-            this,
-            event
-        )
+        return AggregateResult.of(this, event)
     }
 
     fun isOngoing(date: LocalDate): Boolean {
@@ -132,7 +126,7 @@ class Subscription private constructor(
         return AggregateResult.of(this, listOf())
     }
 
-    private fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
+    fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
         return date == startDate.plusYears(3)
             && date == endDate
     }

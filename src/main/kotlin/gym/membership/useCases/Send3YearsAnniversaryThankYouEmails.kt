@@ -17,13 +17,14 @@ class Send3YearsAnniversaryThankYouEmails(
             LocalDate.parse(command.asOfDate)
         )
 
+        val events = mutableListOf<DomainEvent>()
+
         threeYearsAnniversaryMembers.forEach {
-            mailer.send3YearsAnniversaryThankYouEmail(it)
-            eventStore.store(it)
+            val aggregateResult = mailer.send3YearsAnniversaryThankYouEmail(it)
+            eventStore.store(aggregateResult)
+            events.addAll(aggregateResult.events)
         }
 
-        return threeYearsAnniversaryMembers.map {
-            it.recentEvents().last()
-        }
+        return events
     }
 }

@@ -6,7 +6,7 @@ import gym.membership.domain.Member
 import gym.membership.domain.MemberEventStore
 import java.time.LocalDate
 
-class InMemoryMemberEventStore : InMemoryEventStore<Member>(), MemberEventStore {
+class InMemoryMemberEventStore : InMemoryEventStore(), MemberEventStore {
 
     override fun get(memberId: String): Member {
         return Member.restoreFrom(

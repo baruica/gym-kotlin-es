@@ -14,10 +14,10 @@ class SendWelcomeEmail(
 
         val member = eventStore.get(event.memberId)
 
-        mailer.sendWelcomeEmail(member)
+        val aggregateResult = mailer.sendWelcomeEmail(member)
 
-        eventStore.store(member)
+        eventStore.store(aggregateResult)
 
-        return member.recentEvents()
+        return aggregateResult.events
     }
 }
