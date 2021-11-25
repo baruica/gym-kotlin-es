@@ -15,11 +15,14 @@ class ApplyThreeYearsAnniversaryDiscount(
 
         val threeYearsAnniversarySubscriptions = eventStore.threeYearsAnniversarySubscriptions(date)
 
+        val events = mutableListOf<DomainEvent>()
+
         threeYearsAnniversarySubscriptions.forEach {
-            it.applyThreeYearsAnniversaryDiscount(date)
-            eventStore.store(it)
+            val aggregateResult = it.applyThreeYearsAnniversaryDiscount(date)
+            eventStore.store(aggregateResult)
+            events.addAll(aggregateResult.events)
         }
 
-        return threeYearsAnniversarySubscriptions.flatMap { it.recentEvents() }
+        return events
     }
 }

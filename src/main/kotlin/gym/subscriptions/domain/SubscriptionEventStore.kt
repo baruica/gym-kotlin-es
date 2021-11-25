@@ -3,7 +3,7 @@ package gym.subscriptions.domain
 import EventStore
 import java.time.LocalDate
 
-interface SubscriptionEventStore : EventStore<Subscription> {
+interface SubscriptionEventStore : EventStore {
 
     fun get(subscriptionId: String): Subscription
 

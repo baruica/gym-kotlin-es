@@ -2,6 +2,7 @@ package gym.membership.domain
 
 import Aggregate
 import AggregateHistory
+import AggregateResult
 import DomainEvent
 import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
@@ -44,19 +45,18 @@ class Member private constructor(
             emailAddress: EmailAddress,
             subscriptionId: String,
             memberSince: String
-        ): Member {
+        ): AggregateResult<Member, MemberEvent> {
             val member = Member(MemberId(id))
 
-            member.applyChange(
-                NewMemberRegistered(
-                    member.getId(),
-                    emailAddress.toString(),
-                    SubscriptionId(subscriptionId).toString(),
-                    LocalDate.parse(memberSince).toString()
-                )
+            val event = NewMemberRegistered(
+                member.getId(),
+                emailAddress.toString(),
+                SubscriptionId(subscriptionId).toString(),
+                LocalDate.parse(memberSince).toString()
             )
+            member.applyChange(event)
 
-            return member
+            return AggregateResult.of(member, event)
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Member {
@@ -70,27 +70,29 @@ class Member private constructor(
         }
     }
 
-    fun markWelcomeEmailAsSent() {
-        applyChange(
-            WelcomeEmailWasSentToNewMember(
-                getId(),
-                emailAddress.value,
-                memberSince.toString()
-            )
+    fun markWelcomeEmailAsSent(): AggregateResult<Member, WelcomeEmailWasSentToNewMember> {
+        val event = WelcomeEmailWasSentToNewMember(
+            getId(),
+            emailAddress.value,
+            memberSince.toString()
         )
+        applyChange(event)
+
+        return AggregateResult.of(this, event)
     }
 
     fun isThreeYearsAnniversary(date: LocalDate): Boolean {
         return date.minusYears(3).isEqual(memberSince)
     }
 
-    fun mark3YearsAnniversaryThankYouEmailAsSent() {
-        applyChange(
-            ThreeYearsAnniversaryThankYouEmailSent(
-                getId(),
-                emailAddress.toString(),
-                memberSince.toString()
-            )
+    fun mark3YearsAnniversaryThankYouEmailAsSent(): AggregateResult<Member, ThreeYearsAnniversaryThankYouEmailSent> {
+        val event = ThreeYearsAnniversaryThankYouEmailSent(
+            getId(),
+            emailAddress.toString(),
+            memberSince.toString()
         )
+        applyChange(event)
+
+        return AggregateResult.of(this, event)
     }
 }

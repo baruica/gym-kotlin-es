@@ -3,7 +3,7 @@ package gym.membership.domain
 import EventStore
 import java.time.LocalDate
 
-interface MemberEventStore : EventStore<Member> {
+interface MemberEventStore : EventStore {
 
     fun get(memberId: String): Member
 

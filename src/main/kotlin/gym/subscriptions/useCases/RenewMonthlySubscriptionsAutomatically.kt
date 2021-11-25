@@ -13,11 +13,14 @@ class RenewMonthlySubscriptionsAutomatically(
 
         val endedMonthlySubscriptionsAsOf = eventStore.endedMonthlySubscriptions(LocalDate.parse(command.asOfDate))
 
+        val events = mutableListOf<DomainEvent>()
+
         endedMonthlySubscriptionsAsOf.forEach {
-            it.renew()
-            eventStore.store(it)
+            val aggregateResult = it.renew()
+            eventStore.store(aggregateResult)
+            events.addAll(aggregateResult.events)
         }
 
-        return endedMonthlySubscriptionsAsOf.flatMap { it.recentEvents() }
+        return events
     }
 }

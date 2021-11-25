@@ -1,8 +1,10 @@
 package gym.membership.domain
 
+import AggregateResult
+
 interface Mailer {
 
-    fun sendWelcomeEmail(member: Member)
+    fun sendWelcomeEmail(member: Member): AggregateResult<Member, WelcomeEmailWasSentToNewMember>
 
     fun sendSubscriptionSummary(
         emailAddress: EmailAddress,
@@ -11,5 +13,5 @@ interface Mailer {
         price: Int
     )
 
-    fun send3YearsAnniversaryThankYouEmail(member: Member)
+    fun send3YearsAnniversaryThankYouEmail(member: Member): AggregateResult<Member, ThreeYearsAnniversaryThankYouEmailSent>
 }

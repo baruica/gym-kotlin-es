@@ -1,19 +1,18 @@
 package gym.membership.infrastructure
 
-import gym.membership.domain.Email
+import AggregateResult
+import gym.membership.domain.*
 import gym.membership.domain.Email.*
-import gym.membership.domain.EmailAddress
-import gym.membership.domain.Mailer
-import gym.membership.domain.Member
 import java.util.*
 
 class InMemoryMailer(
     private val sentEmails: MutableMap<String, Email> = mutableMapOf()
 ) : Mailer {
 
-    override fun sendWelcomeEmail(member: Member) {
+    override fun sendWelcomeEmail(member: Member): AggregateResult<Member, WelcomeEmailWasSentToNewMember> {
         sentEmails[UUID.randomUUID().toString()] = Welcome(member.emailAddress)
-        member.markWelcomeEmailAsSent()
+
+        return member.markWelcomeEmailAsSent()
     }
 
     override fun sendSubscriptionSummary(
@@ -25,9 +24,10 @@ class InMemoryMailer(
         sentEmails[UUID.randomUUID().toString()] = SubscriptionSummary(emailAddress, startDate, endDate, price)
     }
 
-    override fun send3YearsAnniversaryThankYouEmail(member: Member) {
+    override fun send3YearsAnniversaryThankYouEmail(member: Member): AggregateResult<Member, ThreeYearsAnniversaryThankYouEmailSent> {
         sentEmails[UUID.randomUUID().toString()] = ThreeYearsAnniversary(member.emailAddress)
-        member.mark3YearsAnniversaryThankYouEmailAsSent()
+
+        return member.mark3YearsAnniversaryThankYouEmailAsSent()
     }
 
     internal fun welcomeEmailWasSentTo(emailAddress: String): Boolean {

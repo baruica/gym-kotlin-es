@@ -20,17 +20,17 @@ class RegisterNewMember(
         val knownMember: Member? = eventStore.findByEmailAddress(emailAddress)
 
         if (knownMember == null) {
-            val member = Member.register(
+            val aggregateResult = Member.register(
                 eventStore.nextId(),
                 emailAddress,
                 command.subscriptionId,
                 command.subscriptionStartDate
             )
-            eventStore.store(member)
+            eventStore.store(aggregateResult)
 
-            return member.recentEvents()
+            return aggregateResult.events
         }
 
-        return emptyList()
+        return listOf()
     }
 }

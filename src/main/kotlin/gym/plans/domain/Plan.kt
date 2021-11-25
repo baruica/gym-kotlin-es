@@ -2,6 +2,7 @@ package gym.plans.domain
 
 import Aggregate
 import AggregateHistory
+import AggregateResult
 import DomainEvent
 
 @JvmInline
@@ -35,20 +36,19 @@ class Plan private constructor(
             id: String,
             priceAmount: Int,
             durationInMonths: Int
-        ): Plan {
+        ): AggregateResult<Plan, NewPlanCreated> {
             val plan = Plan(PlanId(id))
             val price = Price(priceAmount)
             val duration = Duration(durationInMonths)
 
-            plan.applyChange(
-                NewPlanCreated(
-                    plan.getId(),
-                    price.amount,
-                    duration.durationInMonths
-                )
+            val event = NewPlanCreated(
+                plan.getId(),
+                price.amount,
+                duration.durationInMonths
             )
+            plan.applyChange(event)
 
-            return plan
+            return AggregateResult.of(plan, event)
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Plan {
@@ -62,18 +62,21 @@ class Plan private constructor(
         }
     }
 
-    fun changePrice(newPriceAmount: Int) {
+    fun changePrice(newPriceAmount: Int): AggregateResult<Plan, PlanPriceChanged> {
         val newPrice = Price(newPriceAmount)
 
         if (price != newPrice) {
-            applyChange(
-                PlanPriceChanged(
-                    getId(),
-                    price.amount,
-                    newPrice.amount
-                )
+            val event = PlanPriceChanged(
+                getId(),
+                price.amount,
+                newPrice.amount
             )
+            applyChange(event)
+
+            return AggregateResult.of(this, event)
         }
+
+        return AggregateResult.of(this, listOf())
     }
 }
 

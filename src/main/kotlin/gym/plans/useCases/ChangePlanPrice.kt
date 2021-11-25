@@ -14,10 +14,10 @@ class ChangePlanPrice(private val eventStore: PlanEventStore) {
 
         val plan = eventStore.get(command.planId)
 
-        plan.changePrice(command.newPrice)
+        val aggregateResult = plan.changePrice(command.newPrice)
 
-        eventStore.store(plan)
+        eventStore.store(aggregateResult)
 
-        return plan.recentEvents()
+        return aggregateResult.events
     }
 }

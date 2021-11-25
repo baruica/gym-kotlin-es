@@ -1,8 +1,8 @@
-interface EventStore<T : Aggregate> {
+interface EventStore {
 
     fun nextId(): String
 
-    fun store(aggregate: T)
+    fun store(aggregateResult: AggregateResult<out Aggregate, out DomainEvent>)
 
     fun storeEvents(events: List<DomainEvent>)
 

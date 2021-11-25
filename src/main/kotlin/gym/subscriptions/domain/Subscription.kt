@@ -2,6 +2,7 @@ package gym.subscriptions.domain
 
 import Aggregate
 import AggregateHistory
+import AggregateResult
 import DomainEvent
 import java.time.LocalDate
 import java.time.Period
@@ -47,7 +48,7 @@ class Subscription private constructor(
             planPrice: Int,
             email: String,
             isStudent: Boolean
-        ): Subscription {
+        ): AggregateResult<Subscription, SubscriptionEvent> {
             val subscription = Subscription(SubscriptionId(subscriptionId))
 
             val priceAfterDiscount = Price(planPrice)
@@ -56,19 +57,18 @@ class Subscription private constructor(
 
             val endDate = subscriptionDate.plusMonths(planDurationInMonths.toLong())
 
-            subscription.applyChange(
-                NewSubscription(
-                    subscriptionId,
-                    priceAfterDiscount.amount,
-                    Duration(planDurationInMonths).value,
-                    subscriptionDate.toString(),
-                    endDate.toString(),
-                    email,
-                    isStudent
-                )
+            val event = NewSubscription(
+                subscriptionId,
+                priceAfterDiscount.amount,
+                Duration(planDurationInMonths).value,
+                subscriptionDate.toString(),
+                endDate.toString(),
+                email,
+                isStudent
             )
+            subscription.applyChange(event)
 
-            return subscription
+            return AggregateResult.of(subscription, event)
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Subscription {
@@ -82,16 +82,17 @@ class Subscription private constructor(
         }
     }
 
-    fun renew() {
+    fun renew(): AggregateResult<Aggregate, DomainEvent> {
         val newEndDate = endDate.plus(Period.ofMonths(duration.value))
 
-        applyChange(
-            SubscriptionRenewed(
-                getId(),
-                endDate.toString(),
-                newEndDate.toString()
-            )
+        val event = SubscriptionRenewed(
+            getId(),
+            endDate.toString(),
+            newEndDate.toString()
         )
+        applyChange(event)
+
+        return AggregateResult.of(this, event)
     }
 
     fun isOngoing(date: LocalDate): Boolean {
@@ -106,21 +107,23 @@ class Subscription private constructor(
         return (price.amount / duration.value).roundToInt()
     }
 
-    fun applyThreeYearsAnniversaryDiscount(date: LocalDate) {
+    fun applyThreeYearsAnniversaryDiscount(date: LocalDate): AggregateResult<Subscription, SubscriptionEvent> {
         if (threeYearsDiscountNotYetApplied()) {
             val discountedPrice = price.applyThreeYearsAnniversaryDiscount(
                 hasThreeYearsAnniversaryOn(date)
             )
 
             if (price != discountedPrice) {
-                applyChange(
-                    SubscriptionDiscountedFor3YearsAnniversary(
-                        getId(),
-                        discountedPrice.amount
-                    )
+                val event = SubscriptionDiscountedFor3YearsAnniversary(
+                    getId(),
+                    discountedPrice.amount
                 )
+                applyChange(event)
+
+                return AggregateResult.of(this, event)
             }
         }
+        return AggregateResult.of(this, listOf())
     }
 
     fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {

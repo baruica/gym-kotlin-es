@@ -19,7 +19,7 @@ class SubscribeToPlan(
 ) {
     operator fun invoke(command: SubscribeToPlanCommand): List<DomainEvent> {
 
-        val subscription = Subscription.subscribe(
+        val aggregateResult = Subscription.subscribe(
             command.subscriptionId,
             command.planDurationInMonths,
             LocalDate.parse(command.startDate),
@@ -28,8 +28,8 @@ class SubscribeToPlan(
             command.isStudent
         )
 
-        eventStore.store(subscription)
+        eventStore.store(aggregateResult)
 
-        return subscription.recentEvents()
+        return aggregateResult.events
     }
 }
