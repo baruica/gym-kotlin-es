@@ -36,7 +36,7 @@ class Plan private constructor(
             id: String,
             priceAmount: Int,
             durationInMonths: Int
-        ): AggregateResult<Aggregate, DomainEvent> {
+        ): AggregateResult<Plan, NewPlanCreated> {
             val plan = Plan(PlanId(id))
             val price = Price(priceAmount)
             val duration = Duration(durationInMonths)
@@ -48,10 +48,7 @@ class Plan private constructor(
             )
             plan.applyChange(event)
 
-            return AggregateResult.of(
-                plan,
-                event
-            )
+            return AggregateResult.of(plan, event)
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Plan {
@@ -65,18 +62,21 @@ class Plan private constructor(
         }
     }
 
-    fun changePrice(newPriceAmount: Int) {
+    fun changePrice(newPriceAmount: Int): AggregateResult<Plan, PlanPriceChanged> {
         val newPrice = Price(newPriceAmount)
 
         if (price != newPrice) {
-            applyChange(
-                PlanPriceChanged(
-                    getId(),
-                    price.amount,
-                    newPrice.amount
-                )
+            val event = PlanPriceChanged(
+                getId(),
+                price.amount,
+                newPrice.amount
             )
+            applyChange(event)
+
+            return AggregateResult.of(this, event)
         }
+
+        return AggregateResult.of(this, listOf())
     }
 }
 

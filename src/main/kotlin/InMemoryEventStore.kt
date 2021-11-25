@@ -6,8 +6,8 @@ open class InMemoryEventStore(
 
     override fun nextId(): String = UUID.randomUUID().toString()
 
-    override fun store(aggregateResult: AggregateResult<Aggregate, DomainEvent>) {
-        this.events.getOrPut(aggregateResult.aggregate.getId()) { mutableListOf() }.add(aggregateResult.event)
+    override fun store(aggregateResult: AggregateResult<out Aggregate, out DomainEvent>) {
+        this.events.getOrPut(aggregateResult.aggregate.getId()) { mutableListOf() }.addAll(aggregateResult.events)
     }
 
     override fun storeEvents(events: List<DomainEvent>) {

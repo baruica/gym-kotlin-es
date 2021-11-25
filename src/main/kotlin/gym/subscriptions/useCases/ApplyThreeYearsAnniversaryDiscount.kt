@@ -16,8 +16,8 @@ class ApplyThreeYearsAnniversaryDiscount(
         val threeYearsAnniversarySubscriptions = eventStore.threeYearsAnniversarySubscriptions(date)
 
         threeYearsAnniversarySubscriptions.forEach {
-            it.applyThreeYearsAnniversaryDiscount(date)
-            eventStore.store(it)
+            val aggregateResult = it.applyThreeYearsAnniversaryDiscount(date)
+            eventStore.store(aggregateResult)
         }
 
         return threeYearsAnniversarySubscriptions.flatMap { it.recentEvents() }

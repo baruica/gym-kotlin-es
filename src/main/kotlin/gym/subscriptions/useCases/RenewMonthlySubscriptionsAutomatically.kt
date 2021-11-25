@@ -1,6 +1,6 @@
 package gym.subscriptions.useCases
 
-import gym.subscriptions.domain.SubscriptionEvent
+import DomainEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
@@ -9,7 +9,7 @@ data class RenewMonthlySubscriptionsAutomaticallyCommand(val asOfDate: String)
 class RenewMonthlySubscriptionsAutomatically(
     private val eventStore: SubscriptionEventStore
 ) {
-    operator fun invoke(command: RenewMonthlySubscriptionsAutomaticallyCommand): List<SubscriptionEvent> {
+    operator fun invoke(command: RenewMonthlySubscriptionsAutomaticallyCommand): List<DomainEvent> {
 
         val endedMonthlySubscriptionsAsOf = eventStore.endedMonthlySubscriptions(LocalDate.parse(command.asOfDate))
 
@@ -18,6 +18,6 @@ class RenewMonthlySubscriptionsAutomatically(
             eventStore.store(aggregateResult)
         }
 
-        return endedMonthlySubscriptionsAsOf.flatMap { it.recentEvents() }
+        return endedMonthlySubscriptionsAsOf.flatMap { it.events }
     }
 }

@@ -48,7 +48,7 @@ class Subscription private constructor(
             planPrice: Int,
             email: String,
             isStudent: Boolean
-        ): AggregateResult<Aggregate, DomainEvent> {
+        ): AggregateResult<Subscription, SubscriptionEvent> {
             val subscription = Subscription(SubscriptionId(subscriptionId))
 
             val priceAfterDiscount = Price(planPrice)
@@ -113,24 +113,26 @@ class Subscription private constructor(
         return (price.amount / duration.value).roundToInt()
     }
 
-    fun applyThreeYearsAnniversaryDiscount(date: LocalDate) {
+    fun applyThreeYearsAnniversaryDiscount(date: LocalDate): AggregateResult<Subscription, SubscriptionEvent> {
         if (threeYearsDiscountNotYetApplied()) {
             val discountedPrice = price.applyThreeYearsAnniversaryDiscount(
                 hasThreeYearsAnniversaryOn(date)
             )
 
             if (price != discountedPrice) {
-                applyChange(
-                    SubscriptionDiscountedFor3YearsAnniversary(
-                        getId(),
-                        discountedPrice.amount
-                    )
+                val event = SubscriptionDiscountedFor3YearsAnniversary(
+                    getId(),
+                    discountedPrice.amount
                 )
+                applyChange(event)
+
+                return AggregateResult.of(this, event)
             }
         }
+        return AggregateResult.of(this, listOf())
     }
 
-    fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
+    private fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
         return date == startDate.plusYears(3)
             && date == endDate
     }

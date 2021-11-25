@@ -1,7 +1,7 @@
 package gym.plans.useCases
 
+import DomainEvent
 import gym.plans.domain.Plan
-import gym.plans.domain.PlanEvent
 import gym.plans.domain.PlanEventStore
 
 data class CreateNewPlanCommand(
@@ -12,16 +12,16 @@ data class CreateNewPlanCommand(
 
 class CreateNewPlan(private val eventStore: PlanEventStore) {
 
-    operator fun invoke(command: CreateNewPlanCommand): PlanEvent {
+    operator fun invoke(command: CreateNewPlanCommand): List<DomainEvent> {
 
-        val plan = Plan.new(
+        val aggregateResult = Plan.new(
             command.planId,
             command.planPrice,
             command.planDurationInMonths
         )
 
-        eventStore.store(plan)
+        eventStore.store(aggregateResult)
 
-        return plan.event as PlanEvent
+        return aggregateResult.events
     }
 }

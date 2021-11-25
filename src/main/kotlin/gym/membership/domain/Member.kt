@@ -45,7 +45,7 @@ class Member private constructor(
             emailAddress: EmailAddress,
             subscriptionId: String,
             memberSince: String
-        ): AggregateResult<Aggregate, DomainEvent> {
+        ): AggregateResult<Member, MemberEvent> {
             val member = Member(MemberId(id))
 
             val event = NewMemberRegistered(
@@ -56,10 +56,7 @@ class Member private constructor(
             )
             member.applyChange(event)
 
-            return AggregateResult.of(
-                member,
-                event
-            )
+            return AggregateResult.of(member, event)
         }
 
         fun restoreFrom(aggregateHistory: AggregateHistory): Member {
