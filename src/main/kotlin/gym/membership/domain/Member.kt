@@ -14,7 +14,7 @@ value class MemberId(private val id: String) {
 
 class Member private constructor(
     private val id: MemberId
-) : Aggregate() {
+) : Aggregate {
 
     internal lateinit var emailAddress: EmailAddress
     internal lateinit var subscriptionId: String
@@ -22,7 +22,7 @@ class Member private constructor(
 
     override fun getId(): String = id.toString()
 
-    override fun whenEvent(event: DomainEvent) {
+    private fun whenEvent(event: DomainEvent) {
         when (event) {
             is NewMemberRegistered -> {
                 emailAddress = EmailAddress(event.memberEmailAddress)
@@ -54,7 +54,7 @@ class Member private constructor(
                 SubscriptionId(subscriptionId).toString(),
                 LocalDate.parse(memberSince).toString()
             )
-            member.applyChange(event)
+            member.whenEvent(event)
 
             return AggregateResult.of(member, event)
         }
@@ -76,7 +76,7 @@ class Member private constructor(
             emailAddress.value,
             memberSince.toString()
         )
-        applyChange(event)
+        whenEvent(event)
 
         return AggregateResult.of(this, event)
     }
@@ -91,7 +91,7 @@ class Member private constructor(
             emailAddress.toString(),
             memberSince.toString()
         )
-        applyChange(event)
+        whenEvent(event)
 
         return AggregateResult.of(this, event)
     }

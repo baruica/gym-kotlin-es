@@ -14,8 +14,10 @@ value class SubscriptionId(private val id: String) {
 }
 
 class Subscription private constructor(
-    private val id: SubscriptionId
-) : Aggregate() {
+    private val id: SubscriptionId,
+    private var threeYearsDiscountApplied: Boolean = false
+) : Aggregate {
+
     internal lateinit var price: Price
     internal lateinit var startDate: LocalDate
     internal lateinit var endDate: LocalDate
@@ -23,7 +25,7 @@ class Subscription private constructor(
 
     override fun getId(): String = id.toString()
 
-    override fun whenEvent(event: DomainEvent) {
+    private fun whenEvent(event: DomainEvent) {
         when (event) {
             is NewSubscription -> {
                 price = Price(event.subscriptionPrice)
@@ -36,6 +38,7 @@ class Subscription private constructor(
             }
             is SubscriptionDiscountedFor3YearsAnniversary -> {
                 price = Price(event.discountedPrice)
+                threeYearsDiscountApplied = true
             }
         }
     }
@@ -66,7 +69,7 @@ class Subscription private constructor(
                 email,
                 isStudent
             )
-            subscription.applyChange(event)
+            subscription.whenEvent(event)
 
             return AggregateResult.of(subscription, event)
         }
@@ -90,7 +93,7 @@ class Subscription private constructor(
             endDate.toString(),
             newEndDate.toString()
         )
-        applyChange(event)
+        whenEvent(event)
 
         return AggregateResult.of(this, event)
     }
@@ -108,7 +111,7 @@ class Subscription private constructor(
     }
 
     fun applyThreeYearsAnniversaryDiscount(date: LocalDate): AggregateResult<Subscription, SubscriptionEvent> {
-        if (threeYearsDiscountNotYetApplied()) {
+        if (!threeYearsDiscountApplied) {
             val discountedPrice = price.applyThreeYearsAnniversaryDiscount(
                 hasThreeYearsAnniversaryOn(date)
             )
@@ -118,7 +121,7 @@ class Subscription private constructor(
                     getId(),
                     discountedPrice.amount
                 )
-                applyChange(event)
+                whenEvent(event)
 
                 return AggregateResult.of(this, event)
             }
@@ -129,15 +132,6 @@ class Subscription private constructor(
     fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {
         return date == startDate.plusYears(3)
             && date == endDate
-    }
-
-    private fun threeYearsDiscountNotYetApplied(): Boolean {
-        return !this.events.contains(
-            SubscriptionDiscountedFor3YearsAnniversary(
-                getId(),
-                price.amount
-            )
-        )
     }
 }
 

@@ -66,11 +66,11 @@ class SubscriptionTest : AnnotationSpec() {
 
     @Test
     fun `can be renewed`() {
-        val (subscription, _) = yearlySubscription(1000, LocalDate.parse("2018-06-05"), isStudent = false)
-        ((subscription.events.last()) as NewSubscription).subscriptionEndDate shouldBe "2019-06-05"
+        val (subscription, events) = yearlySubscription(1000, LocalDate.parse("2018-06-05"), isStudent = false)
+        (events.last() as NewSubscription).subscriptionEndDate shouldBe "2019-06-05"
 
-        subscription.renew()
-        ((subscription.events.last()) as SubscriptionRenewed).newEndDate shouldBe "2020-06-05"
+        val (_, renewedSubscriptionEvents) = subscription.renew()
+        (renewedSubscriptionEvents.last() as SubscriptionRenewed).newEndDate shouldBe "2020-06-05"
     }
 
     @Test

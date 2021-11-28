@@ -25,9 +25,9 @@ class PlanTest : AnnotationSpec() {
     @Test
     fun `can change its price`() {
         val (tested, _) = Plan.new("plan abc", 400, 1)
-        tested.changePrice(500)
+        val (_, events) = tested.changePrice(500)
 
-        tested.events.shouldEndWith(
+        events.shouldEndWith(
             PlanPriceChanged("plan abc", 400, 500)
         )
     }

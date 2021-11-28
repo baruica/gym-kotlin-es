@@ -12,14 +12,14 @@ value class PlanId(private val id: String) {
 
 class Plan private constructor(
     private val id: PlanId
-) : Aggregate() {
+) : Aggregate {
 
     internal lateinit var price: Price
     internal lateinit var duration: Duration
 
     override fun getId(): String = id.toString()
 
-    override fun whenEvent(event: DomainEvent) {
+    private fun whenEvent(event: DomainEvent) {
         when (event) {
             is NewPlanCreated -> {
                 price = Price(event.planPrice)
@@ -46,7 +46,7 @@ class Plan private constructor(
                 price.amount,
                 duration.durationInMonths
             )
-            plan.applyChange(event)
+            plan.whenEvent(event)
 
             return AggregateResult.of(plan, event)
         }
@@ -71,7 +71,7 @@ class Plan private constructor(
                 price.amount,
                 newPrice.amount
             )
-            applyChange(event)
+            whenEvent(event)
 
             return AggregateResult.of(this, event)
         }
