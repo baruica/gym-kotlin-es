@@ -76,7 +76,7 @@ class Plan private constructor(
             return AggregateResult.of(this, event)
         }
 
-        return AggregateResult.of(this, listOf())
+        return AggregateResult.empty(this)
     }
 }
 

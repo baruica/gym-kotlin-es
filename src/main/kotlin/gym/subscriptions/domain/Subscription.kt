@@ -126,7 +126,7 @@ class Subscription private constructor(
                 return AggregateResult.of(this, event)
             }
         }
-        return AggregateResult.of(this, listOf())
+        return AggregateResult.empty(this)
     }
 
     fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {

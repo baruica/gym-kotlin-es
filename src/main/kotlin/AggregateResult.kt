@@ -7,8 +7,8 @@ data class AggregateResult<A, E>(
             return AggregateResult(aggregate, listOf(event))
         }
 
-        fun <A, E> of(aggregate: A, events: List<E>): AggregateResult<A, E> {
-            return AggregateResult(aggregate, events)
+        fun <A, E> empty(aggregate: A): AggregateResult<A, E> {
+            return AggregateResult(aggregate, listOf())
         }
     }
 }
