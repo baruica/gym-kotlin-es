@@ -3,7 +3,7 @@ package gym.subscriptions.useCases
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.kotest.matchers.shouldBe
 
 class SubscribeToPlanTest : AnnotationSpec() {
 
@@ -25,7 +25,7 @@ class SubscribeToPlanTest : AnnotationSpec() {
             )
         )
 
-        events.last().shouldBeSameInstanceAs(
+        events.last().shouldBe(
             NewSubscription(
                 subscriptionId,
                 900.0,
