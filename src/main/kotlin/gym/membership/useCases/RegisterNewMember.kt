@@ -5,16 +5,16 @@ import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEventStore
 
-data class RegisterNewMemberCommand(
+data class RegisterNewMember(
     val subscriptionId: String,
     val subscriptionStartDate: String,
     val email: String,
 )
 
-class RegisterNewMember(
+class RegisterNewMemberHandler(
     private val eventStore: MemberEventStore
 ) {
-    operator fun invoke(command: RegisterNewMemberCommand): List<DomainEvent> {
+    operator fun invoke(command: RegisterNewMember): List<DomainEvent> {
 
         val emailAddress = EmailAddress(command.email)
         val knownMember: Member? = eventStore.findByEmailAddress(emailAddress)

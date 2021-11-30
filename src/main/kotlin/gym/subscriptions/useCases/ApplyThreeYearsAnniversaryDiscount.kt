@@ -4,12 +4,12 @@ import DomainEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
-class ApplyThreeYearsAnniversaryDiscountCommand(val asOfDate: String)
+class ApplyThreeYearsAnniversaryDiscount(val asOfDate: String)
 
-class ApplyThreeYearsAnniversaryDiscount(
+class ApplyThreeYearsAnniversaryDiscountHandler(
     private val eventStore: SubscriptionEventStore
 ) {
-    operator fun invoke(command: ApplyThreeYearsAnniversaryDiscountCommand): List<DomainEvent> {
+    operator fun invoke(command: ApplyThreeYearsAnniversaryDiscount): List<DomainEvent> {
 
         val date = LocalDate.parse(command.asOfDate)
 

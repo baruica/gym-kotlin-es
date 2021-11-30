@@ -18,9 +18,9 @@ class CreateNewPlanTest : AnnotationSpec() {
             eventStore.get(planId)
         }
 
-        val tested = CreateNewPlan(eventStore)
+        val tested = CreateNewPlanHandler(eventStore)
 
-        val events = tested(CreateNewPlanCommand(planId, 300, 1))
+        val events = tested(CreateNewPlan(planId, 300, 1))
 
         events.shouldHaveSize(1)
         events.shouldEndWith(

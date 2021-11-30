@@ -37,10 +37,10 @@ class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
 
         val mailer = InMemoryMailer()
 
-        val tested = Send3YearsAnniversaryThankYouEmails(eventStore, mailer)
+        val tested = Send3YearsAnniversaryThankYouEmailsHandler(eventStore, mailer)
 
         val events = tested(
-            Send3YearsAnniversaryThankYouEmailsCommand("2018-06-05")
+            Send3YearsAnniversaryThankYouEmails("2018-06-05")
         )
 
         mailer.threeYearsAnniversaryWasSentTo("julie@gmail.com").shouldBeTrue()

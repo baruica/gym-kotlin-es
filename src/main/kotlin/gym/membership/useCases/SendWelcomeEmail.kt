@@ -4,13 +4,13 @@ import DomainEvent
 import gym.membership.domain.Mailer
 import gym.membership.domain.MemberEventStore
 
-data class SendWelcomeEmailCommand(val memberId: String)
+data class SendWelcomeEmail(val memberId: String)
 
-class SendWelcomeEmail(
+class SendWelcomeEmailHandler(
     private val eventStore: MemberEventStore,
     private val mailer: Mailer,
 ) {
-    operator fun invoke(event: SendWelcomeEmailCommand): List<DomainEvent> {
+    operator fun invoke(event: SendWelcomeEmail): List<DomainEvent> {
 
         val member = eventStore.get(event.memberId)
 

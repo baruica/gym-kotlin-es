@@ -5,7 +5,7 @@ import gym.subscriptions.domain.Subscription
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
-data class SubscribeToPlanCommand(
+data class SubscribeToPlan(
     val subscriptionId: String,
     val planPrice: Int,
     val planDurationInMonths: Int,
@@ -14,10 +14,10 @@ data class SubscribeToPlanCommand(
     val email: String,
 )
 
-class SubscribeToPlan(
+class SubscribeToPlanHandler(
     private val eventStore: SubscriptionEventStore
 ) {
-    operator fun invoke(command: SubscribeToPlanCommand): List<DomainEvent> {
+    operator fun invoke(command: SubscribeToPlan): List<DomainEvent> {
 
         val aggregateResult = Subscription.subscribe(
             command.subscriptionId,

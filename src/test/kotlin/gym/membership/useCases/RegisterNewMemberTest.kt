@@ -20,10 +20,10 @@ internal class RegisterNewMemberTest : AnnotationSpec() {
         val subscriptionId = "subscriptionId def"
         val subscriptionStartDate = "2018-06-05"
 
-        val tested = RegisterNewMember(eventStore)
+        val tested = RegisterNewMemberHandler(eventStore)
 
         val events = tested(
-            RegisterNewMemberCommand(
+            RegisterNewMember(
                 subscriptionId,
                 subscriptionStartDate,
                 email

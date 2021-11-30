@@ -19,10 +19,10 @@ class ChangePlanPriceTest : AnnotationSpec() {
             )
         )
 
-        val tested = ChangePlanPrice(eventStore)
+        val tested = ChangePlanPriceHandler(eventStore)
 
         val events = tested(
-            ChangePlanPriceCommand(planId, 400)
+            ChangePlanPrice(planId, 400)
         )
 
         events.shouldEndWith(

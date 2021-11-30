@@ -23,15 +23,15 @@ internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
             )
         )
 
-        val tested = ApplyThreeYearsAnniversaryDiscount(eventStore)
+        val tested = ApplyThreeYearsAnniversaryDiscountHandler(eventStore)
 
         val eventsBeforeThreeYearsAnniversary = tested(
-            ApplyThreeYearsAnniversaryDiscountCommand("2018-07-08")
+            ApplyThreeYearsAnniversaryDiscount("2018-07-08")
         )
         eventsBeforeThreeYearsAnniversary.shouldBeEmpty()
 
         val eventsWithThreeYearsDiscount = tested(
-            ApplyThreeYearsAnniversaryDiscountCommand("2018-07-09")
+            ApplyThreeYearsAnniversaryDiscount("2018-07-09")
         )
         eventsWithThreeYearsDiscount shouldEndWith SubscriptionDiscountedFor3YearsAnniversary(
             subscriptionId,
@@ -39,7 +39,7 @@ internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
         )
 
         val eventsAfterThreeYearsAnniversary = tested(
-            ApplyThreeYearsAnniversaryDiscountCommand("2018-07-10")
+            ApplyThreeYearsAnniversaryDiscount("2018-07-10")
         )
         eventsAfterThreeYearsAnniversary.shouldBeEmpty()
     }

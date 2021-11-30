@@ -4,15 +4,15 @@ import DomainEvent
 import gym.plans.domain.Plan
 import gym.plans.domain.PlanEventStore
 
-data class CreateNewPlanCommand(
+data class CreateNewPlan(
     val planId: String,
     val planPrice: Int,
     val planDurationInMonths: Int,
 )
 
-class CreateNewPlan(private val eventStore: PlanEventStore) {
+class CreateNewPlanHandler(private val eventStore: PlanEventStore) {
 
-    operator fun invoke(command: CreateNewPlanCommand): List<DomainEvent> {
+    operator fun invoke(command: CreateNewPlan): List<DomainEvent> {
 
         val aggregateResult = Plan.new(
             command.planId,
