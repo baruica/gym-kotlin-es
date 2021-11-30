@@ -34,10 +34,10 @@ class PlanTest : AnnotationSpec() {
 
     @Test
     fun `can be restored from events`() {
-        val (tested, events) = Plan.new("planId 42", 800, 12)
-        tested.changePrice(900)
+        val (tested, newPlanEvent) = Plan.new("planId 42", 800, 12)
+        val (_, changePriceevent) = tested.changePrice(900)
 
-        val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.getId(), events))
+        val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.getId(), newPlanEvent + changePriceevent))
 
         restoredFromEvents.price shouldBe tested.price
         restoredFromEvents.duration shouldBe tested.duration

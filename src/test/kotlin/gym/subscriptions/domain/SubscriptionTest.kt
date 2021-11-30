@@ -95,7 +95,7 @@ class SubscriptionTest : AnnotationSpec() {
 
     @Test
     fun `can be restored from events`() {
-        val (tested, events) = Subscription.subscribe(
+        val (tested, subscribeEvent) = Subscription.subscribe(
             "aggregateId",
             12,
             LocalDate.parse("2018-07-04"),
@@ -103,9 +103,9 @@ class SubscriptionTest : AnnotationSpec() {
             "Han@gmail.com",
             isStudent = false
         )
-        tested.renew()
+        val (_, renewEvent) = tested.renew()
 
-        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.getId(), events))
+        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.getId(), subscribeEvent + renewEvent))
 
         restoredFromEvents.price shouldBe tested.price
         restoredFromEvents.startDate shouldBe tested.startDate

@@ -9,11 +9,12 @@ internal class InMemoryEventStoreTest : AnnotationSpec() {
 
     @Test
     fun `events of stored aggregates can be retrieved`() {
-        val aggregateResult = Plan.new("id1", 200, 1)
-        aggregateResult.aggregate.changePrice(180)
+        val newPlanResult = Plan.new("id1", 200, 1)
+        val changePriceResult = newPlanResult.aggregate.changePrice(180)
 
         val tested = InMemoryEventStore()
-        tested.store(aggregateResult)
+        tested.store(newPlanResult)
+        tested.store(changePriceResult)
 
         tested.getAggregateHistory("id1").events.shouldContainExactly(
             listOf(

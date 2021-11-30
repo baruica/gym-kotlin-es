@@ -14,7 +14,7 @@ class SubscribeToPlanTest : AnnotationSpec() {
 
         val tested = SubscribeToPlan(eventStore)
 
-        val event = tested(
+        val events = tested(
             SubscribeToPlanCommand(
                 subscriptionId,
                 1000,
@@ -25,7 +25,7 @@ class SubscribeToPlanTest : AnnotationSpec() {
             )
         )
 
-        event.shouldBeSameInstanceAs(
+        events.last().shouldBeSameInstanceAs(
             NewSubscription(
                 subscriptionId,
                 900.0,
