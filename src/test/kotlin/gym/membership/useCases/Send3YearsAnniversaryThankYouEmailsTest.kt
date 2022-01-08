@@ -1,6 +1,5 @@
 package gym.membership.useCases
 
-import com.github.guepardoapps.kulid.ULID
 import gym.membership.domain.NewMemberRegistered
 import gym.membership.domain.ThreeYearsAnniversaryThankYouEmailSent
 import gym.membership.infrastructure.InMemoryMailer
@@ -14,10 +13,10 @@ import java.time.LocalDate
 
 class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
 
+    private val eventStore = InMemoryMemberEventStore()
+
     @Test
     fun handle() {
-        val eventStore = InMemoryMemberEventStore()
-
         val memberSinceJulie = LocalDate.parse("2018-06-05").minusYears(3)
         val newMemberRegisteredJulie = newMemberRegistered("julie@gmail.com", memberSinceJulie)
 
@@ -75,7 +74,7 @@ class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
         email: String,
         memberSince: LocalDate
     ): NewMemberRegistered = NewMemberRegistered(
-        ULID.random(),
+        eventStore.nextId(),
         email,
         "subscription def",
         memberSince.toString()
