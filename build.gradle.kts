@@ -1,6 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
-    id("io.kotest") version "0.3.8"
+    id("io.kotest") version "0.3.9"
 }
 
 group = "me.baruica"
@@ -10,10 +10,6 @@ description = "The Gym"
 repositories {
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
 
 dependencies {
@@ -30,4 +26,8 @@ java {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
