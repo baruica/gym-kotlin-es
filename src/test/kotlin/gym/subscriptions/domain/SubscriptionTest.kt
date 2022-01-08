@@ -2,13 +2,13 @@ package gym.subscriptions.domain
 
 import AggregateHistory
 import AggregateResult
+import com.github.guepardoapps.kulid.ULID
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
-import java.util.*
 
 class SubscriptionTest : AnnotationSpec() {
 
@@ -143,7 +143,7 @@ class SubscriptionTest : AnnotationSpec() {
         isStudent: Boolean
     ): AggregateResult<Subscription, SubscriptionEvent> {
         return Subscription.subscribe(
-            UUID.randomUUID().toString(),
+            ULID.random(),
             durationInMonths,
             subscriptionDate,
             basePrice,

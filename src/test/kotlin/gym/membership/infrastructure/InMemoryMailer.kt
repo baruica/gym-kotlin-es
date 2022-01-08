@@ -1,16 +1,16 @@
 package gym.membership.infrastructure
 
 import AggregateResult
+import com.github.guepardoapps.kulid.ULID
 import gym.membership.domain.*
 import gym.membership.domain.Email.*
-import java.util.*
 
 class InMemoryMailer(
     private val sentEmails: MutableMap<String, Email> = mutableMapOf()
 ) : Mailer {
 
     override fun sendWelcomeEmail(member: Member): AggregateResult<Member, WelcomeEmailWasSentToNewMember> {
-        sentEmails[UUID.randomUUID().toString()] = Welcome(member.emailAddress)
+        sentEmails[ULID.random()] = Welcome(member.emailAddress)
 
         return member.markWelcomeEmailAsSent()
     }
@@ -21,11 +21,11 @@ class InMemoryMailer(
         endDate: String,
         price: Int
     ) {
-        sentEmails[UUID.randomUUID().toString()] = SubscriptionSummary(emailAddress, startDate, endDate, price)
+        sentEmails[ULID.random()] = SubscriptionSummary(emailAddress, startDate, endDate, price)
     }
 
     override fun send3YearsAnniversaryThankYouEmail(member: Member): AggregateResult<Member, ThreeYearsAnniversaryThankYouEmailSent> {
-        sentEmails[UUID.randomUUID().toString()] = ThreeYearsAnniversary(member.emailAddress)
+        sentEmails[ULID.random()] = ThreeYearsAnniversary(member.emailAddress)
 
         return member.mark3YearsAnniversaryThankYouEmailAsSent()
     }

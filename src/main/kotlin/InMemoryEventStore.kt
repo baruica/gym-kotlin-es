@@ -1,10 +1,10 @@
-import java.util.*
+import com.github.guepardoapps.kulid.ULID
 
 open class InMemoryEventStore(
     val events: MutableMap<String, MutableList<DomainEvent>> = mutableMapOf()
 ) : EventStore {
 
-    override fun nextId(): String = UUID.randomUUID().toString()
+    override fun nextId(): String = ULID.random()
 
     override fun store(aggregateResult: AggregateResult<out Aggregate, out DomainEvent>) {
         this.events.getOrPut(aggregateResult.aggregate.getId()) { mutableListOf() }.addAll(aggregateResult.events)
