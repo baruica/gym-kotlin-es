@@ -1,13 +1,13 @@
-data class AggregateResult<A, E>(
-    val aggregate: A,
-    val events: List<E>
+data class AggregateResult<AGGREGATE, EVENT>(
+    val aggregate: AGGREGATE,
+    val events: List<EVENT>
 ) {
     companion object {
-        fun <A, E> of(aggregate: A, event: E): AggregateResult<A, E> {
+        fun <AGGREGATE, EVENT> of(aggregate: AGGREGATE, event: EVENT): AggregateResult<AGGREGATE, EVENT> {
             return AggregateResult(aggregate, listOf(event))
         }
 
-        fun <A, E> empty(aggregate: A): AggregateResult<A, E> {
+        fun <AGGREGATE, EVENT> empty(aggregate: AGGREGATE): AggregateResult<AGGREGATE, EVENT> {
             return AggregateResult(aggregate, listOf())
         }
     }
