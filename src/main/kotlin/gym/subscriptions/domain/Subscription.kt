@@ -85,7 +85,7 @@ class Subscription private constructor(
         }
     }
 
-    fun renew(): AggregateResult<Aggregate, DomainEvent> {
+    fun renew(): AggregateResult<Aggregate, SubscriptionRenewed> {
         val newEndDate = endDate.plus(Period.ofMonths(duration.value))
 
         val event = SubscriptionRenewed(
