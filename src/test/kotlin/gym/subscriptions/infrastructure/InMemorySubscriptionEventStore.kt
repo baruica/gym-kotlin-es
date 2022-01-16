@@ -2,10 +2,11 @@ package gym.subscriptions.infrastructure
 
 import InMemoryEventStore
 import gym.subscriptions.domain.Subscription
+import gym.subscriptions.domain.SubscriptionEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
-class InMemorySubscriptionEventStore : InMemoryEventStore(), SubscriptionEventStore {
+class InMemorySubscriptionEventStore : InMemoryEventStore<Subscription, SubscriptionEvent>(), SubscriptionEventStore {
 
     override fun get(subscriptionId: String): Subscription {
         return Subscription.restoreFrom(

@@ -73,10 +73,12 @@ class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
     private fun newMemberRegistered(
         email: String,
         memberSince: LocalDate
-    ): NewMemberRegistered = NewMemberRegistered(
-        eventStore.nextId(),
-        email,
-        "subscription def",
-        memberSince.toString()
-    )
+    ): NewMemberRegistered {
+        return NewMemberRegistered(
+            eventStore.nextId(),
+            email,
+            "subscription def",
+            memberSince.toString()
+        )
+    }
 }

@@ -51,11 +51,11 @@ class Plan private constructor(
             return AggregateResult.of(plan, event)
         }
 
-        fun restoreFrom(aggregateHistory: AggregateHistory): Plan {
+        fun restoreFrom(aggregateHistory: AggregateHistory<PlanEvent>): Plan {
             val plan = Plan(PlanId(aggregateHistory.aggregateId))
 
             aggregateHistory.events.forEach {
-                plan.whenEvent(it as PlanEvent)
+                plan.whenEvent(it)
             }
 
             return plan

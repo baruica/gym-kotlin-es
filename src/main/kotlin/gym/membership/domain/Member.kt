@@ -59,11 +59,11 @@ class Member private constructor(
             return AggregateResult.of(member, event)
         }
 
-        fun restoreFrom(aggregateHistory: AggregateHistory): Member {
+        fun restoreFrom(aggregateHistory: AggregateHistory<MemberEvent>): Member {
             val member = Member(MemberId(aggregateHistory.aggregateId))
 
             aggregateHistory.events.forEach {
-                member.whenEvent(it as MemberEvent)
+                member.whenEvent(it)
             }
 
             return member

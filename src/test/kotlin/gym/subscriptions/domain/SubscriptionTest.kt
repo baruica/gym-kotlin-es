@@ -70,7 +70,7 @@ class SubscriptionTest : AnnotationSpec() {
         (events.last() as NewSubscription).subscriptionEndDate shouldBe "2019-06-05"
 
         val (_, renewedSubscriptionEvents) = subscription.renew()
-        (renewedSubscriptionEvents.last() as SubscriptionRenewed).newEndDate shouldBe "2020-06-05"
+        renewedSubscriptionEvents.last().newEndDate shouldBe "2020-06-05"
     }
 
     @Test

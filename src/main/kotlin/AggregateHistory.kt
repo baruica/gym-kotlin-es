@@ -1,6 +1,6 @@
-data class AggregateHistory(
+data class AggregateHistory<EVENT>(
     val aggregateId: String,
-    val events: List<DomainEvent>
+    val events: List<EVENT>
 ) {
     init {
         require(events.isNotEmpty()) {

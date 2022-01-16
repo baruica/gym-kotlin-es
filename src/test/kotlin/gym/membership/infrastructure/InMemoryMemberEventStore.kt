@@ -3,10 +3,11 @@ package gym.membership.infrastructure
 import InMemoryEventStore
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
+import gym.membership.domain.MemberEvent
 import gym.membership.domain.MemberEventStore
 import java.time.LocalDate
 
-class InMemoryMemberEventStore : InMemoryEventStore(), MemberEventStore {
+class InMemoryMemberEventStore : InMemoryEventStore<Member, MemberEvent>(), MemberEventStore {
 
     override fun get(memberId: String): Member {
         return Member.restoreFrom(

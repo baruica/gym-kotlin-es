@@ -74,18 +74,18 @@ class Subscription private constructor(
             return AggregateResult.of(subscription, event)
         }
 
-        fun restoreFrom(aggregateHistory: AggregateHistory): Subscription {
+        fun restoreFrom(aggregateHistory: AggregateHistory<SubscriptionEvent>): Subscription {
             val subscription = Subscription(SubscriptionId(aggregateHistory.aggregateId))
 
             aggregateHistory.events.forEach {
-                subscription.whenEvent(it as SubscriptionEvent)
+                subscription.whenEvent(it)
             }
 
             return subscription
         }
     }
 
-    fun renew(): AggregateResult<Aggregate, SubscriptionRenewed> {
+    fun renew(): AggregateResult<Subscription, SubscriptionRenewed> {
         val newEndDate = endDate.plus(Period.ofMonths(duration.value))
 
         val event = SubscriptionRenewed(
