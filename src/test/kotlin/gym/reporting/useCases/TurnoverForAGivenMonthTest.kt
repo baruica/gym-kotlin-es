@@ -59,7 +59,7 @@ class TurnoverForAGivenMonthTest : AnnotationSpec() {
             )
         )
 
-        val tested = TurnoverForAGivenMonthHandler(eventStore)
+        val tested = TurnoverForAGivenMonth.Handler(eventStore)
 
         eventStore.onGoingSubscriptions(today).shouldHaveSize(2)
         tested(TurnoverForAGivenMonth(today)) shouldBe Turnover(83)

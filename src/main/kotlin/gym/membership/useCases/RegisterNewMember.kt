@@ -9,28 +9,28 @@ data class RegisterNewMember(
     val subscriptionId: String,
     val subscriptionStartDate: String,
     val email: String,
-)
-
-class RegisterNewMemberHandler(
-    private val eventStore: MemberEventStore
 ) {
-    operator fun invoke(command: RegisterNewMember): List<DomainEvent> {
+    class Handler(
+        private val eventStore: MemberEventStore
+    ) {
+        operator fun invoke(command: RegisterNewMember): List<DomainEvent> {
 
-        val emailAddress = EmailAddress(command.email)
-        val knownMember: Member? = eventStore.findByEmailAddress(emailAddress)
+            val emailAddress = EmailAddress(command.email)
+            val knownMember: Member? = eventStore.findByEmailAddress(emailAddress)
 
-        if (knownMember == null) {
-            val aggregateResult = Member.register(
-                eventStore.nextId(),
-                emailAddress,
-                command.subscriptionId,
-                command.subscriptionStartDate
-            )
-            eventStore.store(aggregateResult)
+            if (knownMember == null) {
+                val aggregateResult = Member.register(
+                    eventStore.nextId(),
+                    emailAddress,
+                    command.subscriptionId,
+                    command.subscriptionStartDate
+                )
+                eventStore.store(aggregateResult)
 
-            return aggregateResult.events
+                return aggregateResult.events
+            }
+
+            return listOf()
         }
-
-        return listOf()
     }
 }

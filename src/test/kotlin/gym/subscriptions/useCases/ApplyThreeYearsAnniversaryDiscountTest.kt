@@ -23,7 +23,7 @@ internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
             )
         )
 
-        val tested = ApplyThreeYearsAnniversaryDiscountHandler(eventStore)
+        val tested = ApplyThreeYearsAnniversaryDiscount.Handler(eventStore)
 
         val eventsBeforeThreeYearsAnniversary = tested(
             ApplyThreeYearsAnniversaryDiscount("2018-07-08")

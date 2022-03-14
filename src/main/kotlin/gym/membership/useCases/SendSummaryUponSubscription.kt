@@ -8,18 +8,19 @@ data class SendSummaryUponSubscription(
     val startDate: String,
     val endDate: String,
     val price: Int
-)
-
-class SendSummaryUponSubscriptionHandler(
-    private val mailer: Mailer,
 ) {
-    operator fun invoke(command: SendSummaryUponSubscription) {
-
-        mailer.sendSubscriptionSummary(
-            EmailAddress(command.email),
-            command.startDate,
-            command.endDate,
-            command.price
-        )
+    class Handler(
+        private val mailer: Mailer,
+    ) {
+        operator fun invoke(command: SendSummaryUponSubscription) {
+            mailer.sendSubscriptionSummary(
+                EmailAddress(
+                    command.email
+                ),
+                command.startDate,
+                command.endDate,
+                command.price
+            )
+        }
     }
 }

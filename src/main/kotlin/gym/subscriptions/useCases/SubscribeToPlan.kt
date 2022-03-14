@@ -12,24 +12,24 @@ data class SubscribeToPlan(
     val startDate: String,
     val isStudent: Boolean,
     val email: String,
-)
-
-class SubscribeToPlanHandler(
-    private val eventStore: SubscriptionEventStore
 ) {
-    operator fun invoke(command: SubscribeToPlan): List<DomainEvent> {
+    class Handler(
+        private val eventStore: SubscriptionEventStore
+    ) {
+        operator fun invoke(command: SubscribeToPlan): List<DomainEvent> {
 
-        val aggregateResult = Subscription.subscribe(
-            command.subscriptionId,
-            command.planDurationInMonths,
-            LocalDate.parse(command.startDate),
-            command.planPrice,
-            command.email,
-            command.isStudent
-        )
+            val aggregateResult = Subscription.subscribe(
+                command.subscriptionId,
+                command.planDurationInMonths,
+                LocalDate.parse(command.startDate),
+                command.planPrice,
+                command.email,
+                command.isStudent
+            )
 
-        eventStore.store(aggregateResult)
+            eventStore.store(aggregateResult)
 
-        return aggregateResult.events
+            return aggregateResult.events
+        }
     }
 }

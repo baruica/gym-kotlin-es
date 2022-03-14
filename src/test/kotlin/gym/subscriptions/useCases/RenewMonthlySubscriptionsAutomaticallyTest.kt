@@ -38,7 +38,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest : AnnotationSpec() {
             )
         )
 
-        val tested = RenewMonthlySubscriptionsAutomaticallyHandler(eventStore)
+        val tested = RenewMonthlySubscriptionsAutomatically.Handler(eventStore)
 
         val events = tested(
             RenewMonthlySubscriptionsAutomatically("2018-07-09")

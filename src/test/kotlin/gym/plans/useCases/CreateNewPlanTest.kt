@@ -18,7 +18,7 @@ class CreateNewPlanTest : AnnotationSpec() {
             eventStore.get(planId)
         }
 
-        val tested = CreateNewPlanHandler(eventStore)
+        val tested = CreateNewPlan.Handler(eventStore)
 
         val events = tested(CreateNewPlan(planId, 300, 1))
 

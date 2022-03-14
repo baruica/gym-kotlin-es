@@ -19,7 +19,7 @@ class ChangePlanPriceTest : AnnotationSpec() {
             )
         )
 
-        val tested = ChangePlanPriceHandler(eventStore)
+        val tested = ChangePlanPrice.Handler(eventStore)
 
         val events = tested(
             ChangePlanPrice(planId, 400)

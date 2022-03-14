@@ -33,7 +33,7 @@ class SendWelcomeEmailTest : AnnotationSpec() {
 
         val mailer = InMemoryMailer()
 
-        val tested = SendWelcomeEmailHandler(eventStore, mailer)
+        val tested = SendWelcomeEmail.Handler(eventStore, mailer)
 
         val events = tested(
             SendWelcomeEmail(memberId)

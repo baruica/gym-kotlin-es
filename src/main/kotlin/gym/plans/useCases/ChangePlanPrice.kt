@@ -6,18 +6,18 @@ import gym.plans.domain.PlanEventStore
 data class ChangePlanPrice(
     val planId: String,
     val newPrice: Int,
-)
+) {
+    class Handler(private val eventStore: PlanEventStore) {
 
-class ChangePlanPriceHandler(private val eventStore: PlanEventStore) {
+        operator fun invoke(command: ChangePlanPrice): List<DomainEvent> {
 
-    operator fun invoke(command: ChangePlanPrice): List<DomainEvent> {
+            val plan = eventStore.get(command.planId)
 
-        val plan = eventStore.get(command.planId)
+            val aggregateResult = plan.changePrice(command.newPrice)
 
-        val aggregateResult = plan.changePrice(command.newPrice)
+            eventStore.store(aggregateResult)
 
-        eventStore.store(aggregateResult)
-
-        return aggregateResult.events
+            return aggregateResult.events
+        }
     }
 }

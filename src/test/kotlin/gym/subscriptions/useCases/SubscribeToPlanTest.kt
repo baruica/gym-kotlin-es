@@ -12,7 +12,7 @@ class SubscribeToPlanTest : AnnotationSpec() {
         val eventStore = InMemorySubscriptionEventStore()
         val subscriptionId = eventStore.nextId()
 
-        val tested = SubscribeToPlanHandler(eventStore)
+        val tested = SubscribeToPlan.Handler(eventStore)
 
         val events = tested(
             SubscribeToPlan(
