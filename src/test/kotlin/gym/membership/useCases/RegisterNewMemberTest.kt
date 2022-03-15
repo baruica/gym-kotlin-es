@@ -3,9 +3,11 @@ package gym.membership.useCases
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.NewMemberRegistered
 import gym.membership.infrastructure.InMemoryMemberEventStore
+import gym.subscriptions.domain.SubscriptionId
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldEndWith
 import io.kotest.matchers.nulls.shouldBeNull
+import java.time.LocalDate
 
 internal class RegisterNewMemberTest : AnnotationSpec() {
 
@@ -24,9 +26,9 @@ internal class RegisterNewMemberTest : AnnotationSpec() {
 
         val events = tested(
             RegisterNewMember(
-                subscriptionId,
-                subscriptionStartDate,
-                email
+                SubscriptionId(subscriptionId),
+                LocalDate.parse(subscriptionStartDate),
+                EmailAddress(email)
             )
         )
 

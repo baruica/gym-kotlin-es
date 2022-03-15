@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 interface MemberEventStore : EventStore<Member, MemberEvent> {
 
-    fun get(memberId: String): Member
+    fun get(memberId: MemberId): Member
 
     fun findByEmailAddress(emailAddress: EmailAddress): Member?
 

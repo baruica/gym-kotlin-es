@@ -5,16 +5,14 @@ import gym.membership.domain.Mailer
 import gym.membership.domain.MemberEventStore
 import java.time.LocalDate
 
-data class Send3YearsAnniversaryThankYouEmails(val asOfDate: String) {
+data class Send3YearsAnniversaryThankYouEmails(val asOfDate: LocalDate) {
     class Handler(
         private val eventStore: MemberEventStore,
         private val mailer: Mailer,
     ) {
         operator fun invoke(command: Send3YearsAnniversaryThankYouEmails): List<DomainEvent> {
 
-            val threeYearsAnniversaryMembers = eventStore.threeYearsAnniversaryMembers(
-                LocalDate.parse(command.asOfDate)
-            )
+            val threeYearsAnniversaryMembers = eventStore.threeYearsAnniversaryMembers(command.asOfDate)
 
             val events = mutableListOf<DomainEvent>()
 

@@ -4,5 +4,5 @@ import EventStore
 
 interface PlanEventStore : EventStore<Plan, PlanEvent> {
 
-    fun get(planId: String): Plan
+    fun get(planId: PlanId): Plan
 }

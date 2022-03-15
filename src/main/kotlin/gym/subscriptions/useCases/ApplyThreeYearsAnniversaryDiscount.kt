@@ -4,20 +4,18 @@ import DomainEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
-class ApplyThreeYearsAnniversaryDiscount(val asOfDate: String) {
+class ApplyThreeYearsAnniversaryDiscount(val asOfDate: LocalDate) {
     class Handler(
         private val eventStore: SubscriptionEventStore
     ) {
         operator fun invoke(command: ApplyThreeYearsAnniversaryDiscount): List<DomainEvent> {
 
-            val date = LocalDate.parse(command.asOfDate)
-
-            val threeYearsAnniversarySubscriptions = eventStore.threeYearsAnniversarySubscriptions(date)
+            val threeYearsAnniversarySubscriptions = eventStore.threeYearsAnniversarySubscriptions(command.asOfDate)
 
             val events = mutableListOf<DomainEvent>()
 
             threeYearsAnniversarySubscriptions.forEach {
-                val aggregateResult = it.applyThreeYearsAnniversaryDiscount(date)
+                val aggregateResult = it.applyThreeYearsAnniversaryDiscount(command.asOfDate)
                 eventStore.store(aggregateResult)
                 events.addAll(aggregateResult.events)
             }

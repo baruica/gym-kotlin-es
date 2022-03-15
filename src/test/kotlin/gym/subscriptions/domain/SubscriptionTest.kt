@@ -3,6 +3,7 @@ package gym.subscriptions.domain
 import AggregateHistory
 import AggregateResult
 import com.github.guepardoapps.kulid.ULID
+import gym.membership.domain.EmailAddress
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
@@ -96,11 +97,11 @@ class SubscriptionTest : AnnotationSpec() {
     @Test
     fun `can be restored from events`() {
         val (tested, subscribeEvent) = Subscription.subscribe(
-            "aggregateId",
+            SubscriptionId("aggregateId"),
             12,
             LocalDate.parse("2018-07-04"),
             900,
-            "Han@gmail.com",
+            EmailAddress("Han@gmail.com"),
             isStudent = false
         )
         val (_, renewEvent) = tested.renew()
@@ -143,11 +144,11 @@ class SubscriptionTest : AnnotationSpec() {
         isStudent: Boolean
     ): AggregateResult<Subscription, SubscriptionEvent> {
         return Subscription.subscribe(
-            ULID.random(),
+            SubscriptionId(ULID.random()),
             durationInMonths,
             subscriptionDate,
             basePrice,
-            "luke@gmail.com",
+            EmailAddress("luke@gmail.com"),
             isStudent
         )
     }

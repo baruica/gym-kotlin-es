@@ -6,6 +6,7 @@ import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldEndWith
 import io.kotest.matchers.collections.shouldHaveSize
+import java.time.LocalDate
 
 class RenewMonthlySubscriptionsAutomaticallyTest : AnnotationSpec() {
 
@@ -41,7 +42,7 @@ class RenewMonthlySubscriptionsAutomaticallyTest : AnnotationSpec() {
         val tested = RenewMonthlySubscriptionsAutomatically.Handler(eventStore)
 
         val events = tested(
-            RenewMonthlySubscriptionsAutomatically("2018-07-09")
+            RenewMonthlySubscriptionsAutomatically(LocalDate.parse("2018-07-09"))
         )
 
         events.shouldHaveSize(1)

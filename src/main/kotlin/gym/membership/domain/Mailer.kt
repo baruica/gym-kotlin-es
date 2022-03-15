@@ -1,6 +1,7 @@
 package gym.membership.domain
 
 import AggregateResult
+import java.time.LocalDate
 
 interface Mailer {
 
@@ -8,8 +9,8 @@ interface Mailer {
 
     fun sendSubscriptionSummary(
         emailAddress: EmailAddress,
-        startDate: String,
-        endDate: String,
+        startDate: LocalDate,
+        endDate: LocalDate,
         price: Int
     )
 

@@ -1,10 +1,7 @@
 
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEvent
-import gym.plans.domain.NewPlanCreated
-import gym.plans.domain.Plan
-import gym.plans.domain.PlanEvent
-import gym.plans.domain.PlanPriceChanged
+import gym.plans.domain.*
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.maps.shouldBeEmpty
@@ -13,7 +10,7 @@ internal class InMemoryEventStoreTest : AnnotationSpec() {
 
     @Test
     fun `events of stored aggregates can be retrieved`() {
-        val newPlanResult = Plan.new("id1", 200, 1)
+        val newPlanResult = Plan.new(PlanId("id1"), 200, 1)
         val changePriceResult = newPlanResult.aggregate.changePrice(180)
 
         val tested = InMemoryEventStore<Plan, PlanEvent>()

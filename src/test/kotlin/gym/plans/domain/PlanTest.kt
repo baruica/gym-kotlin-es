@@ -11,20 +11,20 @@ class PlanTest : AnnotationSpec() {
     @Test
     fun `a duration cannot be anything but 1 month or 12 months`() {
         shouldThrow<IllegalArgumentException> {
-            Plan.new("plan abc", 400, 4)
+            Plan.new(PlanId("plan abc"), 400, 4)
         }
     }
 
     @Test
     fun `a price cannot be negative`() {
         shouldThrow<IllegalArgumentException> {
-            Plan.new("plan abc", -10, 1)
+            Plan.new(PlanId("plan abc"), -10, 1)
         }
     }
 
     @Test
     fun `can change its price`() {
-        val (tested, _) = Plan.new("plan abc", 400, 1)
+        val (tested, _) = Plan.new(PlanId("plan abc"), 400, 1)
         val (_, events) = tested.changePrice(500)
 
         events.shouldEndWith(
@@ -34,7 +34,7 @@ class PlanTest : AnnotationSpec() {
 
     @Test
     fun `can be restored from events`() {
-        val (tested, newPlanEvent) = Plan.new("planId 42", 800, 12)
+        val (tested, newPlanEvent) = Plan.new(PlanId("planId 42"), 800, 12)
         val (_, changePriceevent) = tested.changePrice(900)
 
         val restoredFromEvents = Plan.restoreFrom(AggregateHistory(tested.getId(), newPlanEvent + changePriceevent))

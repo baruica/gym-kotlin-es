@@ -1,7 +1,10 @@
 package gym.membership.useCases
 
 import DomainEvent
+import gym.membership.domain.EmailAddress
 import gym.subscriptions.domain.NewSubscription
+import gym.subscriptions.domain.SubscriptionId
+import java.time.LocalDate
 
 class NewSubscriptionEventListener(
     private val commandHandler: RegisterNewMember.Handler
@@ -10,9 +13,9 @@ class NewSubscriptionEventListener(
 
         return commandHandler(
             RegisterNewMember(
-                event.subscriptionId,
-                event.subscriptionStartDate,
-                event.email
+                SubscriptionId(event.subscriptionId),
+                LocalDate.parse(event.subscriptionStartDate),
+                EmailAddress(event.email)
             )
         )
     }

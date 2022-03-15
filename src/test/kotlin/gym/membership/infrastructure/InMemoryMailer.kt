@@ -4,6 +4,7 @@ import AggregateResult
 import com.github.guepardoapps.kulid.ULID
 import gym.membership.domain.*
 import gym.membership.domain.Email.*
+import java.time.LocalDate
 
 class InMemoryMailer(
     private val sentEmails: MutableMap<String, Email> = mutableMapOf()
@@ -17,8 +18,8 @@ class InMemoryMailer(
 
     override fun sendSubscriptionSummary(
         emailAddress: EmailAddress,
-        startDate: String,
-        endDate: String,
+        startDate: LocalDate,
+        endDate: LocalDate,
         price: Int
     ) {
         sentEmails[ULID.random()] = SubscriptionSummary(emailAddress, startDate, endDate, price)
@@ -38,8 +39,8 @@ class InMemoryMailer(
 
     internal fun subscriptionSummaryEmailWasSentTo(
         emailAddress: EmailAddress,
-        startDate: String,
-        endDate: String,
+        startDate: LocalDate,
+        endDate: LocalDate,
         price: Int
     ): Boolean {
         return sentEmails.containsValue(

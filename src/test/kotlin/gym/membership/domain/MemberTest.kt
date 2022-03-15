@@ -1,6 +1,7 @@
 package gym.membership.domain
 
 import AggregateHistory
+import gym.subscriptions.domain.SubscriptionId
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
@@ -20,8 +21,8 @@ class MemberTest : AnnotationSpec() {
         val (_, events) = Member.register(
             "member abc",
             EmailAddress(email),
-            subscriptionId,
-            subscriptionStartDate
+            SubscriptionId(subscriptionId),
+            LocalDate.parse(subscriptionStartDate)
         )
 
         events.shouldEndWith(
@@ -39,8 +40,8 @@ class MemberTest : AnnotationSpec() {
         val (with3yearsAnniversaryOnTheFifthOfJune, _) = Member.register(
             "member abc",
             EmailAddress("julie@gmail.com"),
-            "subscription def",
-            LocalDate.parse("2018-06-05").minusYears(3).toString()
+            SubscriptionId("subscription def"),
+            LocalDate.parse("2018-06-05").minusYears(3)
         )
 
         with3yearsAnniversaryOnTheFifthOfJune.isThreeYearsAnniversary(LocalDate.parse("2018-06-04")).shouldBeFalse()
@@ -53,8 +54,8 @@ class MemberTest : AnnotationSpec() {
         val (tested, events) = Member.register(
             "aggregateId",
             EmailAddress("julie@gmail.com"),
-            "subscription 42",
-            LocalDate.now().toString()
+            SubscriptionId("subscription 42"),
+            LocalDate.now()
         )
         tested.markWelcomeEmailAsSent()
 

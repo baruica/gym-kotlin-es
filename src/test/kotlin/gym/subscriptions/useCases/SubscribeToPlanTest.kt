@@ -1,9 +1,12 @@
 package gym.subscriptions.useCases
 
+import gym.membership.domain.EmailAddress
 import gym.subscriptions.domain.NewSubscription
+import gym.subscriptions.domain.SubscriptionId
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
+import java.time.LocalDate
 
 class SubscribeToPlanTest : AnnotationSpec() {
 
@@ -16,12 +19,12 @@ class SubscribeToPlanTest : AnnotationSpec() {
 
         val events = tested(
             SubscribeToPlan(
-                subscriptionId,
+                SubscriptionId(subscriptionId),
                 1000,
                 12,
-                "2018-12-18",
+                LocalDate.parse("2018-12-18"),
                 false,
-                "bob@mail.com"
+                EmailAddress("bob@mail.com")
             )
         )
 

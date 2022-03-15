@@ -4,6 +4,7 @@ import Aggregate
 import AggregateHistory
 import AggregateResult
 import DomainEvent
+import gym.membership.domain.EmailAddress
 import java.time.LocalDate
 import java.time.Period
 import kotlin.math.roundToInt
@@ -45,14 +46,14 @@ class Subscription private constructor(
 
     companion object {
         fun subscribe(
-            subscriptionId: String,
+            subscriptionId: SubscriptionId,
             planDurationInMonths: Int,
             subscriptionDate: LocalDate,
             planPrice: Int,
-            email: String,
+            email: EmailAddress,
             isStudent: Boolean
         ): AggregateResult<Subscription, SubscriptionEvent> {
-            val subscription = Subscription(SubscriptionId(subscriptionId))
+            val subscription = Subscription(subscriptionId)
 
             val priceAfterDiscount = Price(planPrice)
                 .applyDurationDiscount(planDurationInMonths)
@@ -61,12 +62,12 @@ class Subscription private constructor(
             val endDate = subscriptionDate.plusMonths(planDurationInMonths.toLong())
 
             val event = NewSubscription(
-                subscriptionId,
+                subscriptionId.toString(),
                 priceAfterDiscount.amount,
                 Duration(planDurationInMonths).value,
                 subscriptionDate.toString(),
                 endDate.toString(),
-                email,
+                email.toString(),
                 isStudent
             )
             subscription.whenEvent(event)

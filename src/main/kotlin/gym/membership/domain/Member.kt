@@ -43,16 +43,16 @@ class Member private constructor(
         fun register(
             id: String,
             emailAddress: EmailAddress,
-            subscriptionId: String,
-            memberSince: String
+            subscriptionId: SubscriptionId,
+            memberSince: LocalDate
         ): AggregateResult<Member, MemberEvent> {
             val member = Member(MemberId(id))
 
             val event = NewMemberRegistered(
                 member.getId(),
                 emailAddress.toString(),
-                SubscriptionId(subscriptionId).toString(),
-                LocalDate.parse(memberSince).toString()
+                subscriptionId.toString(),
+                memberSince.toString()
             )
             member.whenEvent(event)
 

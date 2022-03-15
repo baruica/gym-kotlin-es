@@ -33,11 +33,11 @@ class Plan private constructor(
 
     companion object {
         fun new(
-            id: String,
+            id: PlanId,
             priceAmount: Int,
             durationInMonths: Int
         ): AggregateResult<Plan, NewPlanCreated> {
-            val plan = Plan(PlanId(id))
+            val plan = Plan(id)
             val price = Price(priceAmount)
             val duration = Duration(durationInMonths)
 

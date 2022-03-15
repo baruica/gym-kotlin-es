@@ -3,9 +3,10 @@ package gym.plans.useCases
 import DomainEvent
 import gym.plans.domain.Plan
 import gym.plans.domain.PlanEventStore
+import gym.plans.domain.PlanId
 
 data class CreateNewPlan(
-    val planId: String,
+    val planId: PlanId,
     val planPrice: Int,
     val planDurationInMonths: Int,
 ) {

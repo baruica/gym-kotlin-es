@@ -7,6 +7,7 @@ import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldEndWith
+import java.time.LocalDate
 
 internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
 
@@ -26,12 +27,12 @@ internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
         val tested = ApplyThreeYearsAnniversaryDiscount.Handler(eventStore)
 
         val eventsBeforeThreeYearsAnniversary = tested(
-            ApplyThreeYearsAnniversaryDiscount("2018-07-08")
+            ApplyThreeYearsAnniversaryDiscount(LocalDate.parse("2018-07-08"))
         )
         eventsBeforeThreeYearsAnniversary.shouldBeEmpty()
 
         val eventsWithThreeYearsDiscount = tested(
-            ApplyThreeYearsAnniversaryDiscount("2018-07-09")
+            ApplyThreeYearsAnniversaryDiscount(LocalDate.parse("2018-07-09"))
         )
         eventsWithThreeYearsDiscount shouldEndWith SubscriptionDiscountedFor3YearsAnniversary(
             subscriptionId,
@@ -39,7 +40,7 @@ internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
         )
 
         val eventsAfterThreeYearsAnniversary = tested(
-            ApplyThreeYearsAnniversaryDiscount("2018-07-10")
+            ApplyThreeYearsAnniversaryDiscount(LocalDate.parse("2018-07-10"))
         )
         eventsAfterThreeYearsAnniversary.shouldBeEmpty()
     }

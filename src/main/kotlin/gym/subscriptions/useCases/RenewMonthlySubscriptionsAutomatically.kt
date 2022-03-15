@@ -4,13 +4,13 @@ import DomainEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
-data class RenewMonthlySubscriptionsAutomatically(val asOfDate: String) {
+data class RenewMonthlySubscriptionsAutomatically(val asOfDate: LocalDate) {
     class Handler(
         private val eventStore: SubscriptionEventStore
     ) {
         operator fun invoke(command: RenewMonthlySubscriptionsAutomatically): List<DomainEvent> {
 
-            val endedMonthlySubscriptionsAsOf = eventStore.endedMonthlySubscriptions(LocalDate.parse(command.asOfDate))
+            val endedMonthlySubscriptionsAsOf = eventStore.endedMonthlySubscriptions(command.asOfDate)
 
             val events = mutableListOf<DomainEvent>()
 

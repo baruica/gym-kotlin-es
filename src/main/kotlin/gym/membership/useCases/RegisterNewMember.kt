@@ -4,24 +4,25 @@ import DomainEvent
 import gym.membership.domain.EmailAddress
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEventStore
+import gym.subscriptions.domain.SubscriptionId
+import java.time.LocalDate
 
 data class RegisterNewMember(
-    val subscriptionId: String,
-    val subscriptionStartDate: String,
-    val email: String,
+    val subscriptionId: SubscriptionId,
+    val subscriptionStartDate: LocalDate,
+    val email: EmailAddress,
 ) {
     class Handler(
         private val eventStore: MemberEventStore
     ) {
         operator fun invoke(command: RegisterNewMember): List<DomainEvent> {
 
-            val emailAddress = EmailAddress(command.email)
-            val knownMember: Member? = eventStore.findByEmailAddress(emailAddress)
+            val knownMember: Member? = eventStore.findByEmailAddress(command.email)
 
             if (knownMember == null) {
                 val aggregateResult = Member.register(
                     eventStore.nextId(),
-                    emailAddress,
+                    command.email,
                     command.subscriptionId,
                     command.subscriptionStartDate
                 )

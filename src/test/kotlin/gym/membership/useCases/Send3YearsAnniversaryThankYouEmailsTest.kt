@@ -39,7 +39,7 @@ class Send3YearsAnniversaryThankYouEmailsTest : AnnotationSpec() {
         val tested = Send3YearsAnniversaryThankYouEmails.Handler(eventStore, mailer)
 
         val events = tested(
-            Send3YearsAnniversaryThankYouEmails("2018-06-05")
+            Send3YearsAnniversaryThankYouEmails(LocalDate.parse("2018-06-05"))
         )
 
         mailer.threeYearsAnniversaryWasSentTo("julie@gmail.com").shouldBeTrue()
