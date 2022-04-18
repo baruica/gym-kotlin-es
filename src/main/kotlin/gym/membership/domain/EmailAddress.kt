@@ -11,7 +11,7 @@ data class EmailAddress(val value: String) {
     }
 
     private fun isValidEmail(value: String) =
-        Regex("^[\\w-_.+]*[\\w-_.]@([\\w]+\\.)+[\\w]+[\\w]$", IGNORE_CASE).matches(value)
+        Regex("^[\\w-_.+]*[\\w-_.]@(\\w+\\.)+\\w+\\w$", IGNORE_CASE).matches(value)
 
     override fun toString(): String = value
 }
