@@ -12,13 +12,12 @@ data class SendWelcomeEmail(val memberId: MemberId) {
     ) {
         operator fun invoke(event: SendWelcomeEmail): List<DomainEvent> {
 
-            val member = eventStore.get(event.memberId)
-
-            val aggregateResult = mailer.sendWelcomeEmail(member)
-
-            eventStore.store(aggregateResult)
-
-            return aggregateResult.events
+            eventStore.get(event.memberId)
+                .let { member ->
+                    return mailer.sendWelcomeEmail(member)
+                        .also { aggregateResult -> eventStore.store(aggregateResult) }
+                        .events
+                }
         }
     }
 }

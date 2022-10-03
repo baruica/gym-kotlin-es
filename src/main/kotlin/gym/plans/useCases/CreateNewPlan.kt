@@ -14,15 +14,13 @@ data class CreateNewPlan(
 
         operator fun invoke(command: CreateNewPlan): List<DomainEvent> {
 
-            val aggregateResult = Plan.new(
+            return Plan.new(
                 command.planId,
                 command.planPrice,
                 command.planDurationInMonths
             )
-
-            eventStore.store(aggregateResult)
-
-            return aggregateResult.events
+                .also { eventStore.store(it) }
+                .events
         }
     }
 }

@@ -17,19 +17,15 @@ data class RegisterNewMember(
     ) {
         operator fun invoke(command: RegisterNewMember): List<DomainEvent> {
 
-            val knownMember: Member? = eventStore.findByEmailAddress(command.email)
-
-            if (knownMember == null) {
-                val aggregateResult = Member.register(
+            eventStore.findByEmailAddress(command.email)
+                ?: return Member.register(
                     eventStore.nextId(),
                     command.email,
                     command.subscriptionId,
                     command.subscriptionStartDate
                 )
-                eventStore.store(aggregateResult)
-
-                return aggregateResult.events
-            }
+                    .also { eventStore.store(it) }
+                    .events
 
             return listOf()
         }

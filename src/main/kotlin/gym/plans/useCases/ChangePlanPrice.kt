@@ -12,13 +12,12 @@ data class ChangePlanPrice(
 
         operator fun invoke(command: ChangePlanPrice): List<DomainEvent> {
 
-            val plan = eventStore.get(command.planId)
-
-            val aggregateResult = plan.changePrice(command.newPrice)
-
-            eventStore.store(aggregateResult)
-
-            return aggregateResult.events
+            eventStore.get(command.planId)
+                .let { plan ->
+                    return plan.changePrice(command.newPrice)
+                        .also { aggregateResult -> eventStore.store(aggregateResult) }
+                        .events
+                }
         }
     }
 }
