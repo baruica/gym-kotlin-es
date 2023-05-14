@@ -1,23 +1,18 @@
 package gym.plans.domain
 
-import Aggregate
 import AggregateHistory
 import AggregateResult
 import DomainEvent
-
-@JvmInline
-value class PlanId(private val id: String) {
-    override fun toString(): String = id
-}
+import Id
+import Identifiable
+import emptyAggregateResult
 
 class Plan private constructor(
-    private val id: PlanId
-) : Aggregate {
+    override val id: Id<String>
+) : Identifiable<String> {
 
     internal lateinit var price: Price
     internal lateinit var duration: Duration
-
-    override fun getId(): String = id.toString()
 
     private fun whenEvent(event: DomainEvent) {
         when (event) {
@@ -33,26 +28,26 @@ class Plan private constructor(
 
     companion object {
         fun new(
-            id: PlanId,
+            id: Id<String>,
             priceAmount: Int,
             durationInMonths: Int
-        ): AggregateResult<Plan, NewPlanCreated> {
+        ): AggregateResult<String, Plan, NewPlanCreated> {
             val plan = Plan(id)
             val price = Price(priceAmount)
             val duration = Duration(durationInMonths)
 
             val event = NewPlanCreated(
-                plan.getId(),
+                plan.id.toString(),
                 price.amount,
                 duration.durationInMonths
             )
             plan.whenEvent(event)
 
-            return AggregateResult.of(plan, event)
+            return AggregateResult(plan, event)
         }
 
-        fun restoreFrom(aggregateHistory: AggregateHistory<PlanEvent>): Plan {
-            val plan = Plan(PlanId(aggregateHistory.aggregateId))
+        fun restoreFrom(aggregateHistory: AggregateHistory<String, PlanEvent>): Plan {
+            val plan = Plan(aggregateHistory.aggregateId)
 
             aggregateHistory.events.forEach {
                 plan.whenEvent(it)
@@ -62,21 +57,21 @@ class Plan private constructor(
         }
     }
 
-    fun changePrice(newPriceAmount: Int): AggregateResult<Plan, PlanPriceChanged> {
+    fun changePrice(newPriceAmount: Int): AggregateResult<String, Plan, PlanPriceChanged> {
         val newPrice = Price(newPriceAmount)
 
         if (price != newPrice) {
             val event = PlanPriceChanged(
-                getId(),
+                id.toString(),
                 price.amount,
                 newPrice.amount
             )
             whenEvent(event)
 
-            return AggregateResult.of(this, event)
+            return AggregateResult(this, event)
         }
 
-        return AggregateResult.empty(this)
+        return emptyAggregateResult(this)
     }
 }
 

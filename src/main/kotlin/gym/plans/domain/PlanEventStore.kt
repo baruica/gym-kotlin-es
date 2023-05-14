@@ -2,7 +2,7 @@ package gym.plans.domain
 
 import EventStore
 
-interface PlanEventStore : EventStore<Plan, PlanEvent> {
+interface PlanEventStore : EventStore<String, Plan, PlanEvent> {
 
-    fun get(planId: PlanId): Plan
+    fun get(planId: String): Plan
 }

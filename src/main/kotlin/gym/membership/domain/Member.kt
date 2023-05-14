@@ -1,32 +1,25 @@
 package gym.membership.domain
 
-import Aggregate
 import AggregateHistory
 import AggregateResult
 import DomainEvent
-import gym.subscriptions.domain.SubscriptionId
+import Id
+import Identifiable
 import java.time.LocalDate
 
-@JvmInline
-value class MemberId(private val id: String) {
-    override fun toString(): String = id
-}
-
 class Member private constructor(
-    private val id: MemberId
-) : Aggregate {
+    override val id: Id<String>
+) : Identifiable<String> {
 
     internal lateinit var emailAddress: EmailAddress
     internal lateinit var subscriptionId: String
     internal lateinit var memberSince: LocalDate
 
-    override fun getId(): String = id.toString()
-
     private fun whenEvent(event: DomainEvent) {
         when (event) {
             is NewMemberRegistered -> {
                 emailAddress = EmailAddress(event.memberEmailAddress)
-                subscriptionId = SubscriptionId(event.subscriptionId).toString()
+                subscriptionId = Id(event.subscriptionId).toString()
                 memberSince = LocalDate.parse(event.memberSince)
             }
             is WelcomeEmailWasSentToNewMember -> {
@@ -43,24 +36,24 @@ class Member private constructor(
         fun register(
             id: String,
             emailAddress: EmailAddress,
-            subscriptionId: SubscriptionId,
+            subscriptionId: Id<String>,
             memberSince: LocalDate
-        ): AggregateResult<Member, MemberEvent> {
-            val member = Member(MemberId(id))
+        ): AggregateResult<String, Member, MemberEvent> {
+            val member = Member(Id(id))
 
             val event = NewMemberRegistered(
-                member.getId(),
+                member.id.toString(),
                 emailAddress.toString(),
                 subscriptionId.toString(),
                 memberSince.toString()
             )
             member.whenEvent(event)
 
-            return AggregateResult.of(member, event)
+            return AggregateResult(member, event)
         }
 
-        fun restoreFrom(aggregateHistory: AggregateHistory<MemberEvent>): Member {
-            val member = Member(MemberId(aggregateHistory.aggregateId))
+        fun restoreFrom(aggregateHistory: AggregateHistory<String, MemberEvent>): Member {
+            val member = Member(aggregateHistory.aggregateId)
 
             aggregateHistory.events.forEach {
                 member.whenEvent(it)
@@ -70,29 +63,29 @@ class Member private constructor(
         }
     }
 
-    fun markWelcomeEmailAsSent(): AggregateResult<Member, WelcomeEmailWasSentToNewMember> {
+    fun markWelcomeEmailAsSent(): AggregateResult<String, Member, WelcomeEmailWasSentToNewMember> {
         val event = WelcomeEmailWasSentToNewMember(
-            getId(),
+            id.toString(),
             emailAddress.value,
             memberSince.toString()
         )
         whenEvent(event)
 
-        return AggregateResult.of(this, event)
+        return AggregateResult(this, event)
     }
 
     fun isThreeYearsAnniversary(date: LocalDate): Boolean {
         return date.minusYears(3).isEqual(memberSince)
     }
 
-    fun mark3YearsAnniversaryThankYouEmailAsSent(): AggregateResult<Member, ThreeYearsAnniversaryThankYouEmailSent> {
+    fun mark3YearsAnniversaryThankYouEmailAsSent(): AggregateResult<String, Member, ThreeYearsAnniversaryThankYouEmailSent> {
         val event = ThreeYearsAnniversaryThankYouEmailSent(
-            getId(),
+            id.toString(),
             emailAddress.toString(),
             memberSince.toString()
         )
         whenEvent(event)
 
-        return AggregateResult.of(this, event)
+        return AggregateResult(this, event)
     }
 }

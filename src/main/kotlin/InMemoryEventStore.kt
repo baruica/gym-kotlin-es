@@ -1,24 +1,20 @@
-import com.github.guepardoapps.kulid.ULID
+open class InMemoryEventStore<ID, A: Identifiable<ID>, E: DomainEvent>(
+    val events: MutableMap<String, MutableList<E>> = mutableMapOf()
+) : EventStore<ID, A, E> {
 
-open class InMemoryEventStore<AGGREGATE: Aggregate, EVENT: DomainEvent>(
-    val events: MutableMap<String, MutableList<EVENT>> = mutableMapOf()
-) : EventStore<AGGREGATE, EVENT> {
-
-    override fun nextId(): String = ULID.random()
-
-    override fun store(aggregateResult: AggregateResult<AGGREGATE, out EVENT>) {
-        this.events.getOrPut(aggregateResult.aggregate.getId()) { mutableListOf() }.addAll(aggregateResult.events)
+    override fun store(aggregateResult: AggregateResult<ID, A, out E>) {
+        this.events.getOrPut(aggregateResult.aggregate.id.toString()) { mutableListOf() }.addAll(aggregateResult.events)
     }
 
-    override fun storeEvents(events: List<EVENT>) {
+    override fun storeEvents(events: List<E>) {
         events.forEach {
-            this.events.getOrPut((it as DomainEvent).getAggregateId()) { mutableListOf() }.add(it)
+            this.events.getOrPut(it.getAggregateId()) { mutableListOf() }.add(it)
         }
     }
 
-    override fun getAggregateHistory(aggregateId: String): AggregateHistory<EVENT> {
+    override fun getAggregateHistory(aggregateId: ID): AggregateHistory<ID, E> {
         return AggregateHistory(
-            aggregateId,
+            Id(aggregateId),
             this.events.getOrDefault(aggregateId, mutableListOf())
         )
     }

@@ -1,6 +1,6 @@
 package gym.membership.useCases
 
-import gym.membership.domain.MemberId
+import Id
 import gym.membership.domain.NewMemberRegistered
 import gym.membership.domain.WelcomeEmailWasSentToNewMember
 import gym.membership.infrastructure.InMemoryMailer
@@ -15,7 +15,7 @@ class SendWelcomeEmailTest : AnnotationSpec() {
     @Test
     fun handle() {
 
-        val memberId = MemberId("member abc")
+        val memberId = "member abc"
         val emailAddress = "bob@gmail.com"
         val subscriptionId = "subscription def"
         val memberSince = LocalDate.now()
@@ -24,7 +24,7 @@ class SendWelcomeEmailTest : AnnotationSpec() {
         eventStore.storeEvents(
             listOf(
                 NewMemberRegistered(
-                    memberId.toString(),
+                    memberId,
                     emailAddress,
                     subscriptionId,
                     memberSince.toString()
@@ -37,12 +37,12 @@ class SendWelcomeEmailTest : AnnotationSpec() {
         val tested = SendWelcomeEmail.Handler(eventStore, mailer)
 
         val events = tested(
-            SendWelcomeEmail(memberId)
+            SendWelcomeEmail(Id(memberId))
         )
 
         events.shouldEndWith(
             WelcomeEmailWasSentToNewMember(
-                memberId.toString(),
+                memberId,
                 emailAddress,
                 memberSince.toString()
             )

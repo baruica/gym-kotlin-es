@@ -2,6 +2,7 @@ package gym.subscriptions.domain
 
 import AggregateHistory
 import AggregateResult
+import Id
 import com.github.guepardoapps.kulid.ULID
 import gym.membership.domain.EmailAddress
 import io.kotest.assertions.throwables.shouldThrow
@@ -97,7 +98,7 @@ class SubscriptionTest : AnnotationSpec() {
     @Test
     fun `can be restored from events`() {
         val (tested, subscribeEvent) = Subscription.subscribe(
-            SubscriptionId("aggregateId"),
+            Id("aggregateId"),
             12,
             LocalDate.parse("2018-07-04"),
             900,
@@ -106,7 +107,7 @@ class SubscriptionTest : AnnotationSpec() {
         )
         val (_, renewEvent) = tested.renew()
 
-        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.getId(), subscribeEvent + renewEvent))
+        val restoredFromEvents = Subscription.restoreFrom(AggregateHistory(tested.id, subscribeEvent + renewEvent))
 
         restoredFromEvents.price shouldBe tested.price
         restoredFromEvents.startDate shouldBe tested.startDate
@@ -117,7 +118,7 @@ class SubscriptionTest : AnnotationSpec() {
     @Test
     fun `cannot be restored if no events`() {
         shouldThrow<IllegalArgumentException> {
-            Subscription.restoreFrom(AggregateHistory("subscriptionId 42", listOf()))
+            Subscription.restoreFrom(AggregateHistory(Id("subscriptionId 42"), listOf()))
         }
     }
 
@@ -125,7 +126,7 @@ class SubscriptionTest : AnnotationSpec() {
         basePrice: Int,
         subscriptionDate: LocalDate,
         isStudent: Boolean = false
-    ): AggregateResult<Subscription, SubscriptionEvent> {
+    ): AggregateResult<String, Subscription, SubscriptionEvent> {
         return newSubscription(subscriptionDate, basePrice, 1, isStudent)
     }
 
@@ -133,7 +134,7 @@ class SubscriptionTest : AnnotationSpec() {
         basePrice: Int,
         subscriptionDate: LocalDate,
         isStudent: Boolean = false
-    ): AggregateResult<Subscription, SubscriptionEvent> {
+    ): AggregateResult<String, Subscription, SubscriptionEvent> {
         return newSubscription(subscriptionDate, basePrice, 12, isStudent)
     }
 
@@ -142,9 +143,9 @@ class SubscriptionTest : AnnotationSpec() {
         basePrice: Int,
         durationInMonths: Int,
         isStudent: Boolean
-    ): AggregateResult<Subscription, SubscriptionEvent> {
+    ): AggregateResult<String, Subscription, SubscriptionEvent> {
         return Subscription.subscribe(
-            SubscriptionId(ULID.random()),
+            Id(ULID.random()),
             durationInMonths,
             subscriptionDate,
             basePrice,

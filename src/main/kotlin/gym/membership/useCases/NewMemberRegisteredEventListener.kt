@@ -1,7 +1,7 @@
 package gym.membership.useCases
 
 import DomainEvent
-import gym.membership.domain.MemberId
+import Id
 import gym.membership.domain.NewMemberRegistered
 
 class NewMemberRegisteredEventListener(
@@ -11,7 +11,7 @@ class NewMemberRegisteredEventListener(
 
         return commandHandler(
             SendWelcomeEmail(
-                MemberId(event.memberId)
+                Id(event.memberId)
             )
         )
     }

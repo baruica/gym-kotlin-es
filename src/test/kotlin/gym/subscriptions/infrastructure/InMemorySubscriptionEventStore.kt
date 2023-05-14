@@ -6,7 +6,7 @@ import gym.subscriptions.domain.SubscriptionEvent
 import gym.subscriptions.domain.SubscriptionEventStore
 import java.time.LocalDate
 
-class InMemorySubscriptionEventStore : InMemoryEventStore<Subscription, SubscriptionEvent>(), SubscriptionEventStore {
+class InMemorySubscriptionEventStore : InMemoryEventStore<String, Subscription, SubscriptionEvent>(), SubscriptionEventStore {
 
     override fun get(subscriptionId: String): Subscription {
         return Subscription.restoreFrom(

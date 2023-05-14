@@ -1,12 +1,12 @@
 package gym.plans.useCases
 
 import DomainEvent
+import Id
 import gym.plans.domain.Plan
 import gym.plans.domain.PlanEventStore
-import gym.plans.domain.PlanId
 
 data class CreateNewPlan(
-    val planId: PlanId,
+    val planId: String,
     val planPrice: Int,
     val planDurationInMonths: Int,
 ) {
@@ -15,7 +15,7 @@ data class CreateNewPlan(
         operator fun invoke(command: CreateNewPlan): List<DomainEvent> {
 
             return Plan.new(
-                command.planId,
+                Id(command.planId),
                 command.planPrice,
                 command.planDurationInMonths
             )

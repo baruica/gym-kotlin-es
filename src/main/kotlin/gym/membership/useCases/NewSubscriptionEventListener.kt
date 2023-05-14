@@ -1,9 +1,9 @@
 package gym.membership.useCases
 
 import DomainEvent
+import Id
 import gym.membership.domain.EmailAddress
 import gym.subscriptions.domain.NewSubscription
-import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
 
 class NewSubscriptionEventListener(
@@ -13,7 +13,7 @@ class NewSubscriptionEventListener(
 
         return commandHandler(
             RegisterNewMember(
-                SubscriptionId(event.subscriptionId),
+                Id(event.subscriptionId),
                 LocalDate.parse(event.subscriptionStartDate),
                 EmailAddress(event.email)
             )

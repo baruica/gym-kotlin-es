@@ -1,14 +1,10 @@
-data class AggregateResult<AGGREGATE: Aggregate, EVENT: DomainEvent>(
-    val aggregate: AGGREGATE,
-    val events: List<EVENT>
+data class AggregateResult<ID, A: Identifiable<ID>, E: DomainEvent>(
+    val aggregate: A,
+    val events: List<E>
 ) {
-    companion object {
-        fun <AGGREGATE: Aggregate, EVENT: DomainEvent> of(aggregate: AGGREGATE, event: EVENT): AggregateResult<AGGREGATE, EVENT> {
-            return AggregateResult(aggregate, listOf(event))
-        }
+    constructor(aggregate: A, event: E) : this(aggregate, listOf(event))
+}
 
-        fun <AGGREGATE: Aggregate, EVENT: DomainEvent> empty(aggregate: AGGREGATE): AggregateResult<AGGREGATE, EVENT> {
-            return AggregateResult(aggregate, listOf())
-        }
-    }
+fun <ID, A: Identifiable<ID>, E: DomainEvent>emptyAggregateResult(aggregate: A): AggregateResult<ID, A, E> {
+    return AggregateResult(aggregate, listOf())
 }

@@ -1,14 +1,14 @@
 package gym.subscriptions.useCases
 
 import DomainEvent
+import Id
 import gym.membership.domain.EmailAddress
 import gym.subscriptions.domain.Subscription
 import gym.subscriptions.domain.SubscriptionEventStore
-import gym.subscriptions.domain.SubscriptionId
 import java.time.LocalDate
 
 data class SubscribeToPlan(
-    val subscriptionId: SubscriptionId,
+    val subscriptionId: Id<String>,
     val planPrice: Int,
     val planDurationInMonths: Int,
     val startDate: LocalDate,

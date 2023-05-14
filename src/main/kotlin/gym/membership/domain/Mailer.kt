@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 interface Mailer {
 
-    fun sendWelcomeEmail(member: Member): AggregateResult<Member, WelcomeEmailWasSentToNewMember>
+    fun sendWelcomeEmail(member: Member): AggregateResult<String, Member, WelcomeEmailWasSentToNewMember>
 
     fun sendSubscriptionSummary(
         emailAddress: EmailAddress,
@@ -14,5 +14,5 @@ interface Mailer {
         price: Int
     )
 
-    fun send3YearsAnniversaryThankYouEmail(member: Member): AggregateResult<Member, ThreeYearsAnniversaryThankYouEmailSent>
+    fun send3YearsAnniversaryThankYouEmail(member: Member): AggregateResult<String, Member, ThreeYearsAnniversaryThankYouEmailSent>
 }

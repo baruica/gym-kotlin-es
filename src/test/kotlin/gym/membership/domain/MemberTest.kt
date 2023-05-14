@@ -1,7 +1,7 @@
 package gym.membership.domain
 
 import AggregateHistory
-import gym.subscriptions.domain.SubscriptionId
+import Id
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
@@ -21,7 +21,7 @@ class MemberTest : AnnotationSpec() {
         val (_, events) = Member.register(
             "member abc",
             EmailAddress(email),
-            SubscriptionId(subscriptionId),
+            Id(subscriptionId),
             LocalDate.parse(subscriptionStartDate)
         )
 
@@ -40,7 +40,7 @@ class MemberTest : AnnotationSpec() {
         val (with3yearsAnniversaryOnTheFifthOfJune, _) = Member.register(
             "member abc",
             EmailAddress("julie@gmail.com"),
-            SubscriptionId("subscription def"),
+            Id("subscription def"),
             LocalDate.parse("2018-06-05").minusYears(3)
         )
 
@@ -54,12 +54,12 @@ class MemberTest : AnnotationSpec() {
         val (tested, events) = Member.register(
             "aggregateId",
             EmailAddress("julie@gmail.com"),
-            SubscriptionId("subscription 42"),
+            Id("subscription 42"),
             LocalDate.now()
         )
         tested.markWelcomeEmailAsSent()
 
-        val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.getId(), events))
+        val restoredFromEvents = Member.restoreFrom(AggregateHistory(tested.id, events))
 
         restoredFromEvents.emailAddress shouldBe tested.emailAddress
         restoredFromEvents.subscriptionId shouldBe tested.subscriptionId
@@ -69,7 +69,7 @@ class MemberTest : AnnotationSpec() {
     @Test
     fun `cannot be restored if no events`() {
         shouldThrow<IllegalArgumentException> {
-            Member.restoreFrom(AggregateHistory("memberId 42", listOf()))
+            Member.restoreFrom(AggregateHistory(Id("memberId 42"), listOf()))
         }
     }
 }

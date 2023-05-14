@@ -1,5 +1,5 @@
-data class AggregateHistory<EVENT>(
-    val aggregateId: String,
+data class AggregateHistory<ID, EVENT>(
+    val aggregateId: Id<ID>,
     val events: List<EVENT>
 ) {
     init {

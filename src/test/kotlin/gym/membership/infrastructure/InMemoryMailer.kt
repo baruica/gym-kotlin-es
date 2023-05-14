@@ -10,7 +10,7 @@ class InMemoryMailer(
     private val sentEmails: MutableMap<String, Email> = mutableMapOf()
 ) : Mailer {
 
-    override fun sendWelcomeEmail(member: Member): AggregateResult<Member, WelcomeEmailWasSentToNewMember> {
+    override fun sendWelcomeEmail(member: Member): AggregateResult<String, Member, WelcomeEmailWasSentToNewMember> {
         sentEmails[ULID.random()] = Welcome(member.emailAddress)
 
         return member.markWelcomeEmailAsSent()
@@ -25,7 +25,7 @@ class InMemoryMailer(
         sentEmails[ULID.random()] = SubscriptionSummary(emailAddress, startDate, endDate, price)
     }
 
-    override fun send3YearsAnniversaryThankYouEmail(member: Member): AggregateResult<Member, ThreeYearsAnniversaryThankYouEmailSent> {
+    override fun send3YearsAnniversaryThankYouEmail(member: Member): AggregateResult<String, Member, ThreeYearsAnniversaryThankYouEmailSent> {
         sentEmails[ULID.random()] = ThreeYearsAnniversary(member.emailAddress)
 
         return member.mark3YearsAnniversaryThankYouEmailAsSent()

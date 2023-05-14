@@ -1,30 +1,25 @@
 package gym.subscriptions.domain
 
-import Aggregate
 import AggregateHistory
 import AggregateResult
 import DomainEvent
+import Id
+import Identifiable
+import emptyAggregateResult
 import gym.membership.domain.EmailAddress
 import java.time.LocalDate
 import java.time.Period
 import kotlin.math.roundToInt
 
-@JvmInline
-value class SubscriptionId(private val id: String) {
-    override fun toString(): String = id
-}
-
 class Subscription private constructor(
-    private val id: SubscriptionId,
+    override val id: Id<String>,
     private var threeYearsDiscountApplied: Boolean = false
-) : Aggregate {
+) : Identifiable<String> {
 
     internal lateinit var price: Price
     internal lateinit var startDate: LocalDate
     internal lateinit var endDate: LocalDate
     internal lateinit var duration: Duration
-
-    override fun getId(): String = id.toString()
 
     private fun whenEvent(event: DomainEvent) {
         when (event) {
@@ -46,13 +41,13 @@ class Subscription private constructor(
 
     companion object {
         fun subscribe(
-            subscriptionId: SubscriptionId,
+            subscriptionId: Id<String>,
             planDurationInMonths: Int,
             subscriptionDate: LocalDate,
             planPrice: Int,
             email: EmailAddress,
             isStudent: Boolean
-        ): AggregateResult<Subscription, SubscriptionEvent> {
+        ): AggregateResult<String, Subscription, SubscriptionEvent> {
             val subscription = Subscription(subscriptionId)
 
             val priceAfterDiscount = Price(planPrice)
@@ -72,11 +67,11 @@ class Subscription private constructor(
             )
             subscription.whenEvent(event)
 
-            return AggregateResult.of(subscription, event)
+            return AggregateResult(subscription, event)
         }
 
-        fun restoreFrom(aggregateHistory: AggregateHistory<SubscriptionEvent>): Subscription {
-            val subscription = Subscription(SubscriptionId(aggregateHistory.aggregateId))
+        fun restoreFrom(aggregateHistory: AggregateHistory<String, SubscriptionEvent>): Subscription {
+            val subscription = Subscription(aggregateHistory.aggregateId)
 
             aggregateHistory.events.forEach {
                 subscription.whenEvent(it)
@@ -86,17 +81,17 @@ class Subscription private constructor(
         }
     }
 
-    fun renew(): AggregateResult<Subscription, SubscriptionRenewed> {
+    fun renew(): AggregateResult<String, Subscription, SubscriptionRenewed> {
         val newEndDate = endDate.plus(Period.ofMonths(duration.value))
 
         val event = SubscriptionRenewed(
-            getId(),
+            id.toString(),
             endDate.toString(),
             newEndDate.toString()
         )
         whenEvent(event)
 
-        return AggregateResult.of(this, event)
+        return AggregateResult(this, event)
     }
 
     fun isOngoing(date: LocalDate): Boolean {
@@ -111,7 +106,7 @@ class Subscription private constructor(
         return (price.amount / duration.value).roundToInt()
     }
 
-    fun applyThreeYearsAnniversaryDiscount(date: LocalDate): AggregateResult<Subscription, SubscriptionEvent> {
+    fun applyThreeYearsAnniversaryDiscount(date: LocalDate): AggregateResult<String, Subscription, SubscriptionEvent> {
         if (!threeYearsDiscountApplied) {
             val discountedPrice = price.applyThreeYearsAnniversaryDiscount(
                 hasThreeYearsAnniversaryOn(date)
@@ -119,15 +114,15 @@ class Subscription private constructor(
 
             if (price != discountedPrice) {
                 val event = SubscriptionDiscountedFor3YearsAnniversary(
-                    getId(),
+                    id.toString(),
                     discountedPrice.amount
                 )
                 whenEvent(event)
 
-                return AggregateResult.of(this, event)
+                return AggregateResult(this, event)
             }
         }
-        return AggregateResult.empty(this)
+        return emptyAggregateResult(this)
     }
 
     fun hasThreeYearsAnniversaryOn(date: LocalDate): Boolean {

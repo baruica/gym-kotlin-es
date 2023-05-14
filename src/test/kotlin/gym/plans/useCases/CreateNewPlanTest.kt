@@ -1,7 +1,6 @@
 package gym.plans.useCases
 
 import gym.plans.domain.NewPlanCreated
-import gym.plans.domain.PlanId
 import gym.plans.infrastructure.InMemoryPlanEventStore
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
@@ -13,7 +12,7 @@ class CreateNewPlanTest : AnnotationSpec() {
     @Test
     fun handle() {
         val eventStore = InMemoryPlanEventStore()
-        val planId = PlanId(eventStore.nextId())
+        val planId = eventStore.nextId()
 
         shouldThrow<IllegalArgumentException> {
             eventStore.get(planId)
@@ -26,7 +25,7 @@ class CreateNewPlanTest : AnnotationSpec() {
         events.shouldHaveSize(1)
         events.shouldEndWith(
             NewPlanCreated(
-                planId.toString(),
+                planId,
                 300,
                 1
             )

@@ -1,10 +1,12 @@
-interface EventStore<AGGREGATE: Aggregate, EVENT: DomainEvent> {
+import com.github.guepardoapps.kulid.ULID
 
-    fun nextId(): String
+interface EventStore<ID, A: Identifiable<ID>, E: DomainEvent> {
 
-    fun store(aggregateResult: AggregateResult<AGGREGATE, out EVENT>)
+    fun nextId(): String = ULID.random()
 
-    fun storeEvents(events: List<EVENT>)
+    fun store(aggregateResult: AggregateResult<ID, A, out E>)
 
-    fun getAggregateHistory(aggregateId: String): AggregateHistory<EVENT>
+    fun storeEvents(events: List<E>)
+
+    fun getAggregateHistory(aggregateId: ID): AggregateHistory<ID, E>
 }

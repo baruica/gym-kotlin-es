@@ -3,9 +3,9 @@ package gym.membership.domain
 import EventStore
 import java.time.LocalDate
 
-interface MemberEventStore : EventStore<Member, MemberEvent> {
+interface MemberEventStore : EventStore<String, Member, MemberEvent> {
 
-    fun get(memberId: MemberId): Member
+    fun get(memberId: String): Member
 
     fun findByEmailAddress(emailAddress: EmailAddress): Member?
 
