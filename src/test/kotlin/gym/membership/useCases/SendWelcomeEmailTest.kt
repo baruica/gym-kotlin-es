@@ -5,15 +5,14 @@ import gym.membership.domain.NewMemberRegistered
 import gym.membership.domain.WelcomeEmailWasSentToNewMember
 import gym.membership.infrastructure.InMemoryMailer
 import gym.membership.infrastructure.InMemoryMemberEventStore
-import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldEndWith
 import java.time.LocalDate
 
-class SendWelcomeEmailTest : AnnotationSpec() {
+class SendWelcomeEmailTest : StringSpec({
 
-    @Test
-    fun handle() {
+    "handle" {
 
         val memberId = "member abc"
         val emailAddress = "bob@gmail.com"
@@ -49,4 +48,4 @@ class SendWelcomeEmailTest : AnnotationSpec() {
         )
         mailer.welcomeEmailWasSentTo("bob@gmail.com").shouldBeTrue()
     }
-}
+})

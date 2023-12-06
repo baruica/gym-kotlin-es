@@ -4,13 +4,12 @@ import Id
 import gym.plans.domain.NewPlanCreated
 import gym.plans.domain.PlanPriceChanged
 import gym.plans.infrastructure.InMemoryPlanEventStore
-import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldEndWith
 
-class ChangePlanPriceTest : AnnotationSpec() {
+class ChangePlanPriceTest : StringSpec({
 
-    @Test
-    fun handle() {
+    "handle" {
         val eventStore = InMemoryPlanEventStore()
         val planId = eventStore.nextId()
 
@@ -30,4 +29,4 @@ class ChangePlanPriceTest : AnnotationSpec() {
             PlanPriceChanged(planId, 450, 400)
         )
     }
-}
+})

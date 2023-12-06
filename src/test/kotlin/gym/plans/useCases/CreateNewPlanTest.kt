@@ -3,14 +3,13 @@ package gym.plans.useCases
 import gym.plans.domain.NewPlanCreated
 import gym.plans.infrastructure.InMemoryPlanEventStore
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldEndWith
 import io.kotest.matchers.collections.shouldHaveSize
 
-class CreateNewPlanTest : AnnotationSpec() {
+class CreateNewPlanTest : StringSpec({
 
-    @Test
-    fun handle() {
+    "handle" {
         val eventStore = InMemoryPlanEventStore()
         val planId = eventStore.nextId()
 
@@ -31,4 +30,4 @@ class CreateNewPlanTest : AnnotationSpec() {
             )
         )
     }
-}
+})

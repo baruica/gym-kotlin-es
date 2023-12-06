@@ -4,14 +4,13 @@ import Id
 import gym.membership.domain.EmailAddress
 import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
-import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
-class SubscribeToPlanTest : AnnotationSpec() {
+class SubscribeToPlanTest : StringSpec({
 
-    @Test
-    fun handle() {
+    "handle" {
         val eventStore = InMemorySubscriptionEventStore()
         val subscriptionId = eventStore.nextId()
 
@@ -40,4 +39,4 @@ class SubscribeToPlanTest : AnnotationSpec() {
             )
         )
     }
-}
+})

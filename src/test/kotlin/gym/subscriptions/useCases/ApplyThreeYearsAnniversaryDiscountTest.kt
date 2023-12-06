@@ -4,15 +4,14 @@ import gym.subscriptions.domain.NewSubscription
 import gym.subscriptions.domain.SubscriptionDiscountedFor3YearsAnniversary
 import gym.subscriptions.domain.SubscriptionRenewed
 import gym.subscriptions.infrastructure.InMemorySubscriptionEventStore
-import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldEndWith
 import java.time.LocalDate
 
-internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
+internal class ApplyThreeYearsAnniversaryDiscountTest : StringSpec({
 
-    @Test
-    fun handle() {
+    "handle" {
         val eventStore = InMemorySubscriptionEventStore()
 
         val subscriptionId = eventStore.nextId()
@@ -44,4 +43,4 @@ internal class ApplyThreeYearsAnniversaryDiscountTest : AnnotationSpec() {
         )
         eventsAfterThreeYearsAnniversary.shouldBeEmpty()
     }
-}
+})
