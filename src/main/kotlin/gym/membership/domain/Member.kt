@@ -22,10 +22,12 @@ class Member private constructor(
                 subscriptionId = Id(event.subscriptionId).toString()
                 memberSince = LocalDate.parse(event.memberSince)
             }
+
             is WelcomeEmailWasSentToNewMember -> {
                 emailAddress = EmailAddress(event.memberEmailAddress)
                 memberSince = LocalDate.parse(event.memberSince)
             }
+
             is ThreeYearsAnniversaryThankYouEmailSent -> {
                 memberSince = LocalDate.parse(event.memberSince)
             }

@@ -29,9 +29,11 @@ class Subscription private constructor(
                 endDate = LocalDate.parse(event.subscriptionEndDate)
                 duration = Duration(event.planDurationInMonths)
             }
+
             is SubscriptionRenewed -> {
                 endDate = LocalDate.parse(event.newEndDate)
             }
+
             is SubscriptionDiscountedFor3YearsAnniversary -> {
                 price = Price(event.discountedPrice)
                 threeYearsDiscountApplied = true

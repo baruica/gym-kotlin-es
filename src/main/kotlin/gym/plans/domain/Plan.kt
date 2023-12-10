@@ -20,6 +20,7 @@ class Plan private constructor(
                 price = Price(event.planPrice)
                 duration = Duration(event.planDurationInMonths)
             }
+
             is PlanPriceChanged -> {
                 price = Price(event.newPrice)
             }

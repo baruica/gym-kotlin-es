@@ -1,4 +1,4 @@
-open class InMemoryEventStore<ID, A: Identifiable<ID>, E: DomainEvent>(
+open class InMemoryEventStore<ID, A : Identifiable<ID>, E : DomainEvent>(
     val events: MutableMap<String, MutableList<E>> = mutableMapOf()
 ) : EventStore<ID, A, E> {
 

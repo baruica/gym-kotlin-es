@@ -1,4 +1,3 @@
-
 import gym.membership.domain.Member
 import gym.membership.domain.MemberEvent
 import gym.plans.domain.NewPlanCreated

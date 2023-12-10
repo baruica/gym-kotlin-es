@@ -1,6 +1,6 @@
 import com.github.guepardoapps.kulid.ULID
 
-interface EventStore<ID, A: Identifiable<ID>, E: DomainEvent> {
+interface EventStore<ID, A : Identifiable<ID>, E : DomainEvent> {
 
     fun nextId(): String = ULID.random()
 
