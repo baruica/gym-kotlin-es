@@ -26,5 +26,5 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-shared:5.9.1")
     testImplementation("io.kotest:kotest-common:5.9.1")
-    testImplementation("io.kotest:kotest-framework-api:5.9.0")
+    testImplementation("io.kotest:kotest-framework-api:5.9.1")
 }
