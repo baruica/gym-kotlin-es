@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.2.21"
-    id("io.kotest") version "6.0.6"
+    id("io.kotest") version "6.0.7"
     id("com.autonomousapps.dependency-analysis") version "3.5.1"
 }
 
@@ -24,7 +24,7 @@ dependencies {
     implementation("jp.kukv:kULID:2.0.0.1")
     testRuntimeOnly("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
-    testImplementation("io.kotest:kotest-assertions-shared:6.0.6")
-    testImplementation("io.kotest:kotest-common:6.0.6")
-    testImplementation("io.kotest:kotest-framework-api:6.0.6")
+    testImplementation("io.kotest:kotest-assertions-shared:6.0.7")
+    testImplementation("io.kotest:kotest-common:6.0.7")
+    testImplementation("io.kotest:kotest-framework-api:6.0.7")
 }
