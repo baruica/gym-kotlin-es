@@ -18,7 +18,7 @@ repositories {
     mavenCentral()
 }
 
-val kotestVersion = "6.2.5"
+val kotestVersion = "6.2.6"
 
 dependencies {
     implementation("jp.kukv:kULID:2.0.0.1")
